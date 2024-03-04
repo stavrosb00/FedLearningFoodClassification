@@ -1,0 +1,6 @@
+- optimizer=momentum
+- strategy=fedavg
+- partitioning=iid
+- balance=True
+- num_clients=32
+- num_classes=4

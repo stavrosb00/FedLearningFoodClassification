@@ -1,0 +1,16 @@
+# @package _global_
+
+exp_name: momentum
+
+optimizer:
+  _target_: models.train
+  lr: 0.01
+  momentum: 0.9
+  weight_decay: 1e-4
+  gmf: 0
+  mu: 0
+
+  # config_fit: 
+  # lr: 0.01
+  # momentum: 0.9
+  # local_epochs: 1

@@ -1,0 +1,39 @@
+num_rounds: 3
+num_clients: 10
+lr_scheduling: false
+batch_size: 64
+partitioning: iid
+alpha: 0.5
+balance: true
+num_classes: 10
+subset: true
+datapath: D:/DesktopC/Datasets/data/
+num_workers: 1
+num_clients_per_round_fit: 8
+num_clients_per_round_eval: ${num_clients_per_round_fit}
+seed: 2024
+client_resources:
+  num_cpus: 2
+  num_gpus: 0.0
+var_local_epochs: false
+var_min_epochs: 1
+var_max_epochs: 4
+local_epochs: 1
+model:
+  _target_: model.ResNet18
+strategy:
+  name: fedavg
+  strategy:
+    _target_: flwr.server.strategy.FedAvg
+    _recursive_: false
+  client_fn:
+    _target_: client.generate_client_fn
+    _recursive_: false
+exp_name: momentum
+optimizer:
+  _target_: models.train
+  lr: 0.01
+  momentum: 0.9
+  weight_decay: 0.0001
+  gmf: 0
+  mu: 0

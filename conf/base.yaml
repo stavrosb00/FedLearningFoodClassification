@@ -1,0 +1,51 @@
+---
+defaults:
+  - _self_
+  - strategy: fedavg
+  - optimizer: momentum
+
+num_rounds: 3
+num_clients: 16
+lr_scheduling: False
+
+batch_size: 64
+
+partitioning: 'iid'
+alpha: 0.5
+balance: True
+num_classes: 4
+subset: True 
+# datapath: './data'
+datapath: 'D:/DesktopC/Datasets/data/'
+num_workers: 1
+
+C_fraction: 0.5
+num_clients_per_round_fit: 8
+num_clients_per_round_eval: ${num_clients_per_round_fit}
+seed: 2024
+client_resources:
+  num_cpus: 4
+  num_gpus: 0.0
+var_local_epochs: False
+var_min_epochs: 1 
+var_max_epochs: 4
+local_epochs: 1
+
+model:
+  _target_: model.ResNet18
+
+
+# hydra:
+#   sweep:
+#     dir: multirun
+#     # subdir: ${hydra.job.override_dirname}/${seed}
+#     # subdir: ${hydra.job.override_dirname}/${seed}
+#   job:
+#     config:
+#       override_dirname:
+#         exclude_keys:
+#           - seed
+#           - num_rounds
+#         kv_sep: _
+#         item_sep: _
+

@@ -1,0 +1,307 @@
+import torch
+from torch.utils.data import random_split, DataLoader, Subset, Dataset
+from torchvision.transforms import ToTensor, Normalize, Compose
+import torchvision.transforms.functional as F
+from torchvision.datasets import Food101
+from dataset_prep import *
+from typing import List, Tuple
+from omegaconf import DictConfig
+import torchvision
+from utils import plot_exp_summary, plot_client_stats, get_subset_stats
+import os
+
+class CustomSubset(Dataset):
+    r"""
+    Subset of a dataset at specified indices.
+
+    Arguments:
+        dataset (Dataset): The whole Dataset
+        indices (sequence): Indices in the whole set selected for subset
+        labels(sequence) : targets as required for the indices. will be the same length as indices
+    """
+    def __init__(self, dataset, indices):
+        self.dataset = dataset
+        self.indices = indices
+        # labels_hold = np.ones(len(dataset)) *999 #( some number not present in the #labels just to make sure)
+        # labels_hold[self.indices] = labels 
+        # np_tr_idx = np.array(self.indices)
+        np_tr_lab = np.array(dataset._labels)
+        tr_mapped_lab = np_tr_lab[indices]
+        self.labels = tr_mapped_lab
+    def __getitem__(self, idx):
+        image = self.dataset[self.indices[idx]][0]
+        label = self.labels[self.indices[idx]]
+        return (image, label)
+
+    def __len__(self):
+        return len(self.indices)
+    
+# from torchvision import transforms
+def get_food101(transform, datapath: str = 'D:/DesktopC/Datasets/data/', subset: bool = True, num_classes: int = 4):
+    """Download Food101 and apply transformation."""
+    trainset = Food101(root=datapath, split="train", transform=transform, download= True)
+    testset = Food101(root=datapath, split="test", transform=transform, download= True)
+    # trainset_labels = trainset.classes
+    if subset:
+        #Taking Subset of trainset and testset
+        # select classes you want to include in your subset
+        list = [i for i in range(num_classes)]
+        classes = torch.tensor(list)
+        # classes = torch.tensor([0, 1, 2, 3])
+        # get indices that correspond to one of the selected classes
+        train_indices = (torch.tensor(trainset._labels)[..., None] == classes).any(-1).nonzero(as_tuple=True)[0]
+        np_tr_idx = np.array(train_indices)
+        # np_tr_lab = np.array(trainset._labels)
+        # tr_mapped_lab = np_tr_lab[np_tr_idx]
+        # subset the dataset
+        train_sub = CustomSubset(trainset, np_tr_idx) # tr_mapped_lab)
+        # train_sub = Subset(trainset, train_indices)
+
+        # get indices that correspond to one of the selected classes
+        test_indices = (torch.tensor(testset._labels)[..., None] == classes).any(-1).nonzero(as_tuple=True)[0]
+        np_test_idx = np.array(test_indices)
+        # np_test_lab = np.array(testset._labels)
+        # test_mapped_lab = np_test_lab[np_test_idx]
+        # subset the dataset
+        test_sub = CustomSubset(testset, np_test_idx) #, test_mapped_lab)
+        # test_sub = Subset(testset, test_indices)
+        return train_sub, test_sub
+    else:
+        return trainset, testset                
+    # return trainset, testset
+             
+def load_dataset(datapath: str, 
+                 subset: bool,
+                 num_classes: int,
+                 num_workers: int,
+                 num_partitions: int, 
+                    batch_size: int,
+                    partitioning: str = "iid", 
+                    alpha: float = 0.5,
+                    balance: bool = True,
+                    seed: int = 2024,
+                    val_ratio: float = 0.1):
+    """Download Food101 and generate IID partitions."""
+    print("Loading data...")
+    #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
+    # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
+    trf = Compose([
+         Resize_with_pad(),
+         ToTensor(),
+    ])
+    trainset, testset = get_food101(trf, datapath,subset, num_classes)
+    if partitioning == "iid":
+        trainsets = partitioning_iid(trainset, num_partitions, balance, seed)
+        title_str = f"Clients data partitioning: {partitioning.upper()}"
+        if balance:
+            save_str_cid: str ="balanced" # equal splits per client based on each label quantity
+        else:
+            save_str_cid: str ="U" #uniform shuffle rand generator
+        save_str_exp = f"images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}/summary" #clients_{len(trainsets)}_classes_{num_classes}_
+    elif partitioning == "dirichlet":
+        trainsets = partitioning_dirichlet(alpha, trainset, num_partitions, seed)
+        title_str = f"Clients data partitioning: {partitioning.upper()}, a={alpha}"
+        save_str_cid: str = (f"a_{alpha}")
+        save_str_exp = f"images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}/summary" #alpha_{alpha}_clients_{len(trainsets)}_classes_{num_classes}_
+    else:
+        raise ValueError
+
+
+    # Obtain and save data statistic plots
+    if not os.path.exists(f'./images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}'):
+            os.makedirs(f'./images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}')
+    plot_exp_summary(trainsets, title_str, num_classes, save_str_exp)
+    for c_id, sub_trainset in enumerate(trainsets):
+        tmp = get_subset_stats(sub_trainset)
+        plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid, save_str_exp)
+    
+    # create dataloaders with train+val support
+    trainloaders: list[CustomSubset] = []
+    valloaders: list[CustomSubset] = []
+    np.random.seed(seed)
+    for trainset_ in trainsets:
+        num_total = len(trainset_)
+        num_val = int(val_ratio * num_total)
+        num_train = num_total - num_val
+        # trainsets on IID case are already shuffled
+        # choose validation indexes
+        choices = np.random.choice(range(num_total), size=num_val, replace=False)
+        # boolean split
+        idxs_val = np.zeros(num_total, dtype=bool)
+        idxs_val[choices] = True
+        idxs_tr = ~idxs_val
+        # In this way, the i-th client will get the i-th element in the trainloaders list and the i-th element in the valloaders list
+        trainloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_tr]))
+        valloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_val]))
+
+    ##### possible plot on splitted sets after for loop #####
+    #
+    # reproducable shuffling for training
+    # torch.manual_seed(seed)
+    # G = torch.Generator()
+    # G.manual_seed(seed)
+    # generator=G,
+    # construct data loaders to their respective list
+    trainloaders = [DataLoader(Subset(trainloaders[i].dataset, trainloaders[i].indices), batch_size=batch_size, 
+                                    shuffle=True, num_workers=num_workers) 
+                         for i in range(len(trainloaders))]
+    valloaders = [DataLoader(Subset(valloaders[i].dataset, valloaders[i].indices), batch_size=batch_size, 
+                                    shuffle=True, num_workers=num_workers) 
+                         for i in range(len(valloaders))]
+    # testloader = DataLoader(testset, batch_size=batch_size, num_workers=num_workers)
+    testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
+    return trainloaders, valloaders, testloader
+
+def load_centr_data(datapath: str, 
+                 subset: bool,
+                 num_classes: int,
+                 num_workers: int,
+                    batch_size: int):
+    """Download Food101 dataset for centralised learning."""
+    print("Loading data...")
+    #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
+    # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
+    trf = Compose([
+         Resize_with_pad(),
+         ToTensor(),
+    ])
+    trainset, testset = get_food101(trf, datapath,subset, num_classes)
+    return DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers), DataLoader(testset, batch_size=batch_size, num_workers=num_workers)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def get_mnist(data_paths: str = './data'):
+#     """Download MNIST and apply minimal transformation."""
+
+#     tr = Compose([ToTensor(), Normalize((0.1307,), (0.3081,))])
+#     trainset = MNIST(data_paths, train=True, download =True, transform=tr)
+#     testset = MNIST(data_paths, train=False, download =True, transform=tr)
+
+#     return trainset, testset
+
+# def prepare_dataset(num_partitions: int, 
+#                     batch_size: int, 
+#                     val_ratio: float = 0.1):
+#     """Download MNIST and generate IID partitions."""
+
+#     # download MNIST in case it's not already in the system
+#     trainset, testset = get_mnist()
+
+    
+#     # split trainset into `num_partitions` trainsets (one per client)
+#     # figure out number of training examples per partition
+#     num_images = len(trainset) // num_partitions
+
+#     # a list of partition lenghts (all partitions are of equal size)
+#     partition_len = [num_images] * num_partitions
+#     trainsets = random_split(
+#         trainset, partition_len, torch.Generator().manual_seed(2023)
+#     )
+
+#     # create dataloaders with train+val support
+#     trainloaders = []
+#     valloaders = []
+#     for trainset_ in trainsets:
+#         num_total = len(trainset_)
+#         num_val = int(val_ratio * num_total)
+#         num_train = num_total - num_val
+
+#         for_train, for_val = random_split(trainset_, [num_train, num_val], torch.Generator().manual_seed(2023))
+#         # construct data loaders and append to their respective list.
+#         # In this way, the i-th client will get the i-th element in the trainloaders list and the i-th element in the valloaders list
+#         trainloaders.append(DataLoader(for_train, batch_size=batch_size, shuffle=True, num_workers=2))
+#         valloaders.append(DataLoader(for_val, batch_size=batch_size, shuffle=True, num_workers=2))
+        
+#     # We leave the test set intact (i.e. we don't partition it)
+#     # This test set will be left on the server side and we'll be used to evaluate the
+#     # performance of the global model after each round.
+#     # Please note that a more realistic setting would instead use a validation set on the server for
+#     # this purpose and only use the testset after the final round.
+#     # Also, in some settings (specially outside simulation) it might not be feasible to construct a validation
+#     # set on the server side, therefore evaluating the global model can only be done by the clients. (see the comment
+#     # in main.py above the strategy definition for more details on this)
+#     testloader = DataLoader(testset, batch_size=128)
+
+#     return trainloaders, valloaders, testloader
+
+# def load_datasets(config: DictConfig) -> Tuple[List[DataLoader], DataLoader, List]:
+#     """Create the dataloaders to be fed into the model.
+
+#     Parameters
+#     ----------
+#     config: DictConfig
+#         Parameterises the dataset partitioning process
+#     num_clients : int
+#         The number of clients that hold a part of the data
+#     val_ratio : float, optional
+#         The ratio of training data that will be used for validation (between 0 and 1),
+#         by default 0.1
+#     batch_size : int, optional
+#         The size of the batches to be fed into the model, by default 32
+#     seed : int, optional
+#         Used to set a fix seed to replicate experiments, by default 42
+
+#     Returns
+#     -------
+#     Tuple[DataLoader, DataLoader, List]
+#         The DataLoader for training, the DataLoader for testing, client dataset sizes.
+#     """
+#     # download MNIST in case it's not already in the system
+#     trainset, testset = get_mnist()
+
+#     partition_sizes = [1.0 / config.num_clients for _ in range(config.num_clients)]
+
+#     partition_obj = DataPartitioner(
+#         trainset, partition_sizes, is_non_iid=config.NIID, alpha=config.alpha
+#     )
+#     ratio = partition_obj.ratio
+
+#     trainloaders = []
+#     for data_split in range(config.num_clients):
+#         client_partition = partition_obj.use(data_split)
+#         trainloaders.append(
+#             torch.utils.data.DataLoader(
+#                 client_partition,
+#                 batch_size=config.batch_size,
+#                 shuffle=True,
+#             )
+#         )
+
+#     test_loader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
+
+#     return trainloaders, test_loader, ratio
+
+# @hydra.main(config_path="conf", config_name="base", version_base=None)
+# def main(cfg: DictConfig):
+    # print(cfg.datapath)
+
+
+# if __name__ == "__main__":
+
+    
+    # datapath = 'D:/DesktopC/Datasets/data/'
+    # subset = True
+    # num_classes = 4
+    # num_workers = 1
+    # batch_size=64
+    # load_centr_data(datapath=datapath, subset=subset, num_classes=num_classes, num_workers=num_workers, )
+
+
+
+# trf2 = Compose([
+    #     torchvision.transforms.Resize((298,224)),
+    #     ToTensor(),
+    #     Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    # ])

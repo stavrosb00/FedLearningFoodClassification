@@ -1,0 +1,9 @@
+name: scaffold
+strategy:
+  _target_: strategy_scaffold.ScaffoldStrategy
+  _recursive_: false
+    
+
+client_fn:
+  _target_: client_scaffold.generate_client_fn
+  _recursive_: false

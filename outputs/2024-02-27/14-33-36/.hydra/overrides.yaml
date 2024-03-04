@@ -1,0 +1,4 @@
+- num_rounds=1
+- partitioning=iid
+- num_clients_per_round_fit=2
+- num_clients=50

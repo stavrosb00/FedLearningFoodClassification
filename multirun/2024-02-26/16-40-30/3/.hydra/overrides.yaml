@@ -1,0 +1,5 @@
+- optimizer=momentum
+- strategy=fedavg
+- partitioning=dirichlet
+- num_clients=16
+- num_classes=4

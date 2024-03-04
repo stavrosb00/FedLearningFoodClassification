@@ -1,0 +1,2 @@
+round,test_loss,test_accuracy,train_loss,train_acc,mean_diff_acc,var_diff_acc
+1,0.022721939921379088,19.1796875,1.524128496646881,25.925925254821777,0.0,13.717422433023785

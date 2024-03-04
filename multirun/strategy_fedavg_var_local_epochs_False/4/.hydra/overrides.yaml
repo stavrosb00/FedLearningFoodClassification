@@ -1,0 +1,3 @@
+- strategy=fedavg
+- var_local_epochs=False
+- seed=4

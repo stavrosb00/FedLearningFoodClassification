@@ -1,0 +1,4 @@
+- num_rounds=5
+- lr_scheduling=False
+- num_classes=4
+- num_clients=30

@@ -1,0 +1,863 @@
+[2024-02-17 19:00:53,483][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-02-17 19:00:53,484][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-02-17 19:00:59,846][flwr][INFO] - Flower VCE: Ray initialized with resources: {'CPU': 4.0, 'node:127.0.0.1': 1.0, 'object_store_memory': 1212986572.0, 'memory': 2425973147.0, 'node:__internal_head__': 1.0}
+[2024-02-17 19:00:59,847][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-02-17 19:00:59,848][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.0}
+[2024-02-17 19:00:59,863][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-02-17 19:00:59,865][flwr][INFO] - Initializing global parameters
+[2024-02-17 19:00:59,865][flwr][INFO] - Requesting initial parameters from one random ScaffoldClient
+[2024-02-17 19:01:07,484][flwr][INFO] - Received initial parameters from one random ScaffoldClient
+[2024-02-17 19:01:07,514][flwr][INFO] - Evaluating initial parameters
+[2024-02-17 19:03:54,873][flwr][INFO] - initial parameters (loss, other metrics): 0.02345752286911011, {'accuracy': 24.47265625}
+[2024-02-17 19:03:54,877][flwr][INFO] - FL starting
+[2024-02-17 19:03:55,107][flwr][DEBUG] - fit_round 1: strategy sampled 10 clients (out of 100)
+[2024-02-17 19:03:58,374][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 28 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:03:58,388][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 28 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:00,785][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 11 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:00,798][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 11 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:03,110][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 53 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:03,122][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 53 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:05,269][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 23 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:05,317][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 23 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:05,852][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 31 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:05,865][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 31 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:07,487][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 47 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:07,538][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 47 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:08,090][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 96 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:08,104][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 96 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:09,652][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 75 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:09,670][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 75 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:09,817][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 50 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:09,835][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=9808, ip=127.0.0.1, actor_id=e29607fa806149d77b43b18801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001DAF1F93650>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 50 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+[2024-02-17 19:04:11,081][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 87 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
+
+[2024-02-17 19:04:11,097][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 67, in fit
+    print(server_cv.shape)
+          ^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'shape'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=6324, ip=127.0.0.1, actor_id=dd9100fb201d0cf8ae6eee4b01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001FB5F22EC90>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 87 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 67, in fit\n    print(server_cv.shape)\n          ^^^^^^^^^^^^^^^\nAttributeError: \'list\' object has no attribute \'shape\'\n',)
