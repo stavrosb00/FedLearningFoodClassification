@@ -166,7 +166,8 @@ def load_centr_data(datapath: str,
          ToTensor(),
     ])
     trainset, testset = get_food101(trf, datapath,subset, num_classes)
-    return DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=num_workers), DataLoader(testset, batch_size=batch_size, num_workers=num_workers)
+    # Subset(testset.dataset, testset.indices)
+    return DataLoader(Subset(trainset.dataset, trainset.indices), batch_size=batch_size, shuffle=True, num_workers=num_workers), DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
 
 
 

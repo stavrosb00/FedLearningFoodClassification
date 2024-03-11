@@ -64,7 +64,7 @@ def get_evaluate_fn_scaffold(num_classes: int, testloader):
         # model = instantiate(model_cfg)
         model = ResNet18(num_classes)
 
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         keys = [k for k, _ in model.named_parameters()]
         params_dict = zip(keys, parameters)
@@ -83,7 +83,7 @@ def get_evaluate_fn(num_classes: int, testloader):
         # model = instantiate(model_cfg)
         model = ResNet18(num_classes)
 
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         params_dict = zip(model.state_dict().keys(), parameters)
         state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})

@@ -31,17 +31,22 @@ def main(cfg: DictConfig):
                                                                cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed)
     # return 0
 
+    save_path = HydraConfig.get().runtime.output_dir
     ## 3. Define your clients
     if cfg.strategy.client_fn._target_ == "client_scaffold.generate_client_fn":
-        save_path = HydraConfig.get().runtime.output_dir
-        client_cv_dir = os.path.join(save_path, "client_cvs")
-        print("Local cvs for scaffold clients are saved to: ", client_cv_dir)
+        
+        # client_progress = os.path.join(save_path, "client_progress")
+        # print("Local progress for clients who participated in rounds are saved to: ", client_progress)
+        client_cv_dir = os.path.join(save_path, "clients")
+        print("Local progress and client variances for scaffold clients are saved to: ", client_cv_dir)
         client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, 
                          cfg.local_epochs, cfg, save_dir=client_cv_dir,
         )
         evaluate_fn = get_evaluate_fn_scaffold(cfg.num_classes, testloader)
     else:
-        client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, cfg.local_epochs, cfg)
+        client_progress = os.path.join(save_path, "clients")
+        print("Local progress for clients who participated in rounds are saved to: ", client_progress)
+        client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
         evaluate_fn = get_evaluate_fn(cfg.num_classes, testloader)
 
     # client_fn = generate_client_fn(trainloaders, validationloaders, cfg.num_classes, cfg.local_epochs, cfg)
@@ -148,10 +153,12 @@ def main(cfg: DictConfig):
         f"_{cfg.exp_name}"
         f"{'_varEpoch' if cfg.var_local_epochs else ''}"
         f"_{cfg.partitioning}"
+        # f"{'_alpha{cfg.alpha}' if cfg.partitioning == "dirichlet" else ''}"
         f"{'_balanced' if cfg.balance else ''}"
         f"_Classes={cfg.num_classes}"
         f"_Seed={cfg.seed}"
         f"_C={cfg.num_clients}"
+        f"_fraction{cfg.C_fraction}"
         f"_B={cfg.batch_size}"
         f"_E={cfg.local_epochs}"
         f"_R={cfg.num_rounds}"

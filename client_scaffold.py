@@ -9,6 +9,7 @@ from hydra.utils import instantiate
 from model import ResNet18, train, test, ScaffoldOptimizer, train_scaffold
 import numpy as np
 import os
+import pandas as pd
 import copy
 
 
@@ -132,24 +133,33 @@ class ScaffoldClient(fl.client.NumPyClient):
         y_i = [torch.from_numpy(p) for p in self.get_parameters(config={})]
 
         # self.client_cv = [val.cpu().numpy() for _, val in self.model.state_dict().items()]
-        c_i_n = []
+        # c_i_n = []
         server_update_x = []
         server_update_c = []
         # server_cv ~ self.server_cv_model.parameters()
         # update client control variate c_i_1 = c_i - c + 1/eta*K (x - y_i)
         for c_i, c, x, yi in zip(self.client_cv, server_cv, server_model, y_i):
-            c_i.data = c_i - c + + (1.0 / (lr * self.epochs * len(self.trainloader))) * (x - yi)
-            # compute client->Server params
+            # c_i' - c_i
+            server_update_c.append((- c + (1.0 / (lr * self.epochs * len(self.trainloader))) * (x - yi)).detach().numpy())
+
+            c_i.data = c_i + server_update_c[-1]
             # y_i - x 
             server_update_x.append((yi - x).detach().numpy())
-            # c_i' - c_i
-            server_update_c.append((- c + + (1.0 / (lr * self.epochs * len(self.trainloader))) * (x - yi)).detach().numpy())
-
+            
+        # keep CID->file, ServerRound->index, train values. Interpolation the progress between ticks in second place
+        temp_dict = {"client_id" : self.cid, "server_round": server_round, "loss": train_loss, "accuracy": train_acc}
+        if os.path.exists(f"{self.dir}/client_progress_{self.cid}.csv"):
+            temp_df = pd.DataFrame(temp_dict) # index=[0])
+            # update by appending only the new values without the header on the .csv
+            temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", mode='a', index=False, header=False)
+        else:
+            # init progress file for first time
+            temp_df = pd.DataFrame(temp_dict) #, index=[0])
+            temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", index=False)
 
         torch.save(self.client_cv, f"{self.dir}/client_cv_{self.cid}.pt")
         # concatenate lists (Dy_i, Dc_i)
         combined_updates = server_update_x + server_update_c
-        # print(f"combined {len(combined_updates)}")
         # return combined updates(line13 alg), number of examples and dict of metrics
         return combined_updates, len(self.trainloader), {"loss": train_loss, "accuracy": train_acc}
 

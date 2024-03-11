@@ -44,7 +44,7 @@ source activate pyt_pg
 which python
 echo " "
 
-#python main.py strategy=scaffold optimizer=scaffold num_rounds=1 num_classes=4
-python testScript.py $@
+python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=10 num_classes=4 
+# python testScript.py $@
 
 exit

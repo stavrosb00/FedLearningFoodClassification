@@ -5,6 +5,7 @@ from logging import WARNING
 
 import numpy as np
 from flwr.common import (
+    EvaluateRes,
     FitRes,
     NDArrays,
     Parameters,

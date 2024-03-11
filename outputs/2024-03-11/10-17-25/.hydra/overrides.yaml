@@ -1,0 +1,3 @@
+- num_rounds=1
+- num_clients=100
+- C_fraction=0.04

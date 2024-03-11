@@ -8,14 +8,16 @@ import flwr as fl
 from hydra.utils import instantiate
 from model import ResNet18, train, test
 import numpy as np
+import os
+import pandas as pd
 
 
 class FlowerClient(fl.client.NumPyClient):
     """Define a Flower Client."""
 
-    def __init__(self, trainloader, valloader, num_classes, epochs, config: DictConfig) -> None:
+    def __init__(self, cid, trainloader, valloader, num_classes, epochs, config: DictConfig, save_dir) -> None:
         super().__init__()
-
+        self.cid = cid
         # the dataloaders that point to the data associated to this client
         self.trainloader = trainloader
         self.valloader = valloader
@@ -25,9 +27,12 @@ class FlowerClient(fl.client.NumPyClient):
         self.model = ResNet18(num_classes)
 
         # figure out if this client has access to GPU support or not
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.epochs = epochs
         self.exp_config = config
+        self.dir = save_dir
+        if not os.path.exists(self.dir):
+            os.makedirs(self.dir)
         # self.var_local_epochs = var_local_epochs
 
     def set_parameters(self, parameters):
@@ -84,6 +89,18 @@ class FlowerClient(fl.client.NumPyClient):
         optim = torch.optim.SGD(self.model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
         # local training
         train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+        
+
+        # keep CID->file, ServerRound->index, train values. Interpolation the progress between ticks in second place
+        temp_dict = {"client_id" : self.cid, "server_round": server_round, "loss": train_loss, "accuracy": train_acc}
+        if os.path.exists(f"{self.dir}/client_progress_{self.cid}.csv"):
+            temp_df = pd.DataFrame(temp_dict, index=[0])
+            # update by appending only the new values without the header on the .csv
+            temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", mode='a', index=False, header=False)
+        else:
+            # init progress file for first time
+            temp_df = pd.DataFrame(temp_dict, index=[0])
+            temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", index=False)
         # return updated model params, number of examples and dict of metrics
         return self.get_parameters({}), len(self.trainloader), {"loss": train_loss, "accuracy": train_acc}
 
@@ -95,7 +112,7 @@ class FlowerClient(fl.client.NumPyClient):
         return float(loss), len(self.valloader), {"loss": loss, "accuracy": accuracy}
 
 
-def generate_client_fn(trainloaders, valloaders, num_classes, epochs, exp_config):
+def generate_client_fn(trainloaders, valloaders, num_classes, epochs, exp_config, save_dir):
     """Return a function that can be used by the VirtualClientEngine.
 
     to spawn a FlowerClient with client id `cid`.
@@ -111,11 +128,13 @@ def generate_client_fn(trainloaders, valloaders, num_classes, epochs, exp_config
         
         # print(f'client id: {cid}')
         return FlowerClient(
+            cid=cid,
             trainloader=trainloaders[int(cid)],
             valloader=valloaders[int(cid)],
             num_classes=num_classes,
             epochs=epochs, 
             config=exp_config,
+            save_dir=save_dir
         ).to_client()
 
     # return the function to spawn client

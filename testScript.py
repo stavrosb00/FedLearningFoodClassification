@@ -159,7 +159,15 @@ class ResNet(nn.Module):
 def main():
     model = ResNet18(4)
     # model = ResNet(3, 18, BasicBlock, 4)
+    for k, p in model.named_parameters():
+        print(k, p.shape)
+        
     bufs = [buf for buf in model.buffers()]
+    # for k, p in model.state_dict().items():
+    #     print(k, p.shape)
+
+    # for b in bufs:
+    #     print(b.shape)
     print(len(bufs)) #60
     # for buf in model.buffers():
     #     print(type(buf), buf.size())
@@ -176,11 +184,6 @@ def main():
     state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})
     model.load_state_dict(state_dict, strict=False)
     print([p.shape for p in parameters])
-    # print(model.named_parameters()(0))
-    # params = [k for k, p in model.named_parameters()]
-    # params2 = [p for _,p in model.named_parameters()]
-    # print(params)
-    # print(params2)
     return 0
     for (k, p), s_k, s_val in zip(params, state_dict.keys(), state_dict.values()):
         print(k)

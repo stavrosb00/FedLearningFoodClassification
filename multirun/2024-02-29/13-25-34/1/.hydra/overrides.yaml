@@ -1,6 +1,0 @@
-- partitioning=dirichlet
-- num_rounds=5
-- num_clients=16
-- num_clients_per_round_fit=8
-- strategy=scaffold
-- optimizer=scaffold
