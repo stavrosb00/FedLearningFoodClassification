@@ -1,0 +1,424 @@
+[2024-03-07 22:06:39,489][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-07 22:06:39,489][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=3, round_timeout=None)
+[2024-03-07 22:06:44,361][flwr][INFO] - Flower VCE: Ray initialized with resources: {'node:__internal_head__': 1.0, 'object_store_memory': 9672901017.0, 'CPU': 12.0, 'node:155.207.19.230': 1.0, 'GPU': 2.0, 'accelerator_type:G': 1.0, 'memory': 19345802036.0}
+[2024-03-07 22:06:44,362][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-07 22:06:44,362][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 1, 'num_gpus': 0.5}
+[2024-03-07 22:06:44,376][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 4 actors
+[2024-03-07 22:06:44,376][flwr][INFO] - Initializing global parameters
+[2024-03-07 22:06:44,376][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-07 22:06:47,980][flwr][INFO] - Received initial parameters from one random client
+[2024-03-07 22:06:47,980][flwr][INFO] - Evaluating initial parameters
+[2024-03-07 22:06:56,830][flwr][INFO] - initial parameters (loss, other metrics): 0.0469443998336792, {'accuracy': 25.09765625}
+[2024-03-07 22:06:56,830][flwr][INFO] - FL starting
+[2024-03-07 22:06:56,830][flwr][DEBUG] - fit_round 1: strategy sampled 8 clients (out of 16)
+[2024-03-07 22:07:13,298][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl
+    x = self.layer2(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward
+    out = self.bn2(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl\n    x = self.layer2(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward\n    out = self.bn2(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+
+[2024-03-07 22:07:13,299][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl
+    x = self.layer2(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward
+    out = self.bn2(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl\n    x = self.layer2(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward\n    out = self.bn2(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+[2024-03-07 22:07:14,935][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl
+    x = self.layer1(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward
+    out = self.bn1(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 65.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 14 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl\n    x = self.layer1(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward\n    out = self.bn1(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 65.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+
+[2024-03-07 22:07:14,935][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl
+    x = self.layer1(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward
+    out = self.bn1(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 65.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 14 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl\n    x = self.layer1(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward\n    out = self.bn1(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 65.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+[2024-03-07 22:07:17,997][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl
+    x = self.layer2(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward
+    out = self.bn2(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 2 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl\n    x = self.layer2(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward\n    out = self.bn2(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+
+[2024-03-07 22:07:17,998][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl
+    x = self.layer2(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward
+    out = self.bn2(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661875, ip=155.207.19.230, actor_id=e1e57dc5e04ec7e59cf84d6001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f0974146cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 2 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 274, in _forward_impl\n    x = self.layer2(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 97, in forward\n    out = self.bn2(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 64.00 MiB (GPU 0; 10.75 GiB total capacity; 3.01 GiB already allocated; 55.50 MiB free; 3.07 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+[2024-03-07 22:07:18,884][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl
+    x = self.layer1(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward
+    out = self.bn1(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 51.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 1 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl\n    x = self.layer1(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward\n    out = self.bn1(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 51.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+
+[2024-03-07 22:07:18,884][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit
+    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train
+    outputs = net(images)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward
+    x = self.resnet(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward
+    return self._forward_impl(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl
+    x = self.layer1(x)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward
+    input = module(input)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward
+    out = self.bn1(out)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward
+    return F.batch_norm(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm
+    return torch.batch_norm(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 51.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=661872, ip=155.207.19.230, actor_id=5960ae88ef501d335a95e67901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7fea2c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 1 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client.py", line 86, in fit\n    train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 161, in train\n    outputs = net(images)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 117, in forward\n    x = self.resnet(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 285, in forward\n    return self._forward_impl(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 273, in _forward_impl\n    x = self.layer1(x)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/container.py", line 204, in forward\n    input = module(input)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torchvision/models/resnet.py", line 93, in forward\n    out = self.bn1(out)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl\n    return forward_call(*input, **kwargs)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/modules/batchnorm.py", line 171, in forward\n    return F.batch_norm(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/torch/nn/functional.py", line 2450, in batch_norm\n    return torch.batch_norm(\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 128.00 MiB (GPU 0; 10.75 GiB total capacity; 2.14 GiB already allocated; 51.62 MiB free; 2.16 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF\n',)
+[2024-03-07 22:07:20,893][flwr][DEBUG] - fit_round 1 received 4 results and 4 failures
+[2024-03-07 22:07:27,799][flwr][INFO] - fit progress: (1, 0.0367216147184372, {'accuracy': 46.77734375}, 30.968504347023554)
+[2024-03-07 22:07:27,799][flwr][DEBUG] - evaluate_round 1: strategy sampled 8 clients (out of 16)

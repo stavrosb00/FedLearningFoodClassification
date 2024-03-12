@@ -1,0 +1,40 @@
+num_rounds: 10
+num_clients: 8
+lr_scheduling: false
+batch_size: 32
+partitioning: iid
+alpha: 0.5
+balance: true
+num_classes: 4
+subset: true
+datapath: ./data
+num_workers: 1
+C_fraction: 0.5
+num_clients_per_round_fit: 8
+num_clients_per_round_eval: ${num_clients_per_round_fit}
+seed: 2024
+client_resources:
+  num_cpus: 2
+  num_gpus: 1
+var_local_epochs: false
+var_min_epochs: 1
+var_max_epochs: 4
+local_epochs: 1
+model:
+  _target_: model.ResNet18
+strategy:
+  name: scaffold
+  strategy:
+    _target_: strategy_scaffold.ScaffoldStrategy
+    _recursive_: false
+  client_fn:
+    _target_: client_scaffold.generate_client_fn
+    _recursive_: false
+exp_name: scaffold
+optimizer:
+  _target_: models.ScaffoldOptimizer
+  lr: 0.01
+  momentum: 0.9
+  weight_decay: 0.0001
+  gmf: 0
+  mu: 0.0

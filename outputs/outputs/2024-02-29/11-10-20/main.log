@@ -1,0 +1,213 @@
+[2024-02-29 11:10:25,565][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-02-29 11:10:25,570][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-02-29 11:10:31,965][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 1231946956.0, 'memory': 2463893915.0, 'node:127.0.0.1': 1.0, 'CPU': 4.0, 'node:__internal_head__': 1.0}
+[2024-02-29 11:10:31,965][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-02-29 11:10:31,965][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 4, 'num_gpus': 0.0}
+[2024-02-29 11:10:31,981][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-02-29 11:10:31,982][flwr][INFO] - Initializing global parameters
+[2024-02-29 11:10:31,984][flwr][INFO] - Requesting initial parameters from one random client
+[2024-02-29 11:10:39,633][flwr][INFO] - Received initial parameters from one random client
+[2024-02-29 11:10:39,664][flwr][INFO] - Evaluating initial parameters
+[2024-02-29 11:13:24,311][flwr][INFO] - initial parameters (loss, other metrics): 0.02310481655597687, {'accuracy': 27.8125}
+[2024-02-29 11:13:24,311][flwr][INFO] - FL starting
+[2024-02-29 11:13:24,517][flwr][DEBUG] - fit_round 1: strategy sampled 2 clients (out of 50)
+[2024-02-29 11:14:15,674][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 150, in fit
+    server_update_x.append((yi - x).detach().numpy())
+                            ~~~^~~
+TypeError: unsupported operand type(s) for -: 'numpy.ndarray' and 'Tensor'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 33 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 150, in fit\n    server_update_x.append((yi - x).detach().numpy())\n                            ~~~^~~\nTypeError: unsupported operand type(s) for -: \'numpy.ndarray\' and \'Tensor\'\n',)
+
+[2024-02-29 11:14:15,699][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 150, in fit
+    server_update_x.append((yi - x).detach().numpy())
+                            ~~~^~~
+TypeError: unsupported operand type(s) for -: 'numpy.ndarray' and 'Tensor'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 33 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 150, in fit\n    server_update_x.append((yi - x).detach().numpy())\n                            ~~~^~~\nTypeError: unsupported operand type(s) for -: \'numpy.ndarray\' and \'Tensor\'\n',)
+[2024-02-29 11:15:07,114][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 150, in fit
+    server_update_x.append((yi - x).detach().numpy())
+                            ~~~^~~
+TypeError: unsupported operand type(s) for -: 'numpy.ndarray' and 'Tensor'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 20 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 150, in fit\n    server_update_x.append((yi - x).detach().numpy())\n                            ~~~^~~\nTypeError: unsupported operand type(s) for -: \'numpy.ndarray\' and \'Tensor\'\n',)
+
+[2024-02-29 11:15:07,142][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 150, in fit
+    server_update_x.append((yi - x).detach().numpy())
+                            ~~~^~~
+TypeError: unsupported operand type(s) for -: 'numpy.ndarray' and 'Tensor'
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=14132, ip=127.0.0.1, actor_id=fbc4191867ff9a9ae3743b1101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002826B67ED10>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 20 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 150, in fit\n    server_update_x.append((yi - x).detach().numpy())\n                            ~~~^~~\nTypeError: unsupported operand type(s) for -: \'numpy.ndarray\' and \'Tensor\'\n',)
+[2024-02-29 11:15:07,163][flwr][DEBUG] - fit_round 1 received 0 results and 2 failures
+[2024-02-29 11:15:07,176][flwr][ERROR] - list index out of range
+[2024-02-29 11:15:07,202][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\app.py", line 308, in start_simulation
+    hist = run_fl(
+           ^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\server\app.py", line 225, in run_fl
+    hist = server.fit(num_rounds=config.num_rounds, timeout=config.round_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\server\server.py", line 109, in fit
+    res_fit = self.fit_round(
+              ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\server_scaffold.py", line 154, in fit_round
+    self.server_cv = [
+                     ^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\server_scaffold.py", line 155, in <listcomp>
+    torch.from_numpy(cv + cv_multiplier * aggregated_cv_update[i])
+                                          ~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+[2024-02-29 11:15:07,209][flwr][ERROR] - Your simulation crashed :(. This could be because of several reasons. The most common are: 
+	 > Sometimes, issues in the simulation code itself can cause crashes. It's always a good idea to double-check your code for any potential bugs or inconsistencies that might be contributing to the problem. For example: 
+		 - You might be using a class attribute in your clients that hasn't been defined.
+		 - There could be an incorrect method call to a 3rd party library (e.g., PyTorch).
+		 - The return types of methods in your clients/strategies might be incorrect.
+	 > Your system couldn't fit a single VirtualClient: try lowering `client_resources`.
+	 > All the actors in your pool crashed. This could be because: 
+		 - You clients hit an out-of-memory (OOM) error and actors couldn't recover from it. Try launching your simulation with more generous `client_resources` setting (i.e. it seems {'num_cpus': 4, 'num_gpus': 0.0} is not enough for your run). Use fewer concurrent actors. 
+		 - You were running a multi-node simulation and all worker nodes disconnected. The head node might still be alive but cannot accommodate any actor with resources: {'num_cpus': 4, 'num_gpus': 0.0}.
+Take a look at the Flower simulation examples for guidance <https://flower.dev/docs/framework/how-to-run-simulations.html>.

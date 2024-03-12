@@ -1,0 +1,5 @@
+- strategy=scaffold
+- optimizer=scaffold
+- partitioning=dirichlet
+- num_rounds=10
+- num_classes=4

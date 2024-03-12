@@ -1,0 +1,502 @@
+[2024-03-07 22:18:30,727][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-07 22:18:30,727][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=10, round_timeout=None)
+[2024-03-07 22:18:35,612][flwr][INFO] - Flower VCE: Ray initialized with resources: {'CPU': 12.0, 'GPU': 2.0, 'node:155.207.19.230': 1.0, 'accelerator_type:G': 1.0, 'object_store_memory': 9631732531.0, 'node:__internal_head__': 1.0, 'memory': 19263465063.0}
+[2024-03-07 22:18:35,613][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-07 22:18:35,613][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 1, 'num_gpus': 1}
+[2024-03-07 22:18:35,635][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-03-07 22:18:35,636][flwr][INFO] - Initializing global parameters
+[2024-03-07 22:18:35,636][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-07 22:18:38,415][flwr][INFO] - Received initial parameters from one random client
+[2024-03-07 22:18:38,608][flwr][INFO] - Evaluating initial parameters
+[2024-03-07 22:18:47,262][flwr][INFO] - initial parameters (loss, other metrics): 0.047710250973701476, {'accuracy': 20.5078125}
+[2024-03-07 22:18:47,263][flwr][INFO] - FL starting
+[2024-03-07 22:18:47,324][flwr][DEBUG] - fit_round 1: strategy sampled 8 clients (out of 16)
+[2024-03-07 22:18:53,348][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 8 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:18:53,348][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 8 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:18:55,706][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:18:55,706][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:18:56,570][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 4 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:18:56,570][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 4 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:18:58,026][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 9 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:18:58,026][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 9 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:18:59,142][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 15 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:18:59,143][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 15 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:19:00,429][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 14 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:19:00,430][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 14 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:19:01,319][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 12 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:19:01,319][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668896, ip=155.207.19.230, actor_id=95a6769a280454e6b79b9cd001000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7f234c462cb0>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 12 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:19:02,296][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/ray/_private/worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 3 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+
+[2024-03-07 22:19:02,297][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold
+    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom
+    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=668898, ip=155.207.19.230, actor_id=18ef3b64a57ece1e6cb8a54901000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x7ff89c14ad40>)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 3 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/ray_transport/ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/client/numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n  File "/home/stavrosmpoul/codebaseMarch/client_scaffold.py", line 128, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 268, in train_scaffold\n    optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)\n  File "/home/stavrosmpoul/codebaseMarch/model.py", line 230, in step_custom\n    par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i\' = - \\eta*(c - c_i)\nRuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!\n',)
+[2024-03-07 22:19:02,298][flwr][DEBUG] - fit_round 1 received 0 results and 8 failures
+[2024-03-07 22:19:02,298][flwr][ERROR] - list index out of range
+[2024-03-07 22:19:02,299][flwr][ERROR] - Traceback (most recent call last):
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/simulation/app.py", line 308, in start_simulation
+    hist = run_fl(
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/server/app.py", line 225, in run_fl
+    hist = server.fit(num_rounds=config.num_rounds, timeout=config.round_timeout)
+  File "/home/stavrosmpoul/miniconda3/envs/pyt_pg2/lib/python3.10/site-packages/flwr/server/server.py", line 109, in fit
+    res_fit = self.fit_round(
+  File "/home/stavrosmpoul/codebaseMarch/server_scaffold.py", line 155, in fit_round
+    self.server_cv = [
+  File "/home/stavrosmpoul/codebaseMarch/server_scaffold.py", line 156, in <listcomp>
+    torch.from_numpy(cv + cv_multiplier * aggregated_cv_update[i])
+IndexError: list index out of range
+
+[2024-03-07 22:19:02,299][flwr][ERROR] - Your simulation crashed :(. This could be because of several reasons. The most common are: 
+	 > Sometimes, issues in the simulation code itself can cause crashes. It's always a good idea to double-check your code for any potential bugs or inconsistencies that might be contributing to the problem. For example: 
+		 - You might be using a class attribute in your clients that hasn't been defined.
+		 - There could be an incorrect method call to a 3rd party library (e.g., PyTorch).
+		 - The return types of methods in your clients/strategies might be incorrect.
+	 > Your system couldn't fit a single VirtualClient: try lowering `client_resources`.
+	 > All the actors in your pool crashed. This could be because: 
+		 - You clients hit an out-of-memory (OOM) error and actors couldn't recover from it. Try launching your simulation with more generous `client_resources` setting (i.e. it seems {'num_cpus': 1, 'num_gpus': 1} is not enough for your run). Use fewer concurrent actors. 
+		 - You were running a multi-node simulation and all worker nodes disconnected. The head node might still be alive but cannot accommodate any actor with resources: {'num_cpus': 1, 'num_gpus': 1}.
+Take a look at the Flower simulation examples for guidance <https://flower.dev/docs/framework/how-to-run-simulations.html>.

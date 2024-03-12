@@ -1,0 +1,26 @@
+[2024-02-12 13:37:05,030][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=3, round_timeout=None)
+[2024-02-12 13:37:12,015][flwr][INFO] - Flower VCE: Ray initialized with resources: {'CPU': 4.0, 'object_store_memory': 969669427.0, 'memory': 1939338855.0, 'node:127.0.0.1': 1.0, 'node:__internal_head__': 1.0}
+[2024-02-12 13:37:12,016][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-02-12 13:37:12,017][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.0}
+[2024-02-12 13:37:12,036][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-02-12 13:37:12,037][flwr][INFO] - Initializing global parameters
+[2024-02-12 13:37:12,037][flwr][INFO] - Requesting initial parameters from one random client
+[2024-02-12 13:37:20,564][flwr][INFO] - Received initial parameters from one random client
+[2024-02-12 13:37:20,565][flwr][INFO] - Evaluating initial parameters
+[2024-02-12 13:37:20,565][flwr][INFO] - FL starting
+[2024-02-12 13:37:20,566][flwr][DEBUG] - fit_round 1: strategy sampled 10 clients (out of 100)
+[2024-02-12 13:38:45,794][flwr][DEBUG] - fit_round 1 received 10 results and 0 failures
+[2024-02-12 13:38:46,717][flwr][WARNING] - No fit_metrics_aggregation_fn provided
+[2024-02-12 13:38:46,726][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-02-12 13:38:46,728][flwr][DEBUG] - fit_round 2: strategy sampled 10 clients (out of 100)
+[2024-02-12 13:40:05,503][flwr][DEBUG] - fit_round 2 received 10 results and 0 failures
+[2024-02-12 13:40:06,435][flwr][INFO] - evaluate_round 2: no clients selected, cancel
+[2024-02-12 13:40:06,436][flwr][DEBUG] - fit_round 3: strategy sampled 10 clients (out of 100)
+[2024-02-12 13:41:19,610][flwr][DEBUG] - fit_round 3 received 10 results and 0 failures
+[2024-02-12 13:41:20,722][flwr][INFO] - evaluate_round 3: no clients selected, cancel
+[2024-02-12 13:41:20,723][flwr][INFO] - FL finished in 240.15657610003836
+[2024-02-12 13:41:20,842][flwr][INFO] - app_fit: losses_distributed []
+[2024-02-12 13:41:20,844][flwr][INFO] - app_fit: metrics_distributed_fit {}
+[2024-02-12 13:41:20,845][flwr][INFO] - app_fit: metrics_distributed {}
+[2024-02-12 13:41:20,845][flwr][INFO] - app_fit: losses_centralized []
+[2024-02-12 13:41:20,846][flwr][INFO] - app_fit: metrics_centralized {}

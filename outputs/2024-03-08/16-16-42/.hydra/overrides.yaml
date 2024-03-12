@@ -1,0 +1,6 @@
+- strategy=scaffold
+- optimizer=scaffold
+- partitioning=iid
+- num_rounds=10
+- num_classes=4
+- num_clients=8
