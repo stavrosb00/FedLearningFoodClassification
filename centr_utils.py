@@ -45,7 +45,8 @@ def show_batch(dl, imgenet_std, imgenet_mean, bs):
     for images, labels in dl:
         fig, ax = plt.subplots(figsize=(12, 12))
         ax.set_xticks([]); ax.set_yticks([])
-        denorm_images = denormalize(images, imgenet_std, imgenet_mean)
+        # denorm_images = denormalize(images, imgenet_std, imgenet_mean)
+        denorm_images = images
         ax.imshow(torchvision.utils.make_grid(denorm_images[:int (bs/4)], nrow=8).permute(1, 2, 0).clamp(0,1))
         if not os.path.exists('./images'):
             os.makedirs('./images') 
