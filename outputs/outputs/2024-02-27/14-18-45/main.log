@@ -1,0 +1,62 @@
+[2024-02-27 14:18:48,196][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-02-27 14:18:48,197][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-02-27 14:18:54,573][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 1393879449.0, 'node:127.0.0.1': 1.0, 'memory': 2787758900.0, 'CPU': 4.0, 'node:__internal_head__': 1.0}
+[2024-02-27 14:18:54,574][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-02-27 14:18:54,574][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.0}
+[2024-02-27 14:18:54,594][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-02-27 14:18:54,595][flwr][INFO] - Initializing global parameters
+[2024-02-27 14:18:54,596][flwr][INFO] - Requesting initial parameters from one random client
+[2024-02-27 14:19:02,577][flwr][INFO] - Received initial parameters from one random client
+[2024-02-27 14:19:02,578][flwr][INFO] - Evaluating initial parameters
+[2024-02-27 14:21:40,680][flwr][INFO] - initial parameters (loss, other metrics): 0.023915028512477874, {'accuracy': 26.85546875}
+[2024-02-27 14:21:40,682][flwr][INFO] - FL starting
+[2024-02-27 14:21:40,683][flwr][DEBUG] - fit_round 1: strategy sampled 2 clients (out of 16)
+[2024-02-27 14:22:14,600][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+[2024-02-27 14:22:14,658][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+
+[2024-02-27 14:22:14,667][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+[2024-02-27 14:22:15,588][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+[2024-02-27 14:22:15,591][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+
+[2024-02-27 14:22:15,601][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+[2024-02-27 14:22:15,608][flwr][DEBUG] - fit_round 1 received 0 results and 2 failures

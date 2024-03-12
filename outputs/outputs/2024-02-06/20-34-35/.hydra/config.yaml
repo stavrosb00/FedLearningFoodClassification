@@ -1,0 +1,18 @@
+num_rounds: 3
+num_clients: 100
+batch_size: 64
+num_classes: 10
+NIID: false
+subset: true
+datapath: D:/DesktopC/Datasets/data/
+num_workers: 1
+num_clients_per_round_fit: 10
+num_clients_per_round_eval: 25
+seed: 2024
+var_local_epochs: false
+config_fit:
+  lr: 0.01
+  momentum: 0.9
+  local_epochs: 1
+strategy:
+  name: fedavg

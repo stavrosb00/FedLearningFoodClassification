@@ -1,0 +1,863 @@
+[2024-02-19 13:14:53,877][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-02-19 13:14:53,878][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-02-19 13:15:01,152][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 350332108.0, 'node:127.0.0.1': 1.0, 'memory': 700664219.0, 'CPU': 4.0, 'node:__internal_head__': 1.0}
+[2024-02-19 13:15:01,153][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-02-19 13:15:01,154][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.0}
+[2024-02-19 13:15:01,205][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-02-19 13:15:01,207][flwr][INFO] - Initializing global parameters
+[2024-02-19 13:15:01,207][flwr][INFO] - Requesting initial parameters from one random client
+[2024-02-19 13:15:10,211][flwr][INFO] - Received initial parameters from one random client
+[2024-02-19 13:15:10,245][flwr][INFO] - Evaluating initial parameters
+[2024-02-19 13:18:15,809][flwr][INFO] - initial parameters (loss, other metrics): 0.02317261874675751, {'accuracy': 24.4140625}
+[2024-02-19 13:18:15,835][flwr][INFO] - FL starting
+[2024-02-19 13:18:16,883][flwr][DEBUG] - fit_round 1: strategy sampled 10 clients (out of 100)
+[2024-02-19 13:18:21,769][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 14 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:21,784][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 14 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:23,865][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 5 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:23,877][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 5 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:26,100][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 99 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:26,114][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 99 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:28,128][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 20 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:28,176][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 20 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:28,687][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 22 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:28,699][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 22 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:30,192][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 91 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:30,234][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 91 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:31,069][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 98 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:31,083][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 98 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:32,822][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 23 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:32,843][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 23 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:32,865][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 51 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:32,877][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=15596, ip=127.0.0.1, actor_id=4f664dedb6027a6f8199cb7101000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000002AEF3CC2450>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 51 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+[2024-02-19 13:18:34,697][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 45 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)
+
+[2024-02-19 13:18:34,712][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\Desktop\PythonProjects\FlowerYtTut\client_scaffold.py", line 98, in fit
+    server_cv = [torch.from_numpy(cv) for cv in server_cv]
+                                                ^^^^^^^^^
+UnboundLocalError: cannot access local variable 'server_cv' where it is not associated with a value
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=5748, ip=127.0.0.1, actor_id=d6a85242a20b86b4662042ac01000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020F0A667ED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 45 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\Stavros\\Desktop\\PythonProjects\\FlowerYtTut\\client_scaffold.py", line 98, in fit\n    server_cv = [torch.from_numpy(cv) for cv in server_cv]\n                                                ^^^^^^^^^\nUnboundLocalError: cannot access local variable \'server_cv\' where it is not associated with a value\n',)

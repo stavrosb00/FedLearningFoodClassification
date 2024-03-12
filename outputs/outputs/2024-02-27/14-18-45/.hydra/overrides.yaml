@@ -1,0 +1,3 @@
+- num_rounds=1
+- partitioning=dirichlet
+- num_clients_per_round_fit=2

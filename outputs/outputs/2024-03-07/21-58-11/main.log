@@ -1,0 +1,5 @@
+[2024-03-07 21:58:12,932][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-07 21:58:12,932][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=3, round_timeout=None)
+[2024-03-07 21:58:17,772][flwr][INFO] - Flower VCE: Ray initialized with resources: {'memory': 19280769024.0, 'node:__internal_head__': 1.0, 'accelerator_type:G': 1.0, 'GPU': 2.0, 'node:155.207.19.230': 1.0, 'CPU': 12.0, 'object_store_memory': 9640384512.0}
+[2024-03-07 21:58:17,773][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-07 21:58:17,773][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 0, 'num_gpus': 0.5}

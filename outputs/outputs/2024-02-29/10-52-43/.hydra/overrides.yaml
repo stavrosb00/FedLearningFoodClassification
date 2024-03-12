@@ -1,0 +1,3 @@
+- num_rounds=1
+- num_clients=100
+- num_clients_per_round_fit=2

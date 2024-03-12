@@ -1,0 +1,3 @@
+- num_rounds=5
+- lr_scheduling=False
+- num_clients=4

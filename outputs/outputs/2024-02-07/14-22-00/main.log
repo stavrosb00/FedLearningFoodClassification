@@ -1,0 +1,40 @@
+[2024-02-07 14:22:01,454][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=3, round_timeout=None)
+[2024-02-07 14:22:09,038][flwr][INFO] - Flower VCE: Ray initialized with resources: {'node:__internal_head__': 1.0, 'CPU': 4.0, 'node:127.0.0.1': 1.0, 'object_store_memory': 652329369.0, 'memory': 1304658740.0}
+[2024-02-07 14:22:09,039][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-02-07 14:22:09,040][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.0}
+[2024-02-07 14:22:09,054][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-02-07 14:22:09,055][flwr][INFO] - Initializing global parameters
+[2024-02-07 14:22:09,057][flwr][INFO] - Requesting initial parameters from one random client
+[2024-02-07 14:22:16,872][flwr][INFO] - Received initial parameters from one random client
+[2024-02-07 14:22:16,873][flwr][INFO] - Evaluating initial parameters
+[2024-02-07 14:22:56,503][flwr][INFO] - initial parameters (loss, other metrics): 0.02288861036300659, {'accuracy': 0.293}
+[2024-02-07 14:22:56,503][flwr][INFO] - FL starting
+[2024-02-07 14:22:56,504][flwr][ERROR] - get_on_fit_config.<locals>.fit_config_fn() missing 1 required positional argument: 'server_round'
+[2024-02-07 14:22:56,507][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\app.py", line 308, in start_simulation
+    hist = run_fl(
+           ^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\server\app.py", line 225, in run_fl
+    hist = server.fit(num_rounds=config.num_rounds, timeout=config.round_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\server\server.py", line 109, in fit
+    res_fit = self.fit_round(
+              ^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\server\server.py", line 213, in fit_round
+    client_instructions = self.strategy.configure_fit(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Stavros\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\server\strategy\fedavg.py", line 178, in configure_fit
+    config = self.on_fit_config_fn(server_round)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: get_on_fit_config.<locals>.fit_config_fn() missing 1 required positional argument: 'server_round'
+
+[2024-02-07 14:22:56,511][flwr][ERROR] - Your simulation crashed :(. This could be because of several reasons. The most common are: 
+	 > Sometimes, issues in the simulation code itself can cause crashes. It's always a good idea to double-check your code for any potential bugs or inconsistencies that might be contributing to the problem. For example: 
+		 - You might be using a class attribute in your clients that hasn't been defined.
+		 - There could be an incorrect method call to a 3rd party library (e.g., PyTorch).
+		 - The return types of methods in your clients/strategies might be incorrect.
+	 > Your system couldn't fit a single VirtualClient: try lowering `client_resources`.
+	 > All the actors in your pool crashed. This could be because: 
+		 - You clients hit an out-of-memory (OOM) error and actors couldn't recover from it. Try launching your simulation with more generous `client_resources` setting (i.e. it seems {'num_cpus': 2, 'num_gpus': 0.0} is not enough for your run). Use fewer concurrent actors. 
+		 - You were running a multi-node simulation and all worker nodes disconnected. The head node might still be alive but cannot accommodate any actor with resources: {'num_cpus': 2, 'num_gpus': 0.0}.
+Take a look at the Flower simulation examples for guidance <https://flower.dev/docs/framework/how-to-run-simulations.html>.
