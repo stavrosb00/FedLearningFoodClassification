@@ -106,7 +106,7 @@ cfg = {
 
 class ResNet18(nn.Module):
     """Initialize ResNet18 architecture as module"""
-    def __init__(self, num_classes: int):
+    def __init__(self, num_classes: int = 4):
         super().__init__()
         self.transform = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
         self.resnet = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.IMAGENET1K_V1)
@@ -138,11 +138,12 @@ class Net(nn.Module):
         return x
     
 
-def train(net, trainloader, optimizer, epochs, device: torch.device, proximal_mu = 0):
+def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
     """Train the network on the training set.
 
     This is a fairly simple training loop for PyTorch.
     """
+    # with torch.autocast(device_type="cuda"):
     criterion = torch.nn.CrossEntropyLoss()
     net.to(device)
     if proximal_mu > 0.0:
@@ -190,25 +191,26 @@ def train(net, trainloader, optimizer, epochs, device: torch.device, proximal_mu
 
 
 
-def test(net, testloader, device: torch.device):
+def test(net: nn.Module, testloader, device: str):
     """Validate the network on the entire test set.
 
     and report loss and accuracy.
     """
+    # with torch.autocast(device_type="cuda"):
     criterion = torch.nn.CrossEntropyLoss()
     accuracy = []
     loss = 0.0
     net.eval()
     net.to(device)
     with torch.no_grad():
-        for data in testloader:
-            images, labels = data[0].to(device), data[1].to(device)
+        for images, labels in testloader:
+            images, labels = images.to(device), labels.to(device)
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             acc1 = comp_accuracy(outputs, labels)
             accuracy.append(acc1[0].item())
     # accuracy = accuracy / len(testloader.dataset)
-    return loss / len(testloader.dataset), sum(accuracy) / len(accuracy)
+    return loss / len(testloader.dataset), sum(accuracy) / len(accuracy) 
 
 class ScaffoldOptimizer(SGD):
     """Implements SGD optimizer step function as defined in the SCAFFOLD paper."""
@@ -218,37 +220,25 @@ class ScaffoldOptimizer(SGD):
             params=params, lr=step_size, momentum=momentum, weight_decay=weight_decay
         )
 
-    def step_custom(self, server_cv, client_cv):
+    def step_custom(self, server_cv: list[torch.Tensor], client_cv: list[torch.Tensor]):
         """Implement the custom step function for SCAFFOLD (option (ii))."""
         # y_i = y_i - \eta * (g_i + c - c_i)  -->
         # y_i = y_i - \eta*(g_i + \mu*b_{t}) - \eta*(c - c_i)
-        self.step() # y_i = y_i - \eta*(g_i + \mu*b_{t})
-        for group in self.param_groups:
-            for par, s_cv, c_cv in zip(group["params"], server_cv, client_cv):
-                # print(type(par)
-                # print(par.data)
-                par.data.add_(s_cv - c_cv, alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
-                # tensor(64x3x7x7) tensor(64x3x7x7) tensor(64x3x7x7)
-                # tensor(64) tensor(64) tensor(64)
-                # ..2-3bhmata
-                # tensor(64x3x7x7)  tensor(64) tensor(64x3x7x7)
-
-
-
-
-
-        # def step(self, server_cs, client_cs):
-                
+        # self.step() # y_i = y_i - \eta*(g_i + \mu*b_{t})
         # for group in self.param_groups:
-        #     for p, sc, cc in zip(group['params'], server_cv, client_cv):
-        #         # print(p.shape)
-        #         # print(cc.shape)
-        #         p.data.add_(other=(p.grad.data + sc - cc), alpha=-group['lr'])
+        #     for par, s_cv, c_cv in zip(group["params"], server_cv, client_cv):
+        #         par.data.add_(s_cv.to(device='cuda') - c_cv.to(device='cuda'), alpha=-group["lr"]) # y_i' = - \eta*(c - c_i)
+        
+        for group in self.param_groups:
+            for p, sc, cc in zip(group['params'], server_cv, client_cv):
+                p.data.add_(other=(p.grad.data + sc.to(device='cuda') - cc.to(device='cuda')), alpha=-group['lr'])
+
 
         
 
-def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, epochs, device: torch.device, server_cv: torch.Tensor, client_cv: torch.Tensor):
+def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, epochs, device, server_cv: list[torch.Tensor], client_cv: list[torch.Tensor]):
     """Train the network based on SCAFFOLD control variates"""
+    # with torch.autocast(device_type="cuda"):
     criterion = torch.nn.CrossEntropyLoss()
     net.to(device)
     net.train()
@@ -276,20 +266,6 @@ def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, ep
     train_acc = sum(train_accuracy) / len(train_accuracy)
 
     return train_loss, train_acc
-
-    
-# def train_scaffold(
-#     net: nn.Module,
-#     trainloader: DataLoader,
-#     device: torch.device,
-#     epochs: int,
-#     learning_rate: float,
-#     momentum: float,
-#     weight_decay: float,
-#     server_cv: torch.Tensor,
-#     client_cv: torch.Tensor,
-# )
-
 
 #Centralised training loop
 def train_loop(net: torch.nn.Module, 
@@ -343,7 +319,6 @@ def train_loop(net: torch.nn.Module,
         results["train_acc"].append(train_acc)
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
-
 
     print('Finished Training')
     # Return the filled results at the end of the epochs
