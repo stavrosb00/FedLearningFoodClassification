@@ -9,6 +9,7 @@ from omegaconf import DictConfig
 import torchvision
 from utils import plot_exp_summary, plot_client_stats, get_subset_stats
 import os
+from sklearn.model_selection import train_test_split
 
 class CustomSubset(Dataset):
     r"""
@@ -80,7 +81,7 @@ def load_dataset(datapath: str,
                     alpha: float = 0.5,
                     balance: bool = True,
                     seed: int = 2024,
-                    val_ratio: float = 0.1):
+                    val_ratio: float = 0.3):
     """Download Food101 and generate IID partitions."""
     print("Loading data...")
     #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
@@ -115,24 +116,61 @@ def load_dataset(datapath: str,
         tmp = get_subset_stats(sub_trainset)
         plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid, save_str_exp)
     
+    # trainsets on IID case if balance=False
     # create dataloaders with train+val support
     trainloaders: list[CustomSubset] = []
     valloaders: list[CustomSubset] = []
     np.random.seed(seed)
-    for trainset_ in trainsets:
-        num_total = len(trainset_)
-        num_val = int(val_ratio * num_total)
-        num_train = num_total - num_val
-        # trainsets on IID case are already shuffled
-        # choose validation indexes
-        choices = np.random.choice(range(num_total), size=num_val, replace=False)
-        # boolean split
-        idxs_val = np.zeros(num_total, dtype=bool)
-        idxs_val[choices] = True
-        idxs_tr = ~idxs_val
-        # In this way, the i-th client will get the i-th element in the trainloaders list and the i-th element in the valloaders list
-        trainloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_tr]))
-        valloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_val]))
+    for c_id, trainset_ in enumerate(trainsets):
+        if balance:
+            if partitioning =="iid":
+                train_indices, val_indices = train_test_split(trainset_.indices, test_size=val_ratio, stratify=trainset_.labels)
+                
+                trainloaders.append(CustomSubset(trainset_.dataset, train_indices))
+                valloaders.append(CustomSubset(trainset_.dataset, val_indices))
+                tmp = get_subset_stats(trainloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_train", save_str_exp+ "_train", split="train")
+                tmp = get_subset_stats(valloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_val", save_str_exp+ "_val", split="val")
+            else: #dirichlet
+                # Get unique class labels and their counts
+                unique_labels, class_counts = np.unique(trainset_.labels, return_counts=True)
+                # Define a minimum threshold for the number of samples in each class
+                min_samples_per_class = 2
+                # Filter out classes with too few samples
+                filtered_classes = [label for label, count in zip(unique_labels, class_counts) if count >= min_samples_per_class]
+                # Filter indices corresponding to the filtered classes
+                filtered_indices = [index for index, label in enumerate(trainset_.labels) if label in filtered_classes]
+                # Split filtered (X,y)
+                train_indices, val_indices = train_test_split(trainset_.indices[filtered_indices], test_size=val_ratio, stratify=trainset_.labels[filtered_indices])
+                # Get the excluded indices
+                excluded_indices = [index for index in range(len(trainset_.labels)) if index not in filtered_indices]
+                train_indices = np.concatenate((train_indices, np.array(trainset_.indices[excluded_indices])))
+
+                trainloaders.append(CustomSubset(trainset_.dataset, train_indices))
+                valloaders.append(CustomSubset(trainset_.dataset, val_indices))
+                tmp = get_subset_stats(trainloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_train", save_str_exp+ "_train", split="train")
+                tmp = get_subset_stats(valloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_val", save_str_exp+ "_val", split="val")
+        else: #uni split if not balanced split requested
+            num_total = len(trainset_)
+            num_val = int(val_ratio * num_total)
+            num_train = num_total - num_val
+            
+            # choose validation indexes
+            choices = np.random.choice(range(num_total), size=num_val, replace=False)
+            # boolean split
+            idxs_val = np.zeros(num_total, dtype=bool)
+            idxs_val[choices] = True
+            idxs_tr = ~idxs_val
+            # In this way, the i-th client will get the i-th element in the trainloaders list and the i-th element in the valloaders list
+            trainloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_tr]))
+            valloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_val]))
+            tmp = get_subset_stats(trainloaders[-1])
+            plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_train", save_str_exp+ "_train", split="train")
+            tmp = get_subset_stats(valloaders[-1])
+            plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_val", save_str_exp+ "_val", split="val")
 
     ##### possible plot on splitted sets after for loop #####
     #

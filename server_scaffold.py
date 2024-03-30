@@ -4,7 +4,7 @@ from model import ResNet18
 import concurrent.futures
 from logging import DEBUG, INFO
 from typing import OrderedDict
-
+import copy
 import torch
 from flwr.common import (
     Code,
@@ -42,8 +42,6 @@ FitResultsAndFailures = Tuple[
 class ScaffoldServer(Server):
     """Implement server for SCAFFOLD."""
 
-    """Implement server for SCAFFOLD."""
-
     def __init__(
         self,
         strategy: Strategy,
@@ -55,6 +53,7 @@ class ScaffoldServer(Server):
         super().__init__(client_manager=client_manager, strategy=strategy)
         self.model_params = ResNet18(num_classes)
         self.server_cv: List[torch.Tensor] = []
+        self.grad_map: List[bool] = []
 
     def _get_initial_parameters(self, timeout: Optional[float]) -> Parameters:
         """Get initial parameters from one of the available clients."""
@@ -77,12 +76,24 @@ class ScaffoldServer(Server):
         # print(f"params init len{len(parameters_to_ndarrays(get_parameters_res.parameters))}") #122
         # exit(0)
         # print(f"params init len{get_parameters_res.parameters}")
+        
+        # self.server_cv = [
+        #     torch.from_numpy(t)
+        #     for t in parameters_to_ndarrays(get_parameters_res.parameters)
+        # ]
         # Server control variate init
-        # get_parameters_res.
+        self.grad_map: list[bool] = [p.requires_grad for _,p in self.model_params.state_dict(keep_vars=True).items()]
+
+        params_dict = zip(self.model_params.state_dict().keys(), parameters_to_ndarrays(get_parameters_res.parameters))
+        state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})
+        self.model_params.load_state_dict(state_dict, strict=True)
+
         self.server_cv = [
-            torch.from_numpy(t)
-            for t in parameters_to_ndarrays(get_parameters_res.parameters)
+            p.detach() #.cpu()
+            for p in self.model_params.parameters()
         ]
+        self.model_params = None
+        # return [val.detach().cpu().numpy() for _, val in self.model.named_parameters()]
         # print(f"len server cv init {len(self.server_cv)}") #122
         # exit()
         # print(len(self.server_cv))
@@ -98,6 +109,7 @@ class ScaffoldServer(Server):
     ]:
         """Perform a single round of federated averaging."""
         # Get clients and their respective instructions from strategy
+        # if server_round==1:
         client_instructions = self.strategy.configure_fit(
             server_round=server_round,
             parameters=update_parameters_with_cv(self.parameters, self.server_cv),
@@ -139,29 +151,59 @@ class ScaffoldServer(Server):
             aggregated_result_arrays_combined = parameters_to_ndarrays(
                 aggregated_result[0]
             )
+        
+        # len_train = len(self.server_cv) #62
+        len_params = len(self.server_cv)
+
+        # aggregated_parameters = aggregated_result_arrays_combined[
+        #     : len(aggregated_result_arrays_combined) // 2
+        # ]
+        # aggregated_cv_update = aggregated_result_arrays_combined[
+        #     len(aggregated_result_arrays_combined) // 2 :
+        # ]
         aggregated_parameters = aggregated_result_arrays_combined[
-            : len(aggregated_result_arrays_combined) // 2
+            : len_params
         ]
+        
         aggregated_cv_update = aggregated_result_arrays_combined[
-            len(aggregated_result_arrays_combined) // 2 :
+            len_params : 2 * len_params
         ]
 
+        aggregated_buffers = aggregated_result_arrays_combined[
+            2 * len_params :
+        ]
+        # print(len_train) # 62
+        # print(len(aggregated_parameters)) # 122
+        # print(len(aggregated_cv_update)) # 62
+        # exit()
         # convert server cv into ndarrays
         server_cv_np = [cv.numpy() for cv in self.server_cv]
-        # update server cv
         total_clients = len(self._client_manager.all())
         # fraction of participant clients
         cv_multiplier = len(results) / total_clients
+        # update server cv c<- c + Delta_c
         self.server_cv = [
             torch.from_numpy(cv + cv_multiplier * aggregated_cv_update[i])
             for i, cv in enumerate(server_cv_np)
         ]
+        
+        # set updates params and buffers
+        ct_p = 0
+        ct_b = 0
+        # eta_g = 1
+        # eta_g = float(np.sqrt(len(results)))
+        updated_params = copy.deepcopy(parameters_to_ndarrays(self.parameters))
+        for grad, i in zip(self.grad_map, range(len(self.grad_map))):
+            # it's trainable parameter: x<-x + \eta_g * Delta_x
+            if grad:
+                # element wise addition between 2 NDarray
+                updated_params[i] = updated_params[i] + aggregated_parameters[ct_p]
+                ct_p+= 1
+            # it's buffer: x_buffer <- aggregated_buffer(x)
+            else:
+                updated_params[i] = aggregated_buffers[ct_b]
+                ct_b+= 1
 
-        # update parameters x = x + 1* aggregated_update, /eta_g = 1
-        curr_params = parameters_to_ndarrays(self.parameters)
-        updated_params = [
-            x + aggregated_parameters[i] for i, x in enumerate(curr_params)
-        ]
         parameters_updated = ndarrays_to_parameters(updated_params)
 
         # metrics
@@ -238,3 +280,18 @@ def _handle_finished_future_after_fit(
 
     # Not successful, client returned a result where the status code is not OK
     failures.append(result)
+
+# trash :
+    # total_clients = len(self._client_manager.all())
+        # fraction of participant clients
+        # cv_multiplier = len(results) / total_clients
+        # self.server_cv = [
+        #     torch.from_numpy(cv + cv_multiplier * aggregated_cv_update[i])
+        #     for i, cv in enumerate(server_cv_np)
+        # ]
+
+        # already updated parameters 1* aggregated_update( /eta_g = 1 or sqrt(S)), so x = x + updated parameters
+        # curr_params = parameters_to_ndarrays(self.parameters)
+        # updated_params = [
+        #     x + aggregated_parameters[i] for i, x in enumerate(curr_params)
+        # ]

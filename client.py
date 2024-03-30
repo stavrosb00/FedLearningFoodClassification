@@ -9,6 +9,7 @@ from hydra.utils import instantiate
 from model import ResNet18, train, test
 import numpy as np
 import os
+import time
 import pandas as pd
 
 
@@ -48,11 +49,13 @@ class FlowerClient(fl.client.NumPyClient):
 
         return [val.cpu().numpy() for _, val in self.model.state_dict().items()]
 
+    
     def fit(self, parameters, config: Dict[str, Scalar]):
         """Train model received by the server (parameters) using the data.
 
         that belongs to this client. Then, send it back to the server.
         """
+        start = time.time()
         # copy parameters sent by the server into client's local model
         self.set_parameters(parameters)
 
@@ -87,29 +90,30 @@ class FlowerClient(fl.client.NumPyClient):
             epochs = self.epochs
         # optimiser
         optim = torch.optim.SGD(self.model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
+        # print(f"Client {self.cid} training on {self.device}")
         # local training
         train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
         
 
         # keep CID->file, ServerRound->index, train values. Interpolation the progress between ticks in second place
-        temp_dict = {"client_id" : self.cid, "server_round": server_round, "loss": train_loss, "accuracy": train_acc}
-        if os.path.exists(f"{self.dir}/client_progress_{self.cid}.csv"):
-            temp_df = pd.DataFrame(temp_dict, index=[0])
-            # update by appending only the new values without the header on the .csv
-            temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", mode='a', index=False, header=False)
-        else:
-            # init progress file for first time
-            temp_df = pd.DataFrame(temp_dict, index=[0])
-            temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", index=False)
+        # temp_dict = {"client_id" : self.cid, "server_round": server_round, "loss": train_loss, "accuracy": train_acc, "fit_mins": (time.time()-start)/60}
+        # if os.path.exists(f"{self.dir}/client_progress_{self.cid}.csv"):
+        #     temp_df = pd.DataFrame(temp_dict, index=[0])
+        #     # update by appending only the new values without the header on the .csv
+        #     temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", mode='a', index=False, header=False)
+        # else:
+        #     # init progress file for first time
+        #     temp_df = pd.DataFrame(temp_dict, index=[0])
+        #     temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", index=False)
         # return updated model params, number of examples and dict of metrics
-        return self.get_parameters({}), len(self.trainloader), {"loss": train_loss, "accuracy": train_acc}
+        return self.get_parameters({}), len(self.trainloader.dataset), {"loss": train_loss, "accuracy": train_acc, "client_id" : self.cid, "fit_mins": (time.time()-start)/60}
 
     def evaluate(self, parameters: NDArrays, config: Dict[str, Scalar]):
         self.set_parameters(parameters)
 
         loss, accuracy = test(self.model, self.valloader, self.device)
 
-        return float(loss), len(self.valloader), {"loss": loss, "accuracy": accuracy}
+        return float(loss), len(self.valloader.dataset), {"loss": loss, "accuracy": accuracy, "client_id" : self.cid}
 
 
 def generate_client_fn(trainloaders, valloaders, num_classes, epochs, exp_config, save_dir):

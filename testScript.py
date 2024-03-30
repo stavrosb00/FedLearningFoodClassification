@@ -1,9 +1,6 @@
-# a = 20
-# print("hello there i am python testScript")
-# a *=20
-# print(a)
-# print(a)
+import copy
 import torch
+import numpy as np
 from torch import Tensor
 from model import *
 from torchvision import models
@@ -156,8 +153,114 @@ class ResNet(nn.Module):
         x = self.fc(x)
         return x
 
+def model_summary(model: nn.Module):
+    buffers = []
+    parameters = []
+
+    for name, tensor in model.named_buffers():
+        buffers.append((name, tensor.clone().detach()))
+
+    for name, param in model.named_parameters():
+        parameters.append((name, param.clone().detach()))
+    
+    # Print buffer names and sizes
+    print("Buffers:")
+    for name, tensor in buffers:
+        print(name, tensor.size())
+
+    # Print parameter names and sizes
+    print("\nParameters:")
+    for name, param in parameters:
+        print(name, param.size())
+    
+    print(len(buffers))
+    print(len(parameters))
+    return (buffers, parameters)
+
+def compare_model_parameters(model1, model2):
+    params_model1 = model1.state_dict()
+    params_model2 = model2.state_dict()
+
+    # Check if the keys are the same
+    if params_model1.keys() != params_model2.keys():
+        print("Models have different sets of parameters.")
+        return False
+
+    # Check if the values are the same
+    for key in params_model1.keys():
+        if not torch.equal(params_model1[key], params_model2[key]):
+            print(f"Parameters for '{key}' are different.")
+            return False
+
+    print("Models have the same parameters.")
+    return True
+
 def main():
     model = ResNet18(4)
+    temp_model = copy.deepcopy(model)
+    buffers, parameters = model_summary(model=model)
+    print(type(buffers[0][0]))
+    print(type(buffers[0][1]))
+    buffers = OrderedDict({k: v for k, v in buffers})
+    model.load_state_dict(buffers, strict=False)
+
+
+    same_parameters = compare_model_parameters(model, temp_model)
+    if same_parameters:
+        print("Models have the same parameters.")
+    else:
+        print("Models have different parameters.")
+    
+    count = [p for p in model.parameters()]
+    # print(len(count))
+    print(len(count))
+    l1 = [i for i in range(50)]
+    l2 = l1[10 : 2* 10]
+    print(l2)
+    print(len(l2))
+    print(l1)
+    print(l1[2*10 :])
+    ct_p = 0
+    ct_b = 0
+    grad_map: list[bool] = [p.requires_grad for _,p in model.state_dict(keep_vars=True).items()]
+    for grad, i in zip(grad_map, range(len(grad_map))):
+        if grad:
+            print(grad, i)
+            ct_p+= 1
+        else:
+            ct_b+= 1
+
+    
+    print(ct_p)
+    print(ct_b)
+    print(np.sqrt(5)[0])
+    # ct_p: int = 0
+    # ct_b: int = 0
+    # for i, (key, p) in enumerate(model.state_dict(keep_vars=True).items()):
+    #     if p.requires_grad:
+    #         grad_map.append(grad_map[i]) = True
+    #         ct_p+=1
+    #     else:
+    #         grad_map[i] = False
+    #         ct_b+=1
+
+    # print(ct_p)
+    # print(ct_b)      
+    # print(grad_map)
+    return 0
+    # model.load_state_dict(strict=False, )
+    for param in model.parameters():
+            client_cv.append(param.clone().detach())
+    
+    print(len(client_cv))
+    print(len(model.state_dict()))
+    # for c_i in client_cv:
+    #     print(c_i[0][0])
+    #     c_i.data = c_i + 0.02
+    #     print(c_i[0][0])
+    #     break
+    # print(client_cv[0][0][0])
+    return 0
     # model = ResNet(3, 18, BasicBlock, 4)
     for k, p in model.named_parameters():
         print(k, p.shape)

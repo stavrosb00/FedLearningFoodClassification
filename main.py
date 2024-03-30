@@ -13,7 +13,7 @@ from hydra.utils import call, instantiate
 from dataset import load_dataset
 from client import generate_client_fn
 # from server import get_on_fit_config, get_evaluate_fn
-from strategy import get_on_fit_config, get_evaluate_fn, get_evaluate_fn_scaffold, weighted_average #get_metrics_aggregation_fn
+from strategy import get_on_fit_config, get_evaluate_fn, get_evaluate_fn_scaffold, weighted_average, CustomFedAvgStrategy #get_metrics_aggregation_fn
 from utils import save_results_as_pickle, plot_metric_from_history
 from strategy_scaffold import ScaffoldStrategy
 from client_scaffold import ScaffoldClient
@@ -28,7 +28,15 @@ def main(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg))
     ## 2. Prepare your dataset
     trainloaders, validationloaders, testloader = load_dataset(cfg.datapath, cfg.subset, cfg.num_classes, cfg.num_workers, 
-                                                               cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed)
+                                                               cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed, cfg.val_ratio)
+    # for i in range(4):
+    #     print(len(trainloaders[i]))
+    #     print(len(validationloaders[i].dataset))
+    #     print(len(trainloaders[i].dataset))
+    
+    # print(len(testloader))
+    # print(testloader.batch_size)
+    # print(len(testloader.dataset))
     # return 0
 
     save_path = HydraConfig.get().runtime.output_dir
@@ -37,10 +45,10 @@ def main(cfg: DictConfig):
         
         # client_progress = os.path.join(save_path, "client_progress")
         # print("Local progress for clients who participated in rounds are saved to: ", client_progress)
-        client_cv_dir = os.path.join(save_path, "clients")
-        print("Local progress and client variances for scaffold clients are saved to: ", client_cv_dir)
+        client_progress = os.path.join(save_path, "clients")
+        print("Local progress and client variances for scaffold clients are saved to: ", client_progress)
         client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, 
-                         cfg.local_epochs, cfg, save_dir=client_cv_dir,
+                         cfg.local_epochs, cfg, save_dir=client_progress,
         )
         evaluate_fn = get_evaluate_fn_scaffold(cfg.num_classes, testloader)
     else:
@@ -63,6 +71,8 @@ def main(cfg: DictConfig):
     # ```
     strategy = instantiate(
         cfg.strategy.strategy,
+        num_classes=cfg.num_classes,
+        save_dir=client_progress,
         fraction_fit=cfg.C_fraction,  # in simulation, since all clients are available at all times, we can just use `min_fit_clients` to control exactly how many clients we want to involve during fit
         # min_fit_clients=cfg.num_clients_per_round_fit,  # number of clients to sample for fit()
         fraction_evaluate=cfg.C_fraction,  # similar to fraction_fit, we don't need to use this argument.
@@ -92,6 +102,9 @@ def main(cfg: DictConfig):
         server= ScaffoldServer(strategy=strategy, num_classes=cfg.num_classes, client_manager=SimpleClientManager())
 
     ## 5. Start Simulation
+    num_cpus = 6
+    num_gpus = 1
+    ram_memory = 16_000 * 1024 * 1024 # 16 GB
     history = fl.simulation.start_simulation(
         strategy=strategy,  # our strategy of choice
         server=server,
@@ -101,24 +114,19 @@ def main(cfg: DictConfig):
             num_rounds=cfg.num_rounds
         ),  # minimal config for the server loop telling the number of rounds in FL
         # strategy=strategy,  # our strategy of choice
-        client_resources=cfg.client_resources,  # (optional) controls the degree of parallelism of your simulation.
+        ray_init_args = {
+            "include_dashboard": True}, # we need this one for tracking
+    #         "num_cpus": num_cpus,
+    #         "num_gpus": num_gpus,
+    #         # "memory": ram_memory,
+    # },
+        client_resources=cfg.client_resources,
+        # client_resources=cfg.client_resources,  # (optional) controls the degree of parallelism of your simulation.
         # Lower resources per client allow for more clients to run concurrently
         # (but need to be set taking into account the compute/memory footprint of your run)
         # `num_cpus` is an absolute number (integer) indicating the number of threads a client should be allocated
         # `num_gpus` is a ratio indicating the portion of gpu memory that a client needs.
     )
-
-    # ^ Following the above comment about `client_resources`. if you set `num_gpus` to 0.5 and you have one GPU in your system,
-    # then your simulation would run 2 clients concurrently. If in your round you have more than 2 clients, then clients will wait
-    # until resources are available from them. This scheduling is done under-the-hood for you so you don't have to worry about it.
-    # What is really important is that you set your `num_gpus` value correctly for the task your clients do. For example, if you are training
-    # a large model, then you'll likely see `nvidia-smi` reporting a large memory usage of you clients. In those settings, you might need to
-    # leave `num_gpus` as a high value (0.5 or even 1.0). For smaller models, like the one in this tutorial, your GPU would likely be capable
-    # of running at least 2 or more (depending on your GPU model.)
-    # Please note that GPU memory is only one dimension to consider when optimising your simulation. Other aspects such as compute footprint
-    # and I/O to the filesystem or data preprocessing might affect your simulation  (and tweaking `num_gpus` would not translate into speedups)
-    # Finally, please note that these gpu limits are not enforced, meaning that a client can still go beyond the limit initially assigned, if
-    # this happens, your might get some out-of-memory (OOM) errors.
 
     ## 6. Save your results
     print("................")
@@ -134,13 +142,17 @@ def main(cfg: DictConfig):
     # with open(str(results_path), "wb") as h:
     #     pickle.dump(results, h, protocol=pickle.HIGHEST_PROTOCOL)
 
+    # Test centralized
     rounds, test_loss = zip(*history.losses_centralized)
     _, test_accuracy = zip(*history.metrics_centralized["accuracy"])
+    # Fit metrics
     _, train_loss = zip(*history.metrics_distributed_fit["loss"])
     _, train_acc = zip(*history.metrics_distributed_fit["accuracy"])
-    # _, var_acc = zip(*history.metrics_distributed_fit["var_acc"])
     _, mean_diff_acc = zip(*history.metrics_distributed_fit["mean_diff_acc"])
     _, var_diff_acc = zip(*history.metrics_distributed_fit["var_diff_acc"])
+    # Evaluation metrics
+    _, val_loss = zip(*history.metrics_distributed["loss"])
+    _, val_acc = zip(*history.metrics_distributed["accuracy"])
 
     if len(rounds) != cfg.num_rounds:
         # drop zeroth evaluation round before start of training
@@ -175,7 +187,7 @@ def main(cfg: DictConfig):
     )
     df = pd.DataFrame(
         {"round": rounds, "test_loss": test_loss, "test_accuracy": test_accuracy, 
-         "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, "var_diff_acc": var_diff_acc}
+         "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, "var_diff_acc": var_diff_acc, "val_loss": val_loss, "val_acc": val_acc}
     )
     df.to_csv(file_name, index=False)
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")

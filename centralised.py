@@ -33,7 +33,7 @@ def main(cfg: DictConfig):
     #     DEVICE = torch.device("cpu")
     # else:
     #     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Training will be on {DEVICE.type}")
 
     # for i in range(3):
@@ -88,10 +88,17 @@ def main(cfg: DictConfig):
     # training and results
     info_dict = train_loop(net=net,train_dataloader=trainloader, test_dataloader=testloader, 
                         optimizer=optimizer,epochs=epochs, device=DEVICE)
+    
     #save results
     save_path = HydraConfig.get().runtime.output_dir
-    
+
     plot_results(save_path=save_path, info_dict=info_dict, subset=subset, num_classes=n_classes, model=model)
+    # Save the current net module 
+    if not os.path.exists('./models'):
+            os.makedirs('./models') 
+
+    prefix_net: str = f"./models/centr_model_classes{n_classes}_E{epochs}.pth"
+    torch.save(net.state_dict(), prefix_net)
     print("Results saved, exiting succesfully...")
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")
 if __name__ == "__main__":
