@@ -496,7 +496,6 @@ def train_loop_ssl(net: torch.nn.Module,
 
     print('Finished Training')
     return results
-
 def train_heterossfl(net: torch.nn.Module, 
           trainloader: torch.utils.data.DataLoader, 
           radloader: torch.utils.data.DataLoader, 
@@ -610,3 +609,4 @@ def train_fedsimsiam(net: torch.nn.Module,
 if __name__ == "__main__":
     print("Testing things")
     pass
+    
