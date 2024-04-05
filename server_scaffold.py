@@ -1,5 +1,6 @@
 """Server class for SCAFFOLD."""
 import numpy as np
+import timeit
 from model import ResNet18
 import concurrent.futures
 from logging import DEBUG, INFO
@@ -30,6 +31,7 @@ from flwr.server import Server
 from flwr.server.client_manager import ClientManager, SimpleClientManager
 from flwr.server.client_proxy import ClientProxy
 from flwr.server.strategy import Strategy
+from flwr.server.history import History
 from hydra.utils import instantiate
 from omegaconf import DictConfig
 from torch.utils.data import DataLoader
@@ -54,6 +56,7 @@ class ScaffoldServer(Server):
         self.model_params = ResNet18(num_classes)
         self.server_cv: List[torch.Tensor] = []
         self.grad_map: List[bool] = []
+        # self.best_train_acc: float = 0
 
     def _get_initial_parameters(self, timeout: Optional[float]) -> Parameters:
         """Get initial parameters from one of the available clients."""
@@ -208,6 +211,20 @@ class ScaffoldServer(Server):
 
         # metrics
         metrics_aggregated = aggregated_result[1]
+        # # save checkpoint
+        # acc = float(metrics_aggregated["accuracy"])
+        # if self.best_train_acc < acc:
+        #     self.best_train_acc = acc
+        #     np.savez(
+        #         f"{self.exp_config.checkpoint_path}bestModel_"
+        #         f"{self.exp_config.exp_name}_{self.strategy}_"
+        #         f"varEpochs_{self.exp_config.var_local_epochs}.npz",
+        #         updated_params,
+        #         self.best_train_acc,
+        #         server_round,
+        #     )
+        #     log(INFO, "Model saved with Best Train accuracy %.3f: ", self.best_train_acc)
+
         return parameters_updated, metrics_aggregated, (results, failures)
 
 

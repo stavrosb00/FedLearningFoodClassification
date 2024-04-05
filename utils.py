@@ -44,6 +44,7 @@ def comp_accuracy(output, target, topk=(1,)):
 
 # Plotters
 def get_subset_stats(sub_trainset: CustomSubset):
+    """Compute the statistics {label: label's samples counted}  and return them as dict"""
     unq, unq_count = np.unique(sub_trainset.labels, return_counts=True)
     tmp = {int(unq[i]) : int(unq_count[i]) for i in range(len(unq))}
     return tmp
@@ -64,14 +65,18 @@ def plot_exp_summary(trainsets: list[CustomSubset], title_str: str, num_classes:
     plt.savefig(f"{save_str}.png")
     plt.close()
 
-def plot_client_stats(partitioning: str, id: int, tmp: dict, num_classes: int, save_str_cid, save_str_exp):
+def plot_client_stats(partitioning: str, id: int, tmp: dict, num_classes: int, save_str_cid, save_str_exp, split: str = ""):
+    if split != "":
+        f_split = f"{split} split"
+    else:
+        f_split = ""
     x = list(tmp.keys())
     y = list(tmp.values())
     fig = plt.figure()
     ax1 = fig.add_subplot()
     ax1.set_ylabel('Frequency')
     ax1.set_xlabel('Class')
-    ax1.set_title(f"Client {id} with {sum(y)} data samples")
+    ax1.set_title(f"Client {id} {f_split} with {sum(y)} data samples")
     ax1.set_xticks(x) #label_tags[x], rotation=90)
     # ax1.set_xticklabels(labels=label_tags)
     ax1.set_yticks(y)

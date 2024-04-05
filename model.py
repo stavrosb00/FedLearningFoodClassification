@@ -6,6 +6,7 @@ import math
 from typing import Dict, List
 from utils import comp_accuracy
 from torch.optim import SGD
+from torch.cuda.amp import autocast, GradScaler
 
 # Note the model and functions here defined do not have any FL-specific components.
 class VGG(nn.Module):
@@ -205,6 +206,7 @@ def test(net: nn.Module, testloader, device: str):
     with torch.no_grad():
         for images, labels in testloader:
             images, labels = images.to(device), labels.to(device)
+            # with autocast():
             outputs = net(images)
             loss += criterion(outputs, labels).item()
             acc1 = comp_accuracy(outputs, labels)
@@ -239,6 +241,7 @@ class ScaffoldOptimizer(SGD):
 def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, epochs, device, server_cv: list[torch.Tensor], client_cv: list[torch.Tensor]):
     """Train the network based on SCAFFOLD control variates"""
     # with torch.autocast(device_type="cuda"):
+    scaler = GradScaler()
     criterion = torch.nn.CrossEntropyLoss()
     net.to(device)
     net.train()
@@ -250,15 +253,18 @@ def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, ep
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             #forward pass
+            # with autocast():
             outputs = net(images)
             loss = criterion(outputs, labels)
             #backward pass
+            # scaler.scale(loss).backward()
             loss.backward()
             #gradient step for SCAFFOLD class
+            # scaler.unscale_(optimizer)
             optimizer.step_custom(server_cv=server_cv, client_cv=client_cv)
+            # scaler.update()
 
             acc = comp_accuracy(outputs, labels)
-
             train_losses.append(loss.item())
             train_accuracy.append(acc[0].item())
 

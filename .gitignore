@@ -1,4 +1,19 @@
-__pycache__/*
-outputs/*
-multirun/*
-.vscode/*
+# __pycache__/*
+# outputs/*
+# multirun/*
+
+# # Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!conf/*
+!images/*
+!*/*.xlsx
+!*.py
+!*.sh
+!*.md
+!*.yml
+
+# rm -i outputs/*/*/clients/client_cv_*.pt
+# rm -i models/*best_model*.pth .npz
