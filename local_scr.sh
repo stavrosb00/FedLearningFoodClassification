@@ -8,7 +8,14 @@ echo "Running locally FL simulation experiment"
 # python -m main --multirun optimizer=momentum strategy=fedavg partitioning=iid balance=True num_clients=10,16,32 num_classes=4,10,30
 # scaffold , dataframes k subdirs
 # python -m main --multirun partitioning=iid,dirichlet num_rounds=5 num_clients=16 num_clients_per_round_fit=8 strategy=scaffold optimizer=scaffold
-python main.py partitioning=dirichlet num_rounds=1 num_clients=16 C_fraction=0.5 num_clients_per_round_fit=8 strategy=scaffold optimizer=scaffold
+conda activate pyt_flwr
+python -m main --multirun strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=100 num_classes=4,10 num_clients=10 C_fraction=0.5
+python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+python main.py strategy=scaffold optimizer=scaffold partitioning=iid num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+# python main.py strategy=fedavg optimizer=proximal partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+# python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+
+# python main.py partitioning=dirichlet num_rounds=1 num_clients=16 C_fraction=0.5 num_clients_per_round_fit=8 strategy=scaffold optimizer=scaffold
 # python main.py strategy=scaffold optimizer=scaffold num_rounds=1 num_classes=4
 
 # python main.py partitioning=dirichlet num_clients=32 num_classes=4

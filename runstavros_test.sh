@@ -46,5 +46,23 @@ echo " "
 
 python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=10 num_classes=4 
 # python testScript.py $@
+# python main.py strategy=scaffold optimizer=scaffold num_rounds=1 num_classes=4 
+# python -m main.py --multirun strategy=scaffold optimizer=scaffold partitioning=iid, dirichlet num_rounds=50 num_classes=4, 10, 30 num_clients=4, 10, 16 C_fraction=0.5
+python -m main --multirun strategy=scaffold optimizer=scaffold partitioning=iid,dirichlet num_rounds=50 num_classes=4, 10, 30 num_clients=4,10,16 C_fraction=0.5      
+# python -m main --multirun strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=50 num_classes=4 num_clients=10 C_fraction=0.5     
+# python -m main --multirun strategy=fedavg optimizer=momentum partitioning=dirichlet num_rounds=100 num_classes=4 num_clients=10 C_fraction=0.5  
+python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=1 num_classes=4 num_clients=10 C_fraction=0.5
+python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=1 num_classes=4 num_clients=10 C_fraction=0.5  
+python main.py strategy=fedavg optimizer=momentum partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+python main.py strategy=fedavg optimizer=proximal partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+# python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+# python main.py strategy=scaffold optimizer=scaffold partitioning=dirichlet num_rounds=20 num_classes=10 num_clients=10 C_fraction=0.5
+
+python main.py strategy=fedavg optimizer=momentum partitioning=iid num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5 #ok
+python main.py strategy=fedavg optimizer=proximal partitioning=iid num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5 #ok
+# run dirichlet me ta nea batches=32 k stratified dirichlet split
+python main.py strategy=fedavg optimizer=momentum partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+python main.py strategy=fedavg optimizer=proximal partitioning=dirichlet num_rounds=100 num_classes=10 num_clients=10 C_fraction=0.5
+# fix scaffold eval
 
 exit

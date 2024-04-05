@@ -3,6 +3,9 @@ from pathlib import Path
 import time
 import os
 import pandas as pd
+import torch
+import numpy as np
+from collections import OrderedDict
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
@@ -18,6 +21,7 @@ from utils import save_results_as_pickle, plot_metric_from_history
 from strategy_scaffold import ScaffoldStrategy
 from client_scaffold import ScaffoldClient
 from server_scaffold import ScaffoldServer
+from model import ResNet18, test
 
 
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
@@ -26,6 +30,8 @@ def main(cfg: DictConfig):
     start = time.time()
     ## 1. Parse config & get experiment output dir
     print(OmegaConf.to_yaml(cfg))
+    ## library me centralised pre-trained models se alla BIG FOOD datasets gia meta-learning se clients me mikra datasets
+
     ## 2. Prepare your dataset
     trainloaders, validationloaders, testloader = load_dataset(cfg.datapath, cfg.subset, cfg.num_classes, cfg.num_workers, 
                                                                cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed, cfg.val_ratio)
@@ -37,14 +43,46 @@ def main(cfg: DictConfig):
     # print(len(testloader))
     # print(testloader.batch_size)
     # print(len(testloader.dataset))
-    # return 0
+    return 0
+    checkpoint_path: str = (
+        f"{cfg.checkpoint_path}best_model_test_"
+        f"{cfg.strategy.name}"
+        f"_{cfg.exp_name}"
+        f"{'_varEpoch' if cfg.var_local_epochs else ''}"
+        f"_{cfg.partitioning}"
+        # f"{'_alpha{cfg.alpha}' if cfg.partitioning == "dirichlet" else ''}"
+        f"{'_balanced' if cfg.balance else ''}"
+        f"_Classes={cfg.num_classes}"
+        f"_Seed={cfg.seed}"
+        f"_C={cfg.num_clients}"
+        f"_fraction{cfg.C_fraction}"
+        f"_B={cfg.batch_size}"
+        f"_E={cfg.local_epochs}"
+        f"_R={cfg.num_rounds}"
+    )
+
+    if cfg.load:
+        try:
+            checkpoint = np.load(
+                f"{checkpoint_path}.npz",
+                allow_pickle=True,
+            )
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            model = ResNet18(cfg.num_classes)
+            npz_keys = [key for key in checkpoint.keys() if key.startswith('array')]
+            params_dict = zip(model.state_dict().keys(), [checkpoint[key] for key in npz_keys])
+            state_dict = OrderedDict({k: torch.Tensor(v) for k, v in params_dict})
+            model.load_state_dict(state_dict)
+            loss, acc = test(model, testloader, device)
+            print(f"--Loss: {loss}, Accuracy: {acc:.3f} on Test set, Round: {checkpoint['scalar_2']} --")
+            # print(f"-L {checkpoint['scalar_0']} -A {checkpoint['scalar_1']:.3f} - R: {checkpoint['scalar_2']}")
+        except FileNotFoundError():
+            print(f"Checkpoint path {checkpoint_path} to be loaded is not implemented.")
+        return None
 
     save_path = HydraConfig.get().runtime.output_dir
     ## 3. Define your clients
     if cfg.strategy.client_fn._target_ == "client_scaffold.generate_client_fn":
-        
-        # client_progress = os.path.join(save_path, "client_progress")
-        # print("Local progress for clients who participated in rounds are saved to: ", client_progress)
         client_progress = os.path.join(save_path, "clients")
         print("Local progress and client variances for scaffold clients are saved to: ", client_progress)
         client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, 
@@ -69,9 +107,11 @@ def main(cfg: DictConfig):
     #         num_clients = int(num_available_clients * self.fraction_fit)
     #         clients_to_do_fit = max(num_clients, self.min_fit_clients)
     # ```
+
     strategy = instantiate(
         cfg.strategy.strategy,
         num_classes=cfg.num_classes,
+        checkpoint_path = checkpoint_path,
         save_dir=client_progress,
         fraction_fit=cfg.C_fraction,  # in simulation, since all clients are available at all times, we can just use `min_fit_clients` to control exactly how many clients we want to involve during fit
         # min_fit_clients=cfg.num_clients_per_round_fit,  # number of clients to sample for fit()

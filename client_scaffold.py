@@ -36,7 +36,7 @@ class ScaffoldClient(fl.client.NumPyClient):
             self.client_cv.append(torch.zeros_like(param))
 
         # figure out if this client has access to GPU support or not
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.epochs = epochs
         self.exp_config = config
         # self.var_local_epochs = var_local_epochs

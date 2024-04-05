@@ -12,10 +12,12 @@ batch_size: 32
 val_ratio: 0.3
 partitioning: 'iid'
 alpha: 0.5
-balance: True
+balance: True #balanced stratified split
 num_classes: 10
 subset: True 
 # datapath: './data'
+load: False
+checkpoint_path: models/
 datapath: 'D:/Datasets/data/'
 num_workers: 1
 

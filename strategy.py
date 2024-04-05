@@ -28,6 +28,7 @@ from flwr.server.client_proxy import ClientProxy
 from flwr.server.client_manager import ClientManager
 from flwr.server.strategy import FedAvg
 from flwr.server.strategy.aggregate import aggregate, aggregate_inplace, weighted_loss_avg
+from logging import INFO
 from model import ResNet18
 import pandas as pd
 import os
@@ -38,6 +39,7 @@ class CustomFedAvgStrategy(FedAvg):
     def __init__(
         self,
         num_classes: int = 10,
+        checkpoint_path: str = './models',
         save_dir: str = "./clients",
         fraction_fit: float = 1.0,
         fraction_evaluate: float = 1.0,
@@ -75,6 +77,8 @@ class CustomFedAvgStrategy(FedAvg):
         
         self.dir = save_dir
         self.num_classes = num_classes 
+        self.checkpoint_path = checkpoint_path
+        self.best_test_acc = 0.0
     
     def aggregate_fit(
         self,
@@ -167,6 +171,47 @@ class CustomFedAvgStrategy(FedAvg):
             log(WARNING, "No evaluate_metrics_aggregation_fn provided")
 
         return loss_aggregated, metrics_aggregated
+    
+    def evaluate(
+        self, server_round: int, parameters: Parameters
+    ) -> Optional[Tuple[float, Dict[str, Scalar]]]:
+        """Overide default evaluate method to save model parameters."""
+        if self.evaluate_fn is None:
+            # No evaluation function provided
+            return None
+
+        parameters_ndarrays = parameters_to_ndarrays(parameters)
+        eval_res = self.evaluate_fn(server_round, parameters_ndarrays, {})
+
+        if eval_res is None:
+            return None
+
+        loss, metrics = eval_res
+        # save checkpoint 
+        accuracy = float(metrics["accuracy"])
+        if accuracy > self.best_test_acc:
+            self.best_test_acc = accuracy
+
+            # Save model parameters and state
+            if server_round == 0:
+                return None
+
+            # if server_round > 50:
+            # List of keys for the arrays
+            keys = [f'array{i+1}' for i in range(len(parameters_ndarrays))]
+
+            np.savez(
+                f"{self.checkpoint_path}.npz",  #test_acc",
+                **{key: arr for key, arr in zip(keys, parameters_ndarrays)},
+                # arr_0 = parameters_ndarrays,
+                scalar_0 = loss,
+                scalar_1 = self.best_test_acc,
+                scalar_2 = server_round
+            )
+
+            log(INFO, "Model saved with Best Test accuracy %.3f: ", self.best_test_acc)
+
+        return loss, metrics
 
 def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
         """Return weighted average of accuracy metrics as evaluation."""
