@@ -94,10 +94,13 @@ def main(cfg: DictConfig):
 
     plot_results(save_path=save_path, info_dict=info_dict, subset=subset, num_classes=n_classes, model=model)
     # Save the current net module 
-    if not os.path.exists('./models'):
-            os.makedirs('./models') 
+    # if not os.path.exists('./models'):
+    #         os.makedirs('./models') 
+    if not os.path.exists(cfg.checkpoint_path):
+            os.makedirs(cfg.checkpoint_path) 
+            
 
-    prefix_net: str = f"./models/centr_model_classes{n_classes}_E{epochs}.pth"
+    prefix_net: str = f"{cfg.checkpoint_path}centr_model_classes{n_classes}_E{epochs}.pth"
     torch.save(net.state_dict(), prefix_net)
     print("Results saved, exiting succesfully...")
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")

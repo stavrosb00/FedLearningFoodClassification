@@ -21,6 +21,7 @@ from flwr.server.client_proxy import ClientProxy
 from flwr.server.client_manager import ClientManager
 from flwr.server.strategy import FedAvg
 from flwr.server.strategy.aggregate import aggregate, weighted_loss_avg
+from logging import INFO
 from model import ResNet18
 import pandas as pd
 import os
@@ -32,6 +33,7 @@ class ScaffoldStrategy(FedAvg):
     def __init__(
         self,
         num_classes: int = 10,
+        checkpoint_path: str = './models',
         save_dir: str = "./clients",
         fraction_fit: float = 1.0,
         fraction_evaluate: float = 1.0,
@@ -68,12 +70,14 @@ class ScaffoldStrategy(FedAvg):
         inplace = inplace)
         
         self.dir = save_dir
+        self.best_test_acc = 0.0
         self.num_classes = num_classes
         self.model_params = ResNet18(self.num_classes)
+        self.checkpoint_path = checkpoint_path
         # self.len_params = len(self.model_params.state_dict())
         # self.N = min_available_clients
         # server learning rate of delta_x
-        self.eta_g: int = 1
+        # self.eta_g: int = 1
         self.len_params = len([p for p in self.model_params.parameters()])
         self.model_params = None
         # self.len_params: int = None # self.strategy.len_params = 112...
@@ -146,23 +150,6 @@ class ScaffoldStrategy(FedAvg):
         ]
         # Aggregate buffers parameters
         server_buffers_aggregated = aggregate(update_buff)
-
-        # Reg(div /S) sum delta client updates for each layer of parameters
-        # cv_updated_params = [
-        #     update[self.len_params : 2*self.len_params] #update[len_combined_parameter // 2 :]
-        #     for update in combined_parameters_all_updates] 
-        # # Create a list of layers
-        # layers = [
-        #     [layer for layer in layers] for layers in cv_updated_params
-        #     ]
-        # # Compute average of each layer  (S / N)*(sum(Delta_c) / S) = sum(Delta_c) / N 
-        # cv_multiplier = self.eta_g / self.min_available_clients
-        
-        # cv_parameters_reg_summed: NDArrays = [
-        #     reduce(np.add, layer_updates) * cv_multiplier#/ self.N #/ S
-        #     for layer_updates in zip(*layers)
-        # ]
-
 
         # Zip client_cv_updates and num_examples
         client_cv_updates_and_num_examples = [
@@ -244,6 +231,46 @@ class ScaffoldStrategy(FedAvg):
 
         return loss_aggregated, metrics_aggregated
     
+    def evaluate(
+        self, server_round: int, parameters: Parameters
+    ) -> Optional[Tuple[float, Dict[str, Scalar]]]:
+        """Overide default evaluate method to save model parameters."""
+        if self.evaluate_fn is None:
+            # No evaluation function provided
+            return None
+
+        parameters_ndarrays = parameters_to_ndarrays(parameters)
+        eval_res = self.evaluate_fn(server_round, parameters_ndarrays, {})
+
+        if eval_res is None:
+            return None
+
+        loss, metrics = eval_res
+        # save checkpoint 
+        accuracy = float(metrics["accuracy"])
+        if accuracy > self.best_test_acc:
+            self.best_test_acc = accuracy
+
+            # Save model parameters and state
+            if server_round == 0:
+                return None
+            
+            # List of keys for the arrays
+            keys = [f'array{i+1}' for i in range(len(parameters_ndarrays))]
+
+            np.savez(
+                f"{self.checkpoint_path}.npz",  #test_acc",
+                **{key: arr for key, arr in zip(keys, parameters_ndarrays)},
+                # arr_0 = parameters_ndarrays,
+                scalar_0 = loss,
+                scalar_1 = self.best_test_acc,
+                scalar_2 = server_round
+            )
+
+            log(INFO, "Model saved with Best Test accuracy %.3f: ", self.best_test_acc)
+
+        return loss, metrics
+    
 #temp trash 
     
         # server_updated_params = [update[: len_combined_parameter // 2] for update in combined_parameters_all_updates]
@@ -264,3 +291,20 @@ class ScaffoldStrategy(FedAvg):
         # ]
         # for upd_param, aggr_param in zip(updated_params[i], aggregated_parameters[ct_p]):
                 #     upd_param = upd_param + eta_g * aggr_param
+    
+
+    # Reg(div /S) sum delta client updates for each layer of parameters
+        # cv_updated_params = [
+        #     update[self.len_params : 2*self.len_params] #update[len_combined_parameter // 2 :]
+        #     for update in combined_parameters_all_updates] 
+        # # Create a list of layers
+        # layers = [
+        #     [layer for layer in layers] for layers in cv_updated_params
+        #     ]
+        # # Compute average of each layer  (S / N)*(sum(Delta_c) / S) = sum(Delta_c) / N 
+        # cv_multiplier = self.eta_g / self.min_available_clients
+        
+        # cv_parameters_reg_summed: NDArrays = [
+        #     reduce(np.add, layer_updates) * cv_multiplier#/ self.N #/ S
+        #     for layer_updates in zip(*layers)
+        # ]

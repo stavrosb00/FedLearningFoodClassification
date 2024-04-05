@@ -5,7 +5,7 @@ exp_name: proximal
 optimizer:
   _target_: models.train
   lr: 0.01
-  momentum: 0
+  momentum: 0.9
   weight_decay: 1e-4
   gmf: 0
   mu: 0.005

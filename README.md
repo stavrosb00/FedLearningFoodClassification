@@ -1,2 +1,17 @@
 # FLsim
- FL simulation
+## FL simulation
+conda create -n my_env_name python=3.10.13
+
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+
+pip install flwr[simulation]==1.7.0
+
+pip install hydra-core==1.3.2
+
+conda install pandas
+
+conda install matplotlib
+
+conda install scikit-learn=1.3.0
+
+[comment]: # (might need conda install cudatoolkit)
