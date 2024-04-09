@@ -12,7 +12,7 @@ from flwr.common import Metrics
 from omegaconf import DictConfig
 from flwr.server.history import History
 from dataset_prep import CustomSubset
-
+import yaml
 
 # Training Metrics
 
@@ -307,6 +307,56 @@ def generate_plots(
     plt.savefig(f"{save_path}testAccuracy_{save_name}_varEpochs_{var_epochs}.png")
 
     plt.show()
+
+# From visual.ipynb
+def plot_progress(eval_file, train_file, cid: int, save_str: str, exp_str: str):
+    # Read CSV files
+    eval_df = pd.read_csv(eval_file)
+    train_df = pd.read_csv(train_file)
+    fit_time = 60 * train_df['fit_mins'].mean()
+    # Plot accuracies from .csv
+    plt.plot(eval_df['server_round'], eval_df['accuracy'], 'o-', markersize=4, label='Eval Accuracy')
+    plt.plot(train_df['server_round'], train_df['accuracy'], 'o-', markersize=4, label='Train Accuracy')
+
+    # Add labels and legend
+    if cid == 1:
+        print(f"{save_str}progress_cid_{cid}.png")
+    plt.xlabel('Server round participation')
+    plt.ylabel('Accuracy %')
+    plt.title(f'Sampled accuracies from {exp_str} client: {cid}, time fit: {fit_time:.3f} s')
+    plt.legend(loc = 'lower center')
+    plt.savefig(f"{save_str}{exp_str}_progress_cid_{cid}.png")
+    # plt.show()
+    plt.close()
+
+def plot_clients_progress(exp_file_csv: str):
+    """Insert final expirement file of .csv to plot the evaluation and fit accuracy progress of whole party of clients who participated in each round.
+    Example: exp_file = 'outputs\\2024-03-30\\23-40-23\\scaffold_scaffold_dirichlet_balanced_Classes=10_Seed=2024_C=10_fraction0.5_B=32_E=1_R=150.csv'
+    """
+    save_path: str = "./images/comparisons/"
+    if not os.path.exists(save_path):
+        os.mkdir(save_path)
+    up_dir = os.path.dirname(exp_file_csv)
+    config_file = glob.glob(f"{up_dir}/.hydra/config.yaml")[0]
+    print(config_file)
+    with open(config_file, 'r') as f:
+        config_data = yaml.load(f, Loader=yaml.FullLoader)
+    clients = config_data['num_clients']
+    exp_name = config_data['exp_name']
+    exp_dict = {
+        'momentum': 'FedAvg',
+        'proximal': 'FedProx',
+        'scaffold': 'SCAFFOLD'
+    }
+    for cid in range(clients):
+        # client_cid_cvs = glob.glob(f"{up_dir}/clients/client_*progress_{cid}*")
+        cid_eval = glob.glob(f"{up_dir}/clients/client_eval_progress_{cid}*")
+        cid_train = glob.glob(f"{up_dir}/clients/client_fit_progress_{cid}*")
+        try:
+            plot_progress(cid_eval[0], cid_train[0], cid+1, save_str=save_path, exp_str=exp_dict[exp_name])
+        except:
+            print("Not enough rounds for eval and train accuracy samples")
+            FileExistsError()
 
 
 if __name__ == "__main__":

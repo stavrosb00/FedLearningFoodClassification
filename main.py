@@ -15,12 +15,12 @@ from flwr.server.server import Server
 from hydra.utils import call, instantiate
 from dataset import load_dataset
 from client import generate_client_fn
-# from server import get_on_fit_config, get_evaluate_fn
 from strategy import get_on_fit_config, get_evaluate_fn, get_evaluate_fn_scaffold, weighted_average, CustomFedAvgStrategy #get_metrics_aggregation_fn
 from utils import save_results_as_pickle, plot_metric_from_history
-from strategy_scaffold import ScaffoldStrategy
+from strategy_scaffold import ScaffoldStrategy, ScaffoldStrategyV2
 from client_scaffold import ScaffoldClient
-from server_scaffold import ScaffoldServer
+from server_scaffold import ScaffoldServer, ScaffoldServerV2
+from server import FedAvgServer
 from model import ResNet18, test
 
 
@@ -39,18 +39,14 @@ def main(cfg: DictConfig):
     #     print(len(trainloaders[i]))
     #     print(len(validationloaders[i].dataset))
     #     print(len(trainloaders[i].dataset))
-    
-    # print(len(testloader))
-    # print(testloader.batch_size)
-    # print(len(testloader.dataset))
-    return 0
+    # return 0
     checkpoint_path: str = (
-        f"{cfg.checkpoint_path}best_model_test_"
+        f"{cfg.checkpoint_path}best_model_eval_"
         f"{cfg.strategy.name}"
         f"_{cfg.exp_name}"
         f"{'_varEpoch' if cfg.var_local_epochs else ''}"
         f"_{cfg.partitioning}"
-        # f"{'_alpha{cfg.alpha}' if cfg.partitioning == "dirichlet" else ''}"
+        f"{'_alpha' + str(cfg.alpha) if cfg.partitioning == 'dirichlet' else ''}"
         f"{'_balanced' if cfg.balance else ''}"
         f"_Classes={cfg.num_classes}"
         f"_Seed={cfg.seed}"
@@ -60,7 +56,6 @@ def main(cfg: DictConfig):
         f"_E={cfg.local_epochs}"
         f"_R={cfg.num_rounds}"
     )
-
     if cfg.load:
         try:
             checkpoint = np.load(
@@ -139,7 +134,12 @@ def main(cfg: DictConfig):
     server = Server(strategy=strategy, client_manager=SimpleClientManager())
     if isinstance(strategy, ScaffoldStrategy):
         print("Chose SCAFFOLD alg!")
-        server= ScaffoldServer(strategy=strategy, num_classes=cfg.num_classes, client_manager=SimpleClientManager())
+        server= ScaffoldServer(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
+    elif isinstance(strategy, ScaffoldStrategyV2):
+        print("Chose SCAFFOLD alg version 2")
+        server= ScaffoldServerV2(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
+    else:
+        server= FedAvgServer(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
 
     ## 5. Start Simulation
     num_cpus = 6
@@ -183,6 +183,7 @@ def main(cfg: DictConfig):
     #     pickle.dump(results, h, protocol=pickle.HIGHEST_PROTOCOL)
 
     # Test centralized
+    # print(f"{(time.time()-start)/60} minutes")
     rounds, test_loss = zip(*history.losses_centralized)
     _, test_accuracy = zip(*history.metrics_centralized["accuracy"])
     # Fit metrics
@@ -205,7 +206,7 @@ def main(cfg: DictConfig):
         f"_{cfg.exp_name}"
         f"{'_varEpoch' if cfg.var_local_epochs else ''}"
         f"_{cfg.partitioning}"
-        # f"{'_alpha{cfg.alpha}' if cfg.partitioning == "dirichlet" else ''}"
+        f"{'_alpha' + str(cfg.alpha) if cfg.partitioning == 'dirichlet' else ''}"
         f"{'_balanced' if cfg.balance else ''}"
         f"_Classes={cfg.num_classes}"
         f"_Seed={cfg.seed}"
@@ -225,10 +226,15 @@ def main(cfg: DictConfig):
         save_path,
         f"{file_suffix}.csv",
     )
-    df = pd.DataFrame(
+    if len(test_loss) == len(train_loss):
+        df = pd.DataFrame(
         {"round": rounds, "test_loss": test_loss, "test_accuracy": test_accuracy, 
-         "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, "var_diff_acc": var_diff_acc, "val_loss": val_loss, "val_acc": val_acc}
-    )
+         "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, "var_diff_acc": var_diff_acc, "val_loss": val_loss, "val_acc": val_acc})
+    else:
+        df = pd.DataFrame(
+        {"round": rounds, "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, 
+         "var_diff_acc": var_diff_acc, "val_loss": val_loss, "val_acc": val_acc})
+    
     df.to_csv(file_name, index=False)
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")
 

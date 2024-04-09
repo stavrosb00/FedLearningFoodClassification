@@ -217,3 +217,158 @@ def generate_client_fn(trainloaders, valloaders, num_classes, epochs, exp_config
 
     # return the function to spawn client
     return client_fn
+
+class ScaffoldClientV2(fl.client.NumPyClient):
+    """Define a Flower Client."""
+
+    def __init__(self, cid, trainloader, valloader, num_classes, epochs, config: DictConfig, save_dir: str) -> None:
+        super().__init__()
+        self.cid = cid
+        # the dataloaders that point to the data associated to this client
+        self.trainloader = trainloader
+        self.valloader = valloader
+
+        # a model that is randomly initialised at first
+        self.model = ResNet18(num_classes)
+        self.grad_map: list[bool] = [p.requires_grad for _,p in self.model.state_dict(keep_vars=True).items()]
+        self.server_cv_model = None
+        self.server_cv = None
+        self.len_params = len(self.model.state_dict())
+        # initialize client control variate with 0 and shape of the module parameters
+        self.client_cv: list[torch.Tensor] = []
+        # for param in self.model.parameters():
+        #     self.client_cv.append(torch.zeros_like(param))
+
+        # figure out if this client has access to GPU support or not
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.epochs = epochs
+        self.exp_config = config
+        # self.client_cv = [val.cpu().numpy() for _, val in self.model.state_dict().items()]
+
+        # for param in self.model.parameters():
+        #     self.client_cv.append(torch.zeros(param.shape))
+            # torch.zeros_like()
+        # save cv to directory
+        if save_dir == "":
+            save_dir = "client_cvs"
+        self.dir = save_dir
+        if not os.path.exists(self.dir):
+            os.makedirs(self.dir)
+
+    def set_parameters(self, parameters):
+        """Receive parameters and apply them to the local model."""
+        params_dict = zip(self.model.state_dict().keys(), parameters)
+        state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})
+        self.model.load_state_dict(state_dict, strict=True)
+
+    def get_parameters(self, config: Dict[str, Scalar]):
+        """Extract model parameters and return them as a list of numpy arrays."""
+        # return [val.detach().cpu().numpy() for _, val in self.model.named_parameters()]
+        return [val.cpu().numpy() for _, val in self.model.state_dict().items()]
+
+    def fit(self, parameters, config: Dict[str, Scalar]):
+        """Train model received by the server (parameters) using the data
+        that belongs to this SCAFFOLD client. Then, send it back to the server.
+        """
+        start = time.time()
+        # the first half are model parameters and the second are the server_cv
+        server_cv = parameters[len(parameters) // 2 :]
+        # global server's model parameters
+        parameters = parameters[: len(parameters) // 2]
+        # server_cv = parameters[self.len_params :]
+        # parameters = parameters[: self.len_params]
+        # copy model parameters sent by the server into client's local model
+        self.set_parameters(parameters)
+
+        #init client control variate List
+        self.client_cv = []
+        # load client control variate if not the first fit
+        if os.path.exists(f"{self.dir}/client_cv_{self.cid}.pt"):
+            self.client_cv = torch.load(f"{self.dir}/client_cv_{self.cid}.pt")
+        else: 
+            for _, param in self.model.state_dict().items():
+                self.client_cv.append(param)
+
+        # convert the server control variate NDArrays to a list of tensors
+        server_cv = [torch.Tensor(cv) for cv in server_cv]
+        lr = config["lr"]
+        server_round = config["server_round"]
+        momentum = self.exp_config.optimizer.momentum
+        # mu = self.exp_config.optimizer.mu
+        weight_decay = self.exp_config.optimizer.weight_decay
+
+        # client's local epochs to train(can be constant or variable choice based on Uniform[var_min_epochs, var_max_epochs])
+        if self.exp_config.var_local_epochs:
+            seed_val = (
+                2024
+                + int(self.client_id)
+                + int(server_round)
+                + int(self.exp_config.seed)
+            )
+            np.random.seed(seed_val)
+            epochs = np.random.randint(
+                self.exp_config.var_min_epochs, self.exp_config.var_max_epochs
+            )
+        else:
+            epochs = self.epochs
+        # SCAFFOLD optimizer
+        optim = ScaffoldOptimizer(self.model.parameters(), lr, momentum, weight_decay)
+        # local training
+        train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, 
+                                               [p for p, require in zip(server_cv, self.grad_map) if require], [p for p, require in zip(self.client_cv, self.grad_map) if require])
+        # local client's model parameters
+        y_i = [p.cpu().numpy() for _, p in self.model.state_dict().items()]
+        server_update_x = []
+        server_update_c = []
+        # update client control variate c_i' = c_i - c + 1/eta*K*num_batches (x - y_i)
+        # j = 0
+        for c_i, c, x, yi in zip(self.client_cv, server_cv, parameters, y_i):
+            # if j == 0:
+            #     print(f"c_i {c_i.device} c {c.device} x {x.device} yi {yi.device}")
+            #     j+=1    
+            # c_i' - c_i
+            server_update_c.append(- c + (1.0 / (lr * self.epochs * len(self.trainloader))) * (x - yi))
+
+            c_i.data = c_i + server_update_c[-1]
+            # y_i - x 
+            server_update_x.append(yi - x) 
+
+        torch.save(self.client_cv, f"{self.dir}/client_cv_{self.cid}.pt")
+        
+        combined_updates = server_update_x + server_update_c
+        # return combined updates(line13 alg), number of examples and dict of metrics
+        return combined_updates, len(self.trainloader.dataset), {"loss": train_loss, "accuracy": train_acc, 
+                                                                "client_id" : self.cid, "fit_mins": (time.time()-start)/60}
+
+    def evaluate(self, parameters: NDArrays, config: Dict[str, Scalar]):
+        self.set_parameters(parameters)
+
+        loss, accuracy = test(self.model, self.valloader, self.device)
+
+        return float(loss), len(self.valloader.dataset), {"loss": loss, "accuracy": accuracy, "client_id" : self.cid}
+
+
+def generate_client_fnV2(trainloaders, valloaders, num_classes, epochs, exp_config, save_dir):
+    """Return a function that can be used by the VirtualClientEngine.
+
+    to spawn a SCAFFOLDClient with client id `cid`.
+    """
+
+    def client_fn(cid: str):
+        # This function will be called internally by the VirtualClientEngine
+        # Each time the cid-th client is told to participate in the FL
+        # simulation (whether it is for doing fit() or evaluate())
+        
+        # print(f'scaff client id: {cid}')
+        return ScaffoldClientV2(
+            cid=cid,
+            trainloader=trainloaders[int(cid)],
+            valloader=valloaders[int(cid)],
+            num_classes=num_classes,
+            epochs=epochs, 
+            config=exp_config,
+            save_dir=save_dir
+        ).to_client()
+
+    # return the function to spawn client
+    return client_fn

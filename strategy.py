@@ -34,13 +34,14 @@ import pandas as pd
 import os
 
 class CustomFedAvgStrategy(FedAvg):
-    """Implement custom strategy for SCAFFOLD based on FedAvg class."""
+    """Implement custom strategy for FedAvg with extra options based on FedAvg class."""
 
     def __init__(
         self,
         num_classes: int = 10,
         checkpoint_path: str = './models',
         save_dir: str = "./clients",
+        eval_every_n: int = 5,
         fraction_fit: float = 1.0,
         fraction_evaluate: float = 1.0,
         min_fit_clients: int = 2,
@@ -79,6 +80,7 @@ class CustomFedAvgStrategy(FedAvg):
         self.num_classes = num_classes 
         self.checkpoint_path = checkpoint_path
         self.best_test_acc = 0.0
+        self.eval_every_n = eval_every_n
     
     def aggregate_fit(
         self,
@@ -180,6 +182,7 @@ class CustomFedAvgStrategy(FedAvg):
             # No evaluation function provided
             return None
 
+        # if (server_round % self.eval_every_n ==0):
         parameters_ndarrays = parameters_to_ndarrays(parameters)
         eval_res = self.evaluate_fn(server_round, parameters_ndarrays, {})
 
@@ -187,30 +190,31 @@ class CustomFedAvgStrategy(FedAvg):
             return None
 
         loss, metrics = eval_res
-        # save checkpoint 
-        accuracy = float(metrics["accuracy"])
-        if accuracy > self.best_test_acc:
-            self.best_test_acc = accuracy
+    #     # save checkpoint 
+    #     accuracy = float(metrics["accuracy"])
+    #     if accuracy > self.best_test_acc:
+    #         self.best_test_acc = accuracy
 
-            # Save model parameters and state
-            if server_round == 0:
-                return None
+    #         # Save model parameters and state
+    #         if server_round == 0:
+    #             return None
+            
+    #         # List of keys for the arrays
+    #         keys = [f'array{i+1}' for i in range(len(parameters_ndarrays))]
 
-            # if server_round > 50:
-            # List of keys for the arrays
-            keys = [f'array{i+1}' for i in range(len(parameters_ndarrays))]
+    #         np.savez(
+    #             f"{self.checkpoint_path}.npz",  #test_acc",
+    #             **{key: arr for key, arr in zip(keys, parameters_ndarrays)},
+    #             # arr_0 = parameters_ndarrays,
+    #             scalar_0 = loss,
+    #             scalar_1 = self.best_test_acc,
+    #             scalar_2 = server_round
+    #         )
 
-            np.savez(
-                f"{self.checkpoint_path}.npz",  #test_acc",
-                **{key: arr for key, arr in zip(keys, parameters_ndarrays)},
-                # arr_0 = parameters_ndarrays,
-                scalar_0 = loss,
-                scalar_1 = self.best_test_acc,
-                scalar_2 = server_round
-            )
-
-            log(INFO, "Model saved with Best Test accuracy %.3f: ", self.best_test_acc)
-
+    #         log(INFO, "Model saved with Best Test accuracy %.3f: ", self.best_test_acc)
+    # else:
+    #     print(f"Only global testing every {self.eval_every_n} rounds...")
+    #     return None
         return loss, metrics
 
 def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:

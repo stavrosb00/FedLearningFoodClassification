@@ -1,9 +1,199 @@
-"""Create global evaluation function.
+"""Server class for FedAvg."""
+import numpy as np
+import timeit
+from model import ResNet18
+import concurrent.futures
+from logging import DEBUG, INFO
+from typing import OrderedDict
+import copy
+import torch
+from flwr.common import (
+    Code,
+    FitIns,
+    FitRes,
+    EvaluateIns,
+    EvaluateRes,
+    Parameters,
+    Scalar,
+    ndarrays_to_parameters,
+    parameters_to_ndarrays,
+)
+from flwr.common.logger import log
+from flwr.common.typing import (
+    Callable,
+    Dict,
+    GetParametersIns,
+    List,
+    NDArrays,
+    Optional,
+    Tuple,
+    Union,
+)
+from flwr.server import Server
+from flwr.server.client_manager import ClientManager, SimpleClientManager
+from flwr.server.client_proxy import ClientProxy
+from flwr.server.strategy import Strategy
+from flwr.server.history import History
+from hydra.utils import instantiate
+from omegaconf import DictConfig
+from torch.utils.data import DataLoader
 
-Optionally, also define a new Server class (please note this is not needed in most
-settings).
-"""
+FitResultsAndFailures = Tuple[
+    List[Tuple[ClientProxy, FitRes]],
+    List[Union[Tuple[ClientProxy, FitRes], BaseException]],
+]
+EvaluateResultsAndFailures = Tuple[
+    List[Tuple[ClientProxy, EvaluateRes]],
+    List[Union[Tuple[ClientProxy, EvaluateRes], BaseException]],
+]
 
+class FedAvgServer(Server):
+    """Implement server for FedAvg."""
+
+    def __init__(
+        self,
+        strategy: Strategy,
+        num_classes: int,
+        checkpoint_path: str = './models',
+        client_manager: Optional[ClientManager] = None,
+    ):
+        if client_manager is None:
+            client_manager = SimpleClientManager()
+        super().__init__(client_manager=client_manager, strategy=strategy)
+        self.best_eval_acc = 0.0
+        self.checkpoint_path = checkpoint_path
+        self.len_params: int = 0
+
+    def evaluate_round(
+        self,
+        server_round: int,
+        timeout: Optional[float],
+    ) -> Optional[
+        Tuple[Optional[float], Dict[str, Scalar], EvaluateResultsAndFailures]
+    ]:
+        """Validate current global model on a number of clients."""
+        # Get clients and their respective instructions from strategy
+        client_instructions = self.strategy.configure_evaluate(
+            server_round=server_round,
+            parameters=self.parameters,
+            client_manager=self._client_manager,
+        )
+        if not client_instructions:
+            log(INFO, "evaluate_round %s: no clients selected, cancel", server_round)
+            return None
+        log(
+            DEBUG,
+            "evaluate_round %s: strategy sampled %s clients (out of %s)",
+            server_round,
+            len(client_instructions),
+            self._client_manager.num_available(),
+        )
+
+        # Collect `evaluate` results from all clients participating in this round
+        results, failures = evaluate_clients(
+            client_instructions,
+            max_workers=self.max_workers,
+            timeout=timeout,
+        )
+        log(
+            DEBUG,
+            "evaluate_round %s received %s results and %s failures",
+            server_round,
+            len(results),
+            len(failures),
+        )
+
+        # Aggregate the evaluation results
+        aggregated_result: Tuple[
+            Optional[float],
+            Dict[str, Scalar],
+        ] = self.strategy.aggregate_evaluate(server_round, results, failures)
+
+        loss_aggregated, metrics_aggregated = aggregated_result
+        # save checkpoint 
+        parameters_ndarrays = parameters_to_ndarrays(self.parameters)
+        accuracy = float(metrics_aggregated["accuracy"])
+        if accuracy > self.best_eval_acc:
+            self.best_eval_acc = accuracy
+
+            # Save model parameters and state
+            if server_round == 0:
+                # self.len_params = len(parameters_to_ndarrays(parameters_ndarrays))
+                return None
+            
+            # List of keys for the arrays
+            keys = [f'array{i+1}' for i in range(len(parameters_ndarrays))]
+
+            np.savez(
+                f"{self.checkpoint_path}.npz",  #eval_acc",
+                **{key: arr for key, arr in zip(keys, parameters_ndarrays)},
+                # arr_0 = parameters_ndarrays,
+                scalar_0 = loss_aggregated,
+                scalar_1 = self.best_eval_acc,
+                scalar_2 = server_round
+            )
+
+            log(INFO, "Model saved with Best eval accuracy %.3f: ", self.best_eval_acc)
+        return loss_aggregated, metrics_aggregated, (results, failures)
+
+def evaluate_clients(
+    client_instructions: List[Tuple[ClientProxy, EvaluateIns]],
+    max_workers: Optional[int],
+    timeout: Optional[float],
+) -> EvaluateResultsAndFailures:
+    """Evaluate parameters concurrently on all selected clients."""
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        submitted_fs = {
+            executor.submit(evaluate_client, client_proxy, ins, timeout)
+            for client_proxy, ins in client_instructions
+        }
+        finished_fs, _ = concurrent.futures.wait(
+            fs=submitted_fs,
+            timeout=None,  # Handled in the respective communication stack
+        )
+
+    # Gather results
+    results: List[Tuple[ClientProxy, EvaluateRes]] = []
+    failures: List[Union[Tuple[ClientProxy, EvaluateRes], BaseException]] = []
+    for future in finished_fs:
+        _handle_finished_future_after_evaluate(
+            future=future, results=results, failures=failures
+        )
+    return results, failures
+
+
+def evaluate_client(
+    client: ClientProxy,
+    ins: EvaluateIns,
+    timeout: Optional[float],
+) -> Tuple[ClientProxy, EvaluateRes]:
+    """Evaluate parameters on a single client."""
+    evaluate_res = client.evaluate(ins, timeout=timeout)
+    return client, evaluate_res
+
+def _handle_finished_future_after_evaluate(
+    future: concurrent.futures.Future,  # type: ignore
+    results: List[Tuple[ClientProxy, EvaluateRes]],
+    failures: List[Union[Tuple[ClientProxy, EvaluateRes], BaseException]],
+) -> None:
+    """Convert finished future into either a result or a failure."""
+    # Check if there was an exception
+    failure = future.exception()
+    if failure is not None:
+        failures.append(failure)
+        return
+
+    # Successfully received a result from a client
+    result: Tuple[ClientProxy, EvaluateRes] = future.result()
+    _, res = result
+
+    # Check result status code
+    if res.status.code == Code.OK:
+        results.append(result)
+        return
+
+    # Not successful, client returned a result where the status code is not OK
+    failures.append(result)
 
 
 

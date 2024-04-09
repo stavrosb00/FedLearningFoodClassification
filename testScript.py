@@ -197,6 +197,12 @@ def compare_model_parameters(model1, model2):
 
 def main():
     model = ResNet18(4)
+    client_cv = []
+    for _, param in model.state_dict().items():
+                client_cv.append(param)
+                print(client_cv[-1].shape, type(client_cv[-1]), client_cv[-1].device)
+    
+    return 0
     temp_model = copy.deepcopy(model)
     buffers, parameters = model_summary(model=model)
     print(type(buffers[0][0]))
