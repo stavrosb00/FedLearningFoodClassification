@@ -19,7 +19,7 @@ subset: True
 load: False
 checkpoint_path: models/
 datapath: 'D:/Datasets/data/'
-num_workers: 1
+num_workers: 0
 
 C_fraction: 0.5
 num_clients_per_round_fit: 8

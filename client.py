@@ -93,18 +93,6 @@ class FlowerClient(fl.client.NumPyClient):
         # print(f"Client {self.cid} training on {self.device}")
         # local training
         train_loss, train_acc = train(self.model, self.trainloader, optim, epochs, self.device, mu)
-        
-
-        # keep CID->file, ServerRound->index, train values. Interpolation the progress between ticks in second place
-        # temp_dict = {"client_id" : self.cid, "server_round": server_round, "loss": train_loss, "accuracy": train_acc, "fit_mins": (time.time()-start)/60}
-        # if os.path.exists(f"{self.dir}/client_progress_{self.cid}.csv"):
-        #     temp_df = pd.DataFrame(temp_dict, index=[0])
-        #     # update by appending only the new values without the header on the .csv
-        #     temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", mode='a', index=False, header=False)
-        # else:
-        #     # init progress file for first time
-        #     temp_df = pd.DataFrame(temp_dict, index=[0])
-        #     temp_df.to_csv(f"{self.dir}/client_progress_{self.cid}.csv", index=False)
         # return updated model params, number of examples and dict of metrics
         return self.get_parameters({}), len(self.trainloader.dataset), {"loss": train_loss, "accuracy": train_acc, "client_id" : self.cid, "fit_mins": (time.time()-start)/60}
 

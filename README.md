@@ -15,3 +15,4 @@ conda install matplotlib
 conda install scikit-learn=1.3.0
 
 [comment]: # (might need conda install cudatoolkit)
+[comment]: # (ray==2.6.3)

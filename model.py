@@ -144,7 +144,6 @@ def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
 
     This is a fairly simple training loop for PyTorch.
     """
-    # with torch.autocast(device_type="cuda"):
     criterion = torch.nn.CrossEntropyLoss()
     net.to(device)
     if proximal_mu > 0.0:
@@ -160,6 +159,7 @@ def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             #forward pass
+            # with torch.autocast(device_type="cuda", dtype=torch.float16):
             outputs = net(images)
             #loss = criterion(outputs, labels)
             if global_params is None:
@@ -206,9 +206,9 @@ def test(net: nn.Module, testloader, device: str):
     with torch.no_grad():
         for images, labels in testloader:
             images, labels = images.to(device), labels.to(device)
-            # with autocast():
-            outputs = net(images)
-            loss += criterion(outputs, labels).item()
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                outputs = net(images)
+                loss += criterion(outputs, labels).item()
             acc1 = comp_accuracy(outputs, labels)
             accuracy.append(acc1[0].item())
     # accuracy = accuracy / len(testloader.dataset)
@@ -240,8 +240,7 @@ class ScaffoldOptimizer(SGD):
 
 def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, epochs, device, server_cv: list[torch.Tensor], client_cv: list[torch.Tensor]):
     """Train the network based on SCAFFOLD control variates"""
-    # with torch.autocast(device_type="cuda"):
-    scaler = GradScaler()
+    # scaler = GradScaler()
     criterion = torch.nn.CrossEntropyLoss()
     net.to(device)
     net.train()
@@ -254,6 +253,7 @@ def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, ep
             optimizer.zero_grad()
             #forward pass
             # with autocast():
+            # with torch.autocast(device_type="cuda", dtype=torch.float16):
             outputs = net(images)
             loss = criterion(outputs, labels)
             #backward pass
