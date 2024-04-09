@@ -1,0 +1,6 @@
+sygkrish sta 100 rounds
+
+
+outputs/2024-03-30/23-40-23/scaffold_scaffold_dirichlet_balanced_Classes=10_Seed=2024_C=10_fraction0.5_B=32_E=1_R=150.csv
+
+outputs/2024-04-07/15-27-50/scaffold_scaffold_dirichlet_alpha0.5_balanced_Classes=10_Seed=2024_C=10_fraction1_B=32_E=1_R=150.csv
