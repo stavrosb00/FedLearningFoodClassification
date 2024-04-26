@@ -159,21 +159,22 @@ def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             #forward pass
-            # with torch.autocast(device_type="cuda", dtype=torch.float16):
-            outputs = net(images)
-            #loss = criterion(outputs, labels)
-            if global_params is None:
-                loss = criterion(outputs, labels)
-            else:
-                # Proximal updates for FedProx
-                proximal_term = 0.0
-                for local_weights, global_weights in zip(
-                    net.parameters(), global_params
-                ):
-                    proximal_term += torch.square(
-                        (local_weights - global_weights).norm(2)
-                    )
-                loss = criterion(outputs, labels) + (proximal_mu / 2) * proximal_term
+
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                outputs = net(images)
+                #loss = criterion(outputs, labels)
+                if global_params is None:
+                    loss = criterion(outputs, labels)
+                else:
+                    # Proximal updates for FedProx
+                    proximal_term = 0.0
+                    for local_weights, global_weights in zip(
+                        net.parameters(), global_params
+                    ):
+                        proximal_term += torch.square(
+                            (local_weights - global_weights).norm(2)
+                        )
+                    loss = criterion(outputs, labels) + (proximal_mu / 2) * proximal_term
 
             #backward pass
             loss.backward()
@@ -253,9 +254,9 @@ def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, ep
             optimizer.zero_grad()
             #forward pass
             # with autocast():
-            # with torch.autocast(device_type="cuda", dtype=torch.float16):
-            outputs = net(images)
-            loss = criterion(outputs, labels)
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                outputs = net(images)
+                loss = criterion(outputs, labels)
             #backward pass
             # scaler.scale(loss).backward()
             loss.backward()
