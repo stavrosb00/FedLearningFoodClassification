@@ -17,6 +17,7 @@ num_classes: 10
 subset: True 
 # datapath: './data'
 load: False
+cleaner: True
 checkpoint_path: models/
 datapath: 'D:/Datasets/data/'
 num_workers: 0
@@ -26,7 +27,7 @@ num_clients_per_round_fit: 8
 num_clients_per_round_eval: ${num_clients_per_round_fit}
 seed: 2024
 client_resources:
-  num_cpus: 4
+  num_cpus: 6
   num_gpus: 1
 var_local_epochs: False
 var_min_epochs: 1 

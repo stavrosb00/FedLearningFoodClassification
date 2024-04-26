@@ -22,6 +22,7 @@ from client_scaffold import ScaffoldClient
 from server_scaffold import ScaffoldServer, ScaffoldServerV2
 from server import FedAvgServer
 from model import ResNet18, test
+import random
 
 
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
@@ -131,6 +132,8 @@ def main(cfg: DictConfig):
     #     )
 
     # Define server
+    # random.seed = 2024
+    # random.seed(cfg.seed) # Reset random seed state clock , Client Manager sampling clients based on random
     server = Server(strategy=strategy, client_manager=SimpleClientManager())
     if isinstance(strategy, ScaffoldStrategy):
         print("Chose SCAFFOLD alg!")
@@ -167,11 +170,18 @@ def main(cfg: DictConfig):
         # `num_cpus` is an absolute number (integer) indicating the number of threads a client should be allocated
         # `num_gpus` is a ratio indicating the portion of gpu memory that a client needs.
     )
+    if cfg.cleaner and client_progress != None:
+        progress_path = Path(client_progress)
+        delete_files = progress_path.glob("client_cv*.pt")
+        for f in delete_files:
+            f.unlink()
+        
+        print("[DELETED]Memory cost temp .pt format files related to client states")
 
     ## 6. Save your results
     print("................")
     print(history)
-    save_path = HydraConfig.get().runtime.output_dir
+    # save_path = HydraConfig.get().runtime.output_dir
     # save results as a Python pickle using a file_path
     # the directory created by Hydra for each run
     save_results_as_pickle(history, file_path=save_path, extra_results={})
@@ -184,6 +194,7 @@ def main(cfg: DictConfig):
 
     # Test centralized
     # print(f"{(time.time()-start)/60} minutes")
+    # if strategy.evaluate_fn = None:
     rounds, test_loss = zip(*history.losses_centralized)
     _, test_accuracy = zip(*history.metrics_centralized["accuracy"])
     # Fit metrics
