@@ -9,102 +9,6 @@ from torch.optim import SGD
 from torch.cuda.amp import autocast, GradScaler
 
 # Note the model and functions here defined do not have any FL-specific components.
-class VGG(nn.Module):
-    """VGG model."""
-
-    def __init__(self):
-        super().__init__()
-        self.features = make_layers(cfg["A"])
-        self.classifier = nn.Sequential(
-            nn.Dropout(),
-            nn.Linear(512, 512),
-            nn.ReLU(True),
-            nn.Dropout(),
-            nn.Linear(512, 512),
-            nn.ReLU(True),
-            nn.Linear(512, 10),
-        )
-        # Initialize weights
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2.0 / n))
-                m.bias.data.zero_()
-
-    def forward(self, x):
-        """Forward pass through the network."""
-        x = self.features(x)
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
-        return x
-
-
-def make_layers(network_cfg, batch_norm=False):
-    """Define the layer configuration of the VGG-16 network."""
-    layers = []
-    in_channels = 3
-    for v in network_cfg:
-        if v == "M":
-            layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
-        else:
-            conv2d = nn.Conv2d(in_channels, v, kernel_size=3, padding=1)
-            if batch_norm:
-                layers += [conv2d, nn.BatchNorm2d(v), nn.ReLU(inplace=True)]
-            else:
-                layers += [conv2d, nn.ReLU(inplace=True)]
-            in_channels = v
-    return nn.Sequential(*layers)
-
-
-cfg = {
-    "A": [64, "M", 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
-    "B": [64, 64, "M", 128, 128, "M", 256, 256, "M", 512, 512, "M", 512, 512, "M"],
-    "D": [
-        64,
-        64,
-        "M",
-        128,
-        128,
-        "M",
-        256,
-        256,
-        256,
-        "M",
-        512,
-        512,
-        512,
-        "M",
-        512,
-        512,
-        512,
-        "M",
-    ],
-    "E": [
-        64,
-        64,
-        "M",
-        128,
-        128,
-        "M",
-        256,
-        256,
-        256,
-        256,
-        "M",
-        512,
-        512,
-        512,
-        512,
-        "M",
-        512,
-        512,
-        512,
-        512,
-        "M",
-    ],
-}
-
-
 class ResNet18(nn.Module):
     """Initialize ResNet18 architecture as module"""
     def __init__(self, num_classes: int = 4):
@@ -117,6 +21,82 @@ class ResNet18(nn.Module):
     def forward(self, x):
         x = self.resnet(x)
         return x
+    
+# Siamese Network Composition
+class ProjectionMLP(nn.Module):
+    """Projection MLP g"""
+    def __init__(self, in_features, h1_features, h2_features, out_features):
+        super(ProjectionMLP, self).__init__()
+        self.l1 = nn.Sequential(
+            nn.Linear(in_features, h1_features),
+            nn.BatchNorm1d(h1_features),
+            nn.ReLU(inplace=True)
+        )
+        self.l2 = nn.Sequential(
+            nn.Linear(h1_features, h2_features),
+            nn.BatchNorm1d(h2_features),
+            nn.ReLU(inplace=True)
+
+        )
+        self.l3 = nn.Sequential(
+            nn.Linear(h1_features, out_features),
+            nn.BatchNorm1d(out_features)
+        )
+
+    def forward(self, x):
+        # x = self.l1(x)
+        # # x = self.l2(x) # FedSSL 2022 paper suggests 2-layer
+        # x = self.l3(x)
+        return self.l3(self.l1(x))
+
+class PredictionMLP(nn.Module):
+    """Prediction MLP h"""
+    def __init__(self, in_features, hidden_features, out_features):
+        super(PredictionMLP, self).__init__()
+        self.l1 = nn.Sequential(
+            nn.Linear(in_features, hidden_features),
+            nn.BatchNorm1d(hidden_features),
+            nn.ReLU(inplace=True)
+        )
+        self.l2 = nn.Linear(hidden_features, out_features)
+    
+    def forward(self, x):
+        return self.l2(self.l1(x))
+
+def D(p, z, version='simplified'): # negative cosine similarity
+    if version == 'original':
+        z = z.detach() # stop gradient
+        p = F.normalize(p, dim=1) # l2-normalize 
+        z = F.normalize(z, dim=1) # l2-normalize 
+        return -(p*z).sum(dim=1).mean()
+
+    elif version == 'simplified':# same thing, much faster. Scroll down, speed test in __main__
+        return - F.cosine_similarity(p, z.detach(), dim=-1).mean()
+    else:
+        raise Exception
+
+class SimSiam(nn.Module):
+    def __init__(self, backbone=ResNet18(num_classes=10), hidden_dim = 2048, pred_dim = 512, output_dim = 2048):
+        super(SimSiam, self).__init__()
+        backbone.output_dim = backbone.fc.in_features
+        backbone.fc = torch.nn.Identity() # erase last linear layer
+
+        self.backbone = backbone
+        self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)
+        self.encoder = nn.Sequential(
+            self.backbone,
+            self.projector
+        )
+        self.predictor = PredictionMLP(hidden_dim, pred_dim, output_dim)
+
+    def forward(self, x1, x2):
+        f, h = self.encoder, self.predictor
+        z1, z2 = f(x1), f(x2)
+        p1, p2 = h(z1), h(z2)
+        L = D(p1, z2) / 2 + D(p2, z1) / 2
+        # return {'loss': L}
+        return L
+
 
 class Net(nn.Module):
     def __init__(self, num_classes: int):

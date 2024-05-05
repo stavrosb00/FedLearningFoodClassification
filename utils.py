@@ -360,6 +360,128 @@ def plot_clients_progress(exp_file_csv: str):
             FileExistsError()
 
 
+
+def compare_alg_on_partitioning(exp_file_csvs: list[str], acc_type: str):
+    """
+    Plot comparison of an algorithm on different data partitioning modes
+    Args:
+        exp_file_csvs (str): List of strings pointing to .csv. Must be related to same algorithm and config baseline
+        acc_type (str): Chosen accuracy type for data to be compared
+    """
+    if not os.path.exists('./images/exps/compare_partitioning'):
+        os.makedirs('./images/exps/compare_partitioning')  
+    exp_dict = {
+        'momentum': 'FedAvg',
+        'proximal': 'FedProx',
+        'scaffold': 'SCAFFOLD'
+    }
+    accuracy_labels = {
+    'train_acc': 'train accuracy',
+    'val_acc': 'val accuracy',
+    'test_accuracy': 'test accuracy'
+    }
+    # Load data from CSV into a DataFrame
+    dfs = []
+    accs = []
+    labels: list[str] = []
+    len_rounds = 0
+    title: str = None
+    plt.figure(figsize=(10, 6))
+    for i, csv in enumerate(exp_file_csvs):
+        up_dir = os.path.dirname(csv)
+        config_file = glob.glob(f"{up_dir}/.hydra/config.yaml")[0]
+        with open(config_file, 'r') as f:
+            config_data = yaml.load(f, Loader=yaml.FullLoader)
+        df = pd.read_csv(csv)
+        dfs.append(df)
+        # accs = df[acc_type]
+        df_rounds = df['round']
+        if i == 0:
+            len_rounds = len(df_rounds)
+            title = f"{exp_dict[config_data['exp_name']]} data partitioning comparison on {accuracy_labels[acc_type]} w/{config_data['C_fraction']} fraction of #C={config_data['num_clients']} Classes={config_data['num_classes']}"
+            exp_str = f"{exp_dict[config_data['exp_name']]}_E={config_data['local_epochs']}_Classes={config_data['num_classes']}"
+        if len_rounds > len(df_rounds):
+            len_rounds = len(df_rounds)
+            # df_rounds = range(len_rounds)
+        if config_data['partitioning'] == 'dirichlet':
+            partitioning= f"Dir({config_data['alpha']})"
+        else:
+            partitioning= config_data['partitioning'].upper()
+        labels.append(partitioning)
+        accs.append(df[acc_type].tolist())
+        # print(    labels[-1])
+        # plt.plot(df_rounds, accs, label=labels[-1])
+    # print(dfs)
+    for acc, label in zip(accs, labels):
+        plt.plot(range(len_rounds), acc[:len_rounds], label=label)
+    # plt.title(f"{exp_dict[exp_name]} {partitioning} R={len_rounds} {config_data['C_fraction']} fraction of #C={config_data['num_clients']} E={config_data['local_epochs']} B={bs}  Classes={config_data['num_classes']}")
+    plt.xlabel('Round')
+    plt.ylabel('Accuracy %')
+    plt.title(title)
+    plt.legend(loc='upper left')
+    # Show plot
+    plt.savefig(f"./images/exps/compare_partitioning/{exp_str}_{acc_type}_summary_.png", bbox_inches='tight')
+    # plt.show()
+    plt.close()
+
+def plot_summary(exp_file_csv: str):
+    """Plot and print summary of a expirement"""
+    if not os.path.exists('./images/exps/summaries'):
+        os.makedirs('./images/exps/summaries')
+    
+    up_dir = os.path.dirname(exp_file_csv)
+    config_file = glob.glob(f"{up_dir}/.hydra/config.yaml")[0]
+    print(exp_file_csv)
+    with open(config_file, 'r') as f:
+        config_data = yaml.load(f, Loader=yaml.FullLoader)
+    clients = config_data['num_clients']
+    exp_name = config_data['exp_name']
+    bs= config_data['batch_size']
+    exp_dict = {
+        'momentum': 'FedAvg',
+        'proximal': 'FedProx',
+        'scaffold': 'SCAFFOLD'
+    }
+    exp_str =  os.path.splitext(os.path.basename(exp_file_csv))[0]
+    # Load data from CSV into a DataFrame
+    df = pd.read_csv(exp_file_csv)
+    # Extracting required columns
+    try:
+        round_values = df['round']
+        test_accuracy = df['test_accuracy']
+        train_accuracy = df['train_acc']
+        val_accuracy = df['val_acc']
+        tr,t_r = np.max(train_accuracy), np.argmax(train_accuracy)
+        val, v_r = np.max(val_accuracy), np.argmax(val_accuracy)
+        test, te_r = np.max(test_accuracy), np.argmax(test_accuracy)
+        print(f"Best accuracies on (accuracy,round):  \nTrain-({tr},{t_r}), Val-({val},{v_r}), Test-({test},{te_r})")
+        # print(config_data)
+        if config_data['partitioning'] == 'dirichlet':
+            partitioning= f"Dir({config_data['alpha']})"
+        else:
+            partitioning= config_data['partitioning'].upper()
+        # Plotting the metrics
+        plt.figure(figsize=(10, 6))
+        plt.plot(round_values, test_accuracy, label='Global model test acc')
+        plt.plot(round_values, train_accuracy, label='Weighted train acc')
+        plt.plot(round_values, val_accuracy, label='Weighted validation acc')
+
+        # Adding labels and title
+        plt.xlabel('Round')
+        plt.ylabel('Accuracy %')
+        #LR={config_data['optimizer']['lr']}
+        plt.title(f"{exp_dict[exp_name]} {partitioning} R={len(round_values)} {config_data['C_fraction']} fraction of #C={config_data['num_clients']} E={config_data['local_epochs']} B={bs}  Classes={config_data['num_classes']}")
+        plt.legend(loc='lower center')
+        # Show plot
+        plt.savefig(f"images/exps/summaries/summary_{exp_str}.png", bbox_inches='tight')
+        # plt.show()
+        plt.close()
+    except:
+        print("Corrupted .csv with missing data")
+
+
+
+
 if __name__ == "__main__":
     # for type_epoch_exp in [False, True]:
     #     for solver in ["vanilla", "momentum", "proximal"]:
