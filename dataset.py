@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import random_split, DataLoader, Subset, Dataset
-from torchvision.transforms import ToTensor, Normalize, Compose
+from torchvision.transforms import ToTensor, Normalize, Compose, RandomResizedCrop, RandomApply, ColorJitter, RandomGrayscale, RandomHorizontalFlip, Resize
 import torchvision.transforms.functional as F
 from torchvision.datasets import Food101
 from dataset_prep import *
@@ -70,7 +70,7 @@ def get_food101(transform, datapath: str = 'D:/DesktopC/Datasets/data/', subset:
     else:
         return trainset, testset                
     # return trainset, testset
-             
+          
 def load_dataset(datapath: str, 
                  subset: bool,
                  num_classes: int,
@@ -207,8 +207,85 @@ def load_centr_data(datapath: str,
     # Subset(testset.dataset, testset.indices)
     return DataLoader(Subset(trainset.dataset, trainset.indices), batch_size=batch_size, shuffle=True, num_workers=num_workers), DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
 
+class TwoCropsTransform:
+    """Take two random crops of one image as the query and key."""
 
+    def __init__(self, base_transform):
+        self.base_transform = base_transform
 
+    def __call__(self, x):
+        q = self.base_transform(x)
+        k = self.base_transform(x)
+        return [q, k]
+
+def get_food101_ssl(transform, simple_trf, datapath: str = 'D:/DesktopC/Datasets/data/', subset: bool = True, num_classes: int = 4):
+    """Download Food101 and apply transformation."""
+    trainsets = Food101(root=datapath, split="train", transform=TwoCropsTransform(transform), download= True)
+    testset = Food101(root=datapath, split="test", transform=simple_trf, download= True)
+    
+    # trainset_labels = trainset.classes
+    if subset:
+        sub_trainsets = []
+        #Taking Subset of trainset and testset
+        for trainset in trainsets:
+            # select classes you want to include in your subset
+            list = [i for i in range(num_classes)]
+            classes = torch.tensor(list)
+            # classes = torch.tensor([0, 1, 2, 3])
+            # get indices that correspond to one of the selected classes
+            train_indices = (torch.tensor(trainset._labels)[..., None] == classes).any(-1).nonzero(as_tuple=True)[0]
+            np_tr_idx = np.array(train_indices)
+            # np_tr_lab = np.array(trainset._labels)
+            # tr_mapped_lab = np_tr_lab[np_tr_idx]
+            # subset the dataset
+            train_sub = CustomSubset(trainset, np_tr_idx) # tr_mapped_lab)
+            sub_trainsets.append(train_sub)
+
+        # get indices that correspond to one of the selected classes
+        test_indices = (torch.tensor(testset._labels)[..., None] == classes).any(-1).nonzero(as_tuple=True)[0]
+        np_test_idx = np.array(test_indices)
+        # subset the dataset
+        test_sub = CustomSubset(testset, np_test_idx) #, test_mapped_lab)
+        # test_sub = Subset(testset, test_indices)
+        return sub_trainsets, test_sub
+    else:
+        return trainset, testset                
+    # return trainset, testset
+
+def load_centr_data_SSL(datapath: str, 
+                 subset: bool,
+                 num_classes: int,
+                 num_workers: int,
+                    batch_size: int):
+    """Download Food101 dataset for centralised learning."""
+    print("Loading data...")
+    #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
+    # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
+    # normalize = Normalize(mean=[0.485, 0.456, 0.406],
+    #                                     std=[0.229, 0.224, 0.225])
+    augmentation = Compose[
+        RandomResizedCrop(224, scale=(0.2, 1.), interpolation= F.InterpolationMode.BICUBIC),
+        RandomApply([
+            ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+        ], p=0.8),
+        RandomGrayscale(p=0.2),
+        RandomHorizontalFlip(),
+        ToTensor(),
+        # normalize
+    ]
+    simple_trf = Compose[
+        Resize(224, F.InterpolationMode.BICUBIC),
+        ToTensor,
+    ]
+    trainsets, testset = get_food101_ssl(augmentation, simple_trf, datapath, subset, num_classes)
+    # trainset_0 = trainsets[0]
+    # trainset_1 = trainsets[1]
+    trainloaders = []
+    for trainset in trainsets:
+        temp_loader = DataLoader(Subset(trainset.dataset, trainset.indices), batch_size=batch_size, shuffle=True, num_workers=num_workers)
+        trainloaders.append(temp_loader)
+    # Subset(testset.dataset, testset.indices)
+    return trainloaders[0], trainloaders[1], DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
 
 
 
