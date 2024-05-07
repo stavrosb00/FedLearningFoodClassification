@@ -1,11 +1,14 @@
 from tqdm import tqdm
 import torch.nn.functional as F 
 import torch
+import numpy as np
 # code copied from https://colab.research.google.com/github/facebookresearch/moco/blob/colab-notebook/colab/moco_cifar10_demo.ipynb#scrollTo=RI1Y8bSImD7N
 # test using a knn monitor
-def knn_monitor(net, memory_data_loader, test_data_loader, k=200, t=0.1, hide_progress=False, device=None):
+def knn_monitor(net, memory_data_loader, test_data_loader, k=200, t=0.1, hide_progress=False, device='cuda'):
     net.eval()
-    classes = len(memory_data_loader.dataset.classes)
+    targets = np.array(memory_data_loader.dataset.dataset._labels)[memory_data_loader.dataset.indices] 
+    classes = len(np.unique(targets))
+    # classes = len(memory_data_loader.dataset.classes)
     total_top1, total_top5, total_num, feature_bank = 0.0, 0.0, 0, []
     with torch.no_grad():
         # generate feature bank
@@ -20,14 +23,11 @@ def knn_monitor(net, memory_data_loader, test_data_loader, k=200, t=0.1, hide_pr
         # [D, N]
         feature_bank = torch.cat(feature_bank, dim=0).t().contiguous()
         # [N]
-        feature_labels = torch.tensor(memory_data_loader.dataset.targets, device=feature_bank.device)
+        feature_labels = torch.tensor(targets, device=feature_bank.device, dtype=torch.int64) #memory_data_loader.dataset.targets
         # loop test data to predict the label by weighted knn search
         test_bar = tqdm(test_data_loader, desc='kNN', disable=hide_progress)
         for data, target in test_bar:
-            if device is None:
-                data, target = data.cuda(non_blocking=True), target.cuda(non_blocking=True)
-            else:
-                data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)
+            data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)
             feature = net(data)
             feature = F.normalize(feature, dim=1)
             

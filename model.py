@@ -7,14 +7,19 @@ from typing import Dict, List
 from utils import comp_accuracy
 from torch.optim import SGD
 from torch.cuda.amp import autocast, GradScaler
+from tqdm import tqdm
+from knn_monitor import knn_monitor
 
 # Note the model and functions here defined do not have any FL-specific components.
 class ResNet18(nn.Module):
     """Initialize ResNet18 architecture as module"""
-    def __init__(self, num_classes: int = 4):
+    def __init__(self, num_classes: int = 4, pretrained = True):
         super().__init__()
         self.transform = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
-        self.resnet = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.IMAGENET1K_V1)
+        if pretrained:
+            self.resnet = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.IMAGENET1K_V1)
+        else:
+            self.resnet = torchvision.models.resnet18()
         # self.resnet = torchvision.models.resnet18(weights= None)
         self.resnet.fc = nn.Linear(in_features=512, out_features=num_classes)
         
@@ -32,12 +37,12 @@ class ProjectionMLP(nn.Module):
             nn.BatchNorm1d(h1_features),
             nn.ReLU(inplace=True)
         )
-        self.l2 = nn.Sequential(
-            nn.Linear(h1_features, h2_features),
-            nn.BatchNorm1d(h2_features),
-            nn.ReLU(inplace=True)
+        # self.l2 = nn.Sequential(
+        #     nn.Linear(h1_features, h2_features),
+        #     nn.BatchNorm1d(h2_features),
+        #     nn.ReLU(inplace=True)
 
-        )
+        # )
         self.l3 = nn.Sequential(
             nn.Linear(h1_features, out_features),
             nn.BatchNorm1d(out_features)
@@ -78,11 +83,13 @@ def D(p, z, version='simplified'): # negative cosine similarity
 class SimSiam(nn.Module):
     def __init__(self, backbone=ResNet18(num_classes=10), hidden_dim = 2048, pred_dim = 512, output_dim = 2048):
         super(SimSiam, self).__init__()
-        backbone.output_dim = backbone.fc.in_features
+        # backbone.output_dim = backbone.fc.in_features
         backbone.fc = torch.nn.Identity() # erase last linear layer
-
         self.backbone = backbone
-        self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)
+        # self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)
+        self.projector = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)  
+        # backbone.fc = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim) 
+        # self.encoder = backbone
         self.encoder = nn.Sequential(
             self.backbone,
             self.projector
@@ -311,3 +318,50 @@ def train_loop(net: torch.nn.Module,
     # Return the filled results at the end of the epochs
     return results
     
+def adjust_learning_rate(optimizer: SGD, init_lr, epoch, epochs):
+    """Decay the learning rate based on schedule"""
+    cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * epoch / epochs)) # math faster than numpy on single values that aren't arrays
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = cur_lr
+
+def train_loop_ssl(net: torch.nn.Module, 
+          trainloader: torch.utils.data.DataLoader, 
+          testloader: torch.utils.data.DataLoader, 
+          memoryloader: torch.utils.data.DataLoader,
+          optimizer: torch.optim.Optimizer,
+          epochs: int,
+          device: torch.device,
+          init_lr=0.032) -> Dict[str, List]:
+    accuracy = 0 
+    results = {"knn_accuracy": [],
+               "train_loss": []
+               }
+    # Start training
+    net.to(device)
+    global_progress = tqdm(range(epochs), desc=f'Training')
+    for epoch in global_progress:
+        batch_loss = []
+        net.train() #need to reset because knn_monitor sets encoder sub-module on eval() mode
+        local_progress = tqdm(trainloader, desc=f'Epoch {epoch}/{epochs}')
+        for i, data in enumerate(local_progress):
+            images = data[0]
+            optimizer.zero_grad()
+            loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+            # loss = data_dict['loss'].mean()
+            loss.backward()
+            optimizer.step()
+            # lr_scheduler.step()
+            batch_loss.append(loss)
+            local_progress.set_postfix({'loss': loss})
+
+        # accuracy = knn_monitor(net.encoder, testloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)
+        # net.backbone
+        accuracy = knn_monitor(net.encoder, memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)  # 25, 7500
+        info_dict = {"epoch":epoch, "accuracy":accuracy}
+        adjust_learning_rate(optimizer, init_lr, epoch, epochs)
+        global_progress.set_postfix(info_dict)
+        results["knn_accuracy"].append(float(accuracy))
+        results["train_loss"].append(float(sum(batch_loss) / len(batch_loss)))
+
+    print('Finished Training')
+    return results
