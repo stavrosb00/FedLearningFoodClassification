@@ -8,7 +8,7 @@ num_rounds: 3
 num_clients: 10
 lr_scheduling: False
 
-batch_size: 32
+batch_size: 64 #32 Federated supervised , 64 Federated SSL
 val_ratio: 0.3
 partitioning: 'iid'
 alpha: 0.5
@@ -35,6 +35,7 @@ var_max_epochs: 4
 local_epochs: 1
 
 model:
+  checkpoint: 'C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E10.pth'
   _target_: model.ResNet18
 
 

@@ -101,3 +101,76 @@ def plot_results(save_path: str, info_dict: Dict[str, List], subset: bool, num_c
     plt.ylabel('Loss')
     plt.savefig(figname2, bbox_inches='tight')
     plt.close()
+
+def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, num_classes: int, model: str):
+    if subset:
+         datamode = "subset"
+    else:
+         datamode = "full"
+    results = pd.DataFrame(info_dict)
+    # file_suffix = f"stats_food101{datamode}_{model}"
+    file_name = os.path.join(
+        save_path,
+        f"centr_SSL_food_{datamode}_{num_classes}classes_{model}.csv",
+    )
+    results.to_csv(file_name, index=False)
+    keys = info_dict.keys()
+    values = info_dict.values()
+    accs = []
+    losses =[]
+    for i, (key, value) in enumerate(zip(keys,values)):
+        if i == 0: 
+            losses = np.array(value)
+        if i == 2:
+            losses = np.stack((losses, np.array(value)), axis=0)
+        
+        if i == 1:
+            accs = np.array(value)
+        if i == 3:
+            accs = np.stack((accs, np.array(value)), axis=0)
+
+    if not os.path.exists('./images'):
+        os.makedirs('./images') 
+
+    xset = [i+1 for i in range(len(accs[0]))]
+    figname1 = f"./images/accuracies_{datamode}_{num_classes}classes_{model}.png"
+    plt.plot(xset, accs[0], 'x-', xset, accs[1], 'x-')
+    plt.legend(('Train Acc', 'Test Acc'), loc = 'lower center')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy %')
+    plt.savefig(figname1, bbox_inches='tight')
+    plt.close()
+
+    figname2 = f"./images/losses_{datamode}_{num_classes}classes_{model}.png"
+    plt.plot(xset, losses[0], 'x-', xset, losses[1], 'x-')
+    plt.legend(('Train Loss', 'Test Loss'), loc = 'lower center')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.savefig(figname2, bbox_inches='tight')
+    plt.close()
+
+
+def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, num_classes: int, model: str):
+    if subset:
+         datamode = "subset"
+    else:
+         datamode = "full"
+    results = pd.DataFrame(info_dict) #, index=range(len(info_dict)))
+    # file_suffix = f"stats_food101{datamode}_{model}"
+    file_name = os.path.join(
+        save_path,
+        f"centr_SSL_food_{datamode}_{num_classes}classes_{model}.csv",
+    )
+    results.to_csv(file_name, index=False)
+
+    accs = info_dict["knn_accuracy"]
+    xset =[x+1 for x in range(len(accs))]
+    figname = f"./images/knn_accuracy_{datamode}_{num_classes}classes_{model}.png"
+    plt.plot(xset, accs, 'x-')
+    plt.xlabel('Epochs')
+    plt.ylabel('kNN Accuracy %')
+    plt.title('Centralised pretraining SimSiam')
+    # plt.grid(True)
+    # plt.show()
+    plt.savefig(figname, bbox_inches='tight')
+    plt.close()

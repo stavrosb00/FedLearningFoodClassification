@@ -37,14 +37,18 @@ https://pytorch.org/mobile/home/
 - [✓] Latex list of symbols(comm rounds T, N clients, Si sub-synolo k.a.)
 - [✓] Dirichlet 0.1 SCAFFOLD full sample fraction
 - [✓] Latex more plots KAI MORE SXOLIA 
-- [✓] Latex algorithms  
+- [semi] Latex algorithms  
+- [] Parse model architecture through arguments. Config .yaml target_ + python instances
+- [✓] Two crops and data augmentation , memory_loader, 
+- [✓] Functioning MLP projector & predictor , SimSiam arch
+- [✓] Optimizer SGD with init_lr and learning scheduler cosine decay
+- [] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
 
+- [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
 - [] Give feature: ignore evaluate_fn and ignore results related to test_acc... indexing me rounds na dw gia na xwraw 2-3 client ray processes. na trexw mono apo miniconda cmd xwris VScode
 - [] Na anebasw # client processes kai na bgalw evaluate_fn global test gia faster simulations
-- [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
 - [] Plot algorithm comparison and titles based on .yaml files : Algorithm(color) based on train acc or other accs(diff line w/ same color)
 - [] Nea polla peiramata me fraction=1 k higher #classes
-- [] Parse model architecture through arguments. Config .yaml target_ + python instances
 
 ## Xrysa tips
 - [semi] Read papers gia meta-learning/self-supervised me pre-trained pretext tasks kai downstream tasks
