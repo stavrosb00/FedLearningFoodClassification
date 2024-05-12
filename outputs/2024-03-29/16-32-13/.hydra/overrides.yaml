@@ -1,0 +1,7 @@
+- strategy=scaffold
+- optimizer=scaffold
+- partitioning=dirichlet
+- num_rounds=20
+- num_classes=10
+- num_clients=10
+- C_fraction=0.5

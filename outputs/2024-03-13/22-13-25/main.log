@@ -1,0 +1,23 @@
+[2024-03-13 22:13:28,284][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-13 22:13:28,284][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-03-13 22:13:31,537][flwr][INFO] - Flower VCE: Ray initialized with resources: {'memory': 17195520000.0, 'node:127.0.0.1': 1.0, 'object_store_memory': 8597760000.0, 'CPU': 6.0, 'node:__internal_head__': 1.0, 'GPU': 1.0}
+[2024-03-13 22:13:31,537][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-13 22:13:31,552][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.5}
+[2024-03-13 22:13:31,552][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-03-13 22:13:31,552][flwr][INFO] - Initializing global parameters
+[2024-03-13 22:13:31,562][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-13 22:13:36,470][flwr][INFO] - Received initial parameters from one random client
+[2024-03-13 22:13:36,486][flwr][INFO] - Evaluating initial parameters
+[2024-03-13 22:13:50,389][flwr][INFO] - initial parameters (loss, other metrics): 0.0224077068567276, {'accuracy': 31.34765625}
+[2024-03-13 22:13:50,390][flwr][INFO] - FL starting
+[2024-03-13 22:13:50,446][flwr][DEBUG] - fit_round 1: strategy sampled 8 clients (out of 16)
+[2024-03-13 22:18:41,586][flwr][DEBUG] - fit_round 1 received 8 results and 0 failures
+[2024-03-13 22:19:00,061][flwr][INFO] - fit progress: (1, 0.022205312848091126, {'accuracy': 27.98828125}, 309.70173489999434)
+[2024-03-13 22:19:00,061][flwr][DEBUG] - evaluate_round 1: strategy sampled 8 clients (out of 16)
+[2024-03-13 22:19:31,397][flwr][DEBUG] - evaluate_round 1 received 8 results and 0 failures
+[2024-03-13 22:19:31,397][flwr][INFO] - FL finished in 341.03359679999994
+[2024-03-13 22:19:31,421][flwr][INFO] - app_fit: losses_distributed [(1, 0.07286094149781597)]
+[2024-03-13 22:19:31,422][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, 1.4383671283721924)], 'accuracy': [(1, 27.58223686218262)], 'mean_diff_acc': [(1, -0.10399533907572556)], 'var_diff_acc': [(1, 6.032058592246809)]}
+[2024-03-13 22:19:31,422][flwr][INFO] - app_fit: metrics_distributed {'loss': [(1, 0.07286094149781598)], 'accuracy': [(1, 25.868054628372192)], 'mean_diff_acc': [(1, 0.0)], 'var_diff_acc': [(1, 94.97370836727436)]}
+[2024-03-13 22:19:31,423][flwr][INFO] - app_fit: losses_centralized [(0, 0.0224077068567276), (1, 0.022205312848091126)]
+[2024-03-13 22:19:31,424][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(0, 31.34765625), (1, 27.98828125)]}

@@ -1,0 +1,23 @@
+[2024-03-14 03:15:25,261][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-14 03:15:25,261][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=50, round_timeout=None)
+[2024-03-14 03:15:30,752][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 8003794944.0, 'node:127.0.0.1': 1.0, 'memory': 16007589888.0, 'CPU': 6.0, 'node:__internal_head__': 1.0, 'GPU': 1.0}
+[2024-03-14 03:15:30,752][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-14 03:15:30,752][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.5}
+[2024-03-14 03:15:30,752][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-03-14 03:15:30,752][flwr][INFO] - Initializing global parameters
+[2024-03-14 03:15:30,764][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-14 03:15:35,667][flwr][INFO] - Received initial parameters from one random client
+[2024-03-14 03:15:35,677][flwr][INFO] - Evaluating initial parameters
+[2024-03-14 03:15:58,330][flwr][INFO] - initial parameters (loss, other metrics): 0.022541823387145995, {'accuracy': 26.54296875}
+[2024-03-14 03:15:58,330][flwr][INFO] - FL starting
+[2024-03-14 03:15:58,396][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-14 03:19:28,582][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-03-14 03:19:52,969][flwr][INFO] - fit progress: (1, 0.021096423745155333, {'accuracy': 34.12109375}, 234.6525735000032)
+[2024-03-14 03:19:52,984][flwr][DEBUG] - evaluate_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-14 03:20:13,940][flwr][DEBUG] - evaluate_round 1 received 5 results and 0 failures
+[2024-03-14 03:20:14,004][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 10)
+[2024-03-14 03:24:08,872][flwr][DEBUG] - fit_round 2 received 5 results and 0 failures
+[2024-03-14 03:24:32,788][flwr][INFO] - fit progress: (2, 0.02024438750743866, {'accuracy': 35.625}, 514.4763130999927)
+[2024-03-14 03:24:32,788][flwr][DEBUG] - evaluate_round 2: strategy sampled 5 clients (out of 10)
+[2024-03-14 03:24:53,143][flwr][DEBUG] - evaluate_round 2 received 5 results and 0 failures
+[2024-03-14 03:24:53,209][flwr][DEBUG] - fit_round 3: strategy sampled 5 clients (out of 10)

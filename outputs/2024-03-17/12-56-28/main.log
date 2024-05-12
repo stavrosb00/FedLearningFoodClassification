@@ -1,0 +1,38 @@
+[2024-03-17 12:56:30,539][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-17 12:56:30,540][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=4, round_timeout=None)
+[2024-03-17 12:56:34,069][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 7583937331.0, 'node:127.0.0.1': 1.0, 'memory': 15167874663.0, 'node:__internal_head__': 1.0, 'CPU': 6.0, 'GPU': 1.0}
+[2024-03-17 12:56:34,070][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-17 12:56:34,070][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 4, 'num_gpus': 1}
+[2024-03-17 12:56:34,079][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-03-17 12:56:34,079][flwr][INFO] - Initializing global parameters
+[2024-03-17 12:56:34,080][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-17 12:56:39,559][flwr][INFO] - Received initial parameters from one random client
+[2024-03-17 12:56:39,575][flwr][INFO] - Evaluating initial parameters
+[2024-03-17 12:56:53,800][flwr][INFO] - initial parameters (loss, other metrics): 0.04331775164604187, {'accuracy': 34.47265625}
+[2024-03-17 12:56:53,800][flwr][INFO] - FL starting
+[2024-03-17 12:56:53,860][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-17 12:57:42,790][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-03-17 12:57:54,694][flwr][INFO] - fit progress: (1, 0.06730862179398536, {'accuracy': 24.4140625}, 60.90241409999726)
+[2024-03-17 12:57:54,695][flwr][DEBUG] - evaluate_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-17 12:58:26,124][flwr][DEBUG] - evaluate_round 1 received 5 results and 0 failures
+[2024-03-17 12:58:26,186][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 10)
+[2024-03-17 12:59:09,119][flwr][DEBUG] - fit_round 2 received 5 results and 0 failures
+[2024-03-17 12:59:20,992][flwr][INFO] - fit progress: (2, 0.060648497201502324, {'accuracy': 48.828125}, 147.21232600000076)
+[2024-03-17 12:59:20,993][flwr][DEBUG] - evaluate_round 2: strategy sampled 5 clients (out of 10)
+[2024-03-17 12:59:52,424][flwr][DEBUG] - evaluate_round 2 received 5 results and 0 failures
+[2024-03-17 12:59:52,486][flwr][DEBUG] - fit_round 3: strategy sampled 5 clients (out of 10)
+[2024-03-17 13:00:37,803][flwr][DEBUG] - fit_round 3 received 5 results and 0 failures
+[2024-03-17 13:00:49,843][flwr][INFO] - fit progress: (3, 0.06453781909495591, {'accuracy': 26.66015625}, 236.07649619999574)
+[2024-03-17 13:00:49,844][flwr][DEBUG] - evaluate_round 3: strategy sampled 5 clients (out of 10)
+[2024-03-17 13:01:21,240][flwr][DEBUG] - evaluate_round 3 received 5 results and 0 failures
+[2024-03-17 13:01:21,303][flwr][DEBUG] - fit_round 4: strategy sampled 5 clients (out of 10)
+[2024-03-17 13:02:06,543][flwr][DEBUG] - fit_round 4 received 5 results and 0 failures
+[2024-03-17 13:02:18,547][flwr][INFO] - fit progress: (4, 0.045440412893891335, {'accuracy': 47.8515625}, 324.7918447999982)
+[2024-03-17 13:02:18,547][flwr][DEBUG] - evaluate_round 4: strategy sampled 5 clients (out of 10)
+[2024-03-17 13:02:49,839][flwr][DEBUG] - evaluate_round 4 received 5 results and 0 failures
+[2024-03-17 13:02:49,840][flwr][INFO] - FL finished in 356.0893505999993
+[2024-03-17 13:02:49,852][flwr][INFO] - app_fit: losses_distributed [(1, 0.13617794567167793), (2, 0.12985591657999956), (3, 0.14863213554906843), (4, 0.08186665869593593)]
+[2024-03-17 13:02:49,853][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, 0.7510418089873651), (2, 0.9962686736409258), (3, 1.256533717553927), (4, 1.4419650790902476)], 'accuracy': [(1, 70.75027226466759), (2, 68.22050643548732), (3, 73.17810440063477), (4, 68.58506917953491)], 'mean_diff_acc': [(1, -0.4798248091554328), (2, -4.8015373870932265), (3, -0.46475582122802733), (4, 0.5966435008578828)], 'var_diff_acc': [(1, 140.83928003885322), (2, 286.3290001721547), (3, 64.68684014966809), (4, 61.83287408943861)]}
+[2024-03-17 13:02:49,854][flwr][INFO] - app_fit: metrics_distributed {'loss': [(1, 0.13617794567167793), (2, 0.12985591657999956), (3, 0.14863213554906843), (4, 0.08186665869593593)], 'accuracy': [(1, 27.83672873179118), (2, 29.76899024418422), (3, 24.706420612335204), (4, 57.09806855519613)], 'mean_diff_acc': [(1, -1.9326542536417661), (2, -4.168792452130998), (3, -7.105427357601002e-16), (4, -4.969274838765465)], 'var_diff_acc': [(1, 468.902771523923), (2, 899.9197480493247), (3, 781.2711640985502), (4, 416.36571439959516)]}
+[2024-03-17 13:02:49,856][flwr][INFO] - app_fit: losses_centralized [(0, 0.04331775164604187), (1, 0.06730862179398536), (2, 0.060648497201502324), (3, 0.06453781909495591), (4, 0.045440412893891335)]
+[2024-03-17 13:02:49,856][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(0, 34.47265625), (1, 24.4140625), (2, 48.828125), (3, 26.66015625), (4, 47.8515625)]}

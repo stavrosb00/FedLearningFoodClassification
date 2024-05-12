@@ -1,0 +1,3 @@
+- strategy=scaffold
+- optimizer=scaffold
+- num_rounds=1

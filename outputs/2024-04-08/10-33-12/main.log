@@ -1,0 +1,46 @@
+[2024-04-08 10:33:14,852][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-04-08 10:33:14,853][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=5, round_timeout=None)
+[2024-04-08 10:33:19,856][flwr][INFO] - Flower VCE: Ray initialized with resources: {'node:127.0.0.1': 1.0, 'memory': 14967418062.0, 'object_store_memory': 7483709030.0, 'node:__internal_head__': 1.0, 'GPU': 1.0, 'CPU': 6.0}
+[2024-04-08 10:33:19,857][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-04-08 10:33:19,858][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 4, 'num_gpus': 1}
+[2024-04-08 10:33:19,867][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-04-08 10:33:19,868][flwr][INFO] - Initializing global parameters
+[2024-04-08 10:33:19,869][flwr][INFO] - Requesting initial parameters from one random client
+[2024-04-08 10:33:26,038][flwr][INFO] - Received initial parameters from one random client
+[2024-04-08 10:33:26,039][flwr][INFO] - Evaluating initial parameters
+[2024-04-08 10:33:46,517][flwr][INFO] - initial parameters (loss, other metrics): 0.07573951416015624, {'accuracy': 10.04746835443038}
+[2024-04-08 10:33:46,518][flwr][INFO] - FL starting
+[2024-04-08 10:33:46,518][flwr][DEBUG] - fit_round 1: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:35:02,256][flwr][DEBUG] - fit_round 1 received 10 results and 0 failures
+[2024-04-08 10:35:21,314][flwr][INFO] - fit progress: (1, 0.08558941040039063, {'accuracy': 17.95886075949367}, 94.79463050000004)
+[2024-04-08 10:35:21,314][flwr][DEBUG] - evaluate_round 1: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:35:53,264][flwr][DEBUG] - evaluate_round 1 received 10 results and 0 failures
+[2024-04-08 10:35:53,343][flwr][INFO] - Model saved with Best eval accuracy 17.764: 
+[2024-04-08 10:35:53,344][flwr][DEBUG] - fit_round 2: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:37:06,612][flwr][DEBUG] - fit_round 2 received 10 results and 0 failures
+[2024-04-08 10:37:25,785][flwr][INFO] - fit progress: (2, 0.09878879222869873, {'accuracy': 17.167721518987342}, 218.81283950000034)
+[2024-04-08 10:37:25,786][flwr][DEBUG] - evaluate_round 2: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:37:56,972][flwr][DEBUG] - evaluate_round 2 received 10 results and 0 failures
+[2024-04-08 10:37:57,002][flwr][DEBUG] - fit_round 3: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:39:08,472][flwr][DEBUG] - fit_round 3 received 10 results and 0 failures
+[2024-04-08 10:39:27,329][flwr][INFO] - fit progress: (3, 0.09646346554756165, {'accuracy': 27.175632911392405}, 339.8271993000003)
+[2024-04-08 10:39:27,329][flwr][DEBUG] - evaluate_round 3: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:39:58,061][flwr][DEBUG] - evaluate_round 3 received 10 results and 0 failures
+[2024-04-08 10:39:58,134][flwr][INFO] - Model saved with Best eval accuracy 27.098: 
+[2024-04-08 10:39:58,135][flwr][DEBUG] - fit_round 4: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:41:09,340][flwr][DEBUG] - fit_round 4 received 10 results and 0 failures
+[2024-04-08 10:41:27,254][flwr][INFO] - fit progress: (4, 0.09004353468418122, {'accuracy': 37.0253164556962}, 459.4225517)
+[2024-04-08 10:41:27,255][flwr][DEBUG] - evaluate_round 4: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:41:57,692][flwr][DEBUG] - evaluate_round 4 received 10 results and 0 failures
+[2024-04-08 10:41:57,766][flwr][INFO] - Model saved with Best eval accuracy 36.414: 
+[2024-04-08 10:41:57,768][flwr][DEBUG] - fit_round 5: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:43:07,294][flwr][DEBUG] - fit_round 5 received 10 results and 0 failures
+[2024-04-08 10:43:25,908][flwr][INFO] - fit progress: (5, 0.09810104000866413, {'accuracy': 31.606012658227847}, 578.0729405000002)
+[2024-04-08 10:43:25,908][flwr][DEBUG] - evaluate_round 5: strategy sampled 10 clients (out of 10)
+[2024-04-08 10:43:56,287][flwr][DEBUG] - evaluate_round 5 received 10 results and 0 failures
+[2024-04-08 10:43:56,320][flwr][INFO] - FL finished in 608.4850020000003
+[2024-04-08 10:43:56,331][flwr][INFO] - app_fit: losses_distributed [(1, 0.09257141473558214), (2, 0.10392638243569269), (3, 0.10463222402996487), (4, 0.09692238693767123), (5, 0.10545451174179712)]
+[2024-04-08 10:43:56,332][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, 0.8657892827110438), (2, 0.8434258498547762), (3, 0.8621244664743506), (4, 0.7705374237947854), (5, 0.7924436669488213)], 'accuracy': [(1, 73.89520807136617), (2, 76.60212033161996), (3, 79.77749506806165), (4, 80.90955053075052), (5, 80.66797927875825)], 'mean_diff_acc': [(1, -8.694558113358198), (2, -7.830425183677384), (3, -7.833326727078465), (4, -6.378612264554315), (5, -4.619569958317338)], 'var_diff_acc': [(1, 556.0759393855976), (2, 510.31093741575916), (3, 425.62462198192935), (4, 277.4823218107577), (5, 223.23733043193633)]}
+[2024-04-08 10:43:56,332][flwr][INFO] - app_fit: metrics_distributed {'loss': [(1, 0.09257141473558214), (2, 0.10392638243569269), (3, 0.10463222402996487), (4, 0.09692238693767123), (5, 0.10545451174179712)], 'accuracy': [(1, 17.763701435795536), (2, 15.681398991433982), (3, 27.09764432485423), (4, 36.41401669759832), (5, 31.23655882013897)], 'mean_diff_acc': [(1, -0.8088631280969694), (2, -5.09814074782836), (3, 1.9920743495365136), (4, 1.0149870770120195), (5, -5.96819955426132)], 'var_diff_acc': [(1, 540.0248492241859), (2, 273.6351189216822), (3, 844.461535148201), (4, 466.7285646180243), (5, 761.2696931234004)]}
+[2024-04-08 10:43:56,333][flwr][INFO] - app_fit: losses_centralized [(0, 0.07573951416015624), (1, 0.08558941040039063), (2, 0.09878879222869873), (3, 0.09646346554756165), (4, 0.09004353468418122), (5, 0.09810104000866413)]
+[2024-04-08 10:43:56,333][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(0, 10.04746835443038), (1, 17.95886075949367), (2, 17.167721518987342), (3, 27.175632911392405), (4, 37.0253164556962), (5, 31.606012658227847)]}

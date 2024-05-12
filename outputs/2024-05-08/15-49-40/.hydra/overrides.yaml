@@ -1,0 +1,5 @@
+- num_rounds=1
+- batch_size=256
+- val_ratio=0
+- optimizer=adam
+- num_workers=0
