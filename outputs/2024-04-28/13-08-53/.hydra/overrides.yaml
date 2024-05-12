@@ -1,0 +1,8 @@
+- optimizer=proximal
+- strategy=fedavg
+- partitioning=dirichlet
+- num_rounds=200
+- num_classes=10
+- num_clients=10
+- C_fraction=0.5
+- alpha=0.1

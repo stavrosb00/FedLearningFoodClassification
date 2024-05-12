@@ -1,0 +1,13 @@
+# @package _global_
+
+exp_name: adam # optimizer for downstream task with linear evaluation. 
+
+optimizer:
+  _target_: models.train
+  lr: 0.003
+  momentum: 0.9
+  weight_decay: 0 #1e-4 0.0005 
+  gmf: 0
+  mu: 0
+  # https://github.com/EasyFL-AI/EasyFL/blob/master/applications/fedssl/linear_evaluation.py
+  # https://github.com/PatrickHua/SimSiam/blob/75a7c51362c30e8628ad83949055ef73829ce786/configs/simsiam_cifar_eval_sgd.yaml  

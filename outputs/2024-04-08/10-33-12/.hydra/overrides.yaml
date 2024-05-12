@@ -1,0 +1,8 @@
+- optimizer=momentum
+- strategy=fedavg
+- partitioning=dirichlet
+- num_rounds=5
+- num_classes=10
+- num_clients=10
+- C_fraction=1
+- alpha=0.1

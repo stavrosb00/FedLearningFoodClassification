@@ -38,12 +38,17 @@ https://pytorch.org/mobile/home/
 - [✓] Dirichlet 0.1 SCAFFOLD full sample fraction
 - [✓] Latex more plots KAI MORE SXOLIA 
 - [semi] Latex algorithms  
-- [] Parse model architecture through arguments. Config .yaml target_ + python instances
+- [] Parse model architecture through arguments. Config .yaml _target + python instances
 - [✓] Two crops and data augmentation , memory_loader, 
 - [✓] Functioning MLP projector & predictor , SimSiam arch
 - [✓] Optimizer SGD with init_lr and learning scheduler cosine decay
-- [] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
+- [✓] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
+- [✓] Na dw alignment dataset me 0 validation support
+- [✓] Alignment dataloader optimization kai profiling benchmark gia tensor or numpy choose gia LinearCKA
+- [] Client and server gia HeteroSSFL
+- [] main_ssfl script
 
+- [] Linear evaluation - load_downstream_data() synarthsh basei label percentages alliws ola 
 - [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
 - [] Give feature: ignore evaluate_fn and ignore results related to test_acc... indexing me rounds na dw gia na xwraw 2-3 client ray processes. na trexw mono apo miniconda cmd xwris VScode
 - [] Na anebasw # client processes kai na bgalw evaluate_fn global test gia faster simulations

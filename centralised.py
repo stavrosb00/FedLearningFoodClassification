@@ -51,7 +51,7 @@ def main(cfg: DictConfig):
     subset = cfg.subset
     n_classes = cfg.num_classes
     #initialize module
-    if subset == 'subset':
+    if subset: #subset == 'subset'
         net = ResNet18(n_classes)
     else:
         net = ResNet18(101)

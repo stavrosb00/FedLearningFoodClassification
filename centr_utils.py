@@ -102,39 +102,27 @@ def plot_results(save_path: str, info_dict: Dict[str, List], subset: bool, num_c
     plt.savefig(figname2, bbox_inches='tight')
     plt.close()
 
-def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, num_classes: int, model: str):
+def plot_results_downstream(save_path: str, info_dict: Dict[str, List], subset: bool, num_classes: int, model: str):
     if subset:
          datamode = "subset"
     else:
          datamode = "full"
-    results = pd.DataFrame(info_dict)
+    results = pd.DataFrame(info_dict) #, index=range(len(info_dict)))
     # file_suffix = f"stats_food101{datamode}_{model}"
     file_name = os.path.join(
         save_path,
-        f"centr_SSL_food_{datamode}_{num_classes}classes_{model}.csv",
+        f"centr_food_{datamode}_{num_classes}classes_{model}.csv",
     )
     results.to_csv(file_name, index=False)
-    keys = info_dict.keys()
-    values = info_dict.values()
     accs = []
-    losses =[]
-    for i, (key, value) in enumerate(zip(keys,values)):
-        if i == 0: 
-            losses = np.array(value)
-        if i == 2:
-            losses = np.stack((losses, np.array(value)), axis=0)
-        
-        if i == 1:
-            accs = np.array(value)
-        if i == 3:
-            accs = np.stack((accs, np.array(value)), axis=0)
-
-    if not os.path.exists('./images'):
-        os.makedirs('./images') 
-
-    xset = [i+1 for i in range(len(accs[0]))]
+    accs.append(info_dict["train_acc"])
+    accs.append(info_dict["test_acc"])
+    losses = []
+    losses.append(info_dict["train_loss"])
+    losses.append(info_dict["test_loss"])
+    xset =[x+1 for x in range(len(accs[0]))]
     figname1 = f"./images/accuracies_{datamode}_{num_classes}classes_{model}.png"
-    plt.plot(xset, accs[0], 'x-', xset, accs[1], 'x-')
+    plt.plot(xset, accs[0], '-', xset, accs[1], '-')
     plt.legend(('Train Acc', 'Test Acc'), loc = 'lower center')
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy %')
@@ -142,13 +130,12 @@ def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, n
     plt.close()
 
     figname2 = f"./images/losses_{datamode}_{num_classes}classes_{model}.png"
-    plt.plot(xset, losses[0], 'x-', xset, losses[1], 'x-')
+    plt.plot(xset, losses[0], '-', xset, losses[1], '-')
     plt.legend(('Train Loss', 'Test Loss'), loc = 'lower center')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.savefig(figname2, bbox_inches='tight')
     plt.close()
-
 
 def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, num_classes: int, model: str):
     if subset:

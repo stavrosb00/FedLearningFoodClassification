@@ -1,0 +1,1183 @@
+[2024-03-14 21:55:35,396][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-14 21:55:35,397][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=100, round_timeout=None)
+[2024-03-14 21:55:39,657][flwr][INFO] - Flower VCE: Ray initialized with resources: {'memory': 17815248078.0, 'node:127.0.0.1': 1.0, 'object_store_memory': 8907624038.0, 'CPU': 6.0, 'GPU': 1.0, 'node:__internal_head__': 1.0}
+[2024-03-14 21:55:39,657][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-14 21:55:39,658][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 1, 'num_gpus': 0.25}
+[2024-03-14 21:55:39,671][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 4 actors
+[2024-03-14 21:55:39,672][flwr][INFO] - Initializing global parameters
+[2024-03-14 21:55:39,672][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-14 21:55:46,143][flwr][INFO] - Received initial parameters from one random client
+[2024-03-14 21:55:46,178][flwr][INFO] - Evaluating initial parameters
+[2024-03-14 21:56:08,876][flwr][INFO] - initial parameters (loss, other metrics): 0.023489242911338807, {'accuracy': 22.75390625}
+[2024-03-14 21:56:08,876][flwr][INFO] - FL starting
+[2024-03-14 21:56:08,956][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-14 21:57:09,134][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=10812, ip=127.0.0.1, actor_id=6744700ba170dbccd9a3368601000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000017A7B93FED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 130, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 265, in train_scaffold
+    outputs = net(images)
+              ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 117, in forward
+    x = self.resnet(x)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 285, in forward
+    return self._forward_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 269, in _forward_impl
+    x = self.bn1(x)
+        ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\batchnorm.py", line 175, in forward
+    return F.batch_norm(
+           ^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\functional.py", line 2482, in batch_norm
+    return torch.batch_norm(
+           ^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=10812, ip=127.0.0.1, actor_id=6744700ba170dbccd9a3368601000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000017A7B93FED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 4 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 130, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 265, in train_scaffold\n    outputs = net(images)\n              ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 117, in forward\n    x = self.resnet(x)\n        ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 285, in forward\n    return self._forward_impl(x)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 269, in _forward_impl\n    x = self.bn1(x)\n        ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\batchnorm.py", line 175, in forward\n    return F.batch_norm(\n           ^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\functional.py", line 2482, in batch_norm\n    return torch.batch_norm(\n           ^^^^^^^^^^^^^^^^^\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n',)
+
+[2024-03-14 21:57:09,136][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 130, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 265, in train_scaffold
+    outputs = net(images)
+              ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 117, in forward
+    x = self.resnet(x)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 285, in forward
+    return self._forward_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 269, in _forward_impl
+    x = self.bn1(x)
+        ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\batchnorm.py", line 175, in forward
+    return F.batch_norm(
+           ^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\functional.py", line 2482, in batch_norm
+    return torch.batch_norm(
+           ^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 3 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 130, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 265, in train_scaffold\n    outputs = net(images)\n              ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 117, in forward\n    x = self.resnet(x)\n        ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 285, in forward\n    return self._forward_impl(x)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 269, in _forward_impl\n    x = self.bn1(x)\n        ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\batchnorm.py", line 175, in forward\n    return F.batch_norm(\n           ^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\functional.py", line 2482, in batch_norm\n    return torch.batch_norm(\n           ^^^^^^^^^^^^^^^^^\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n',)
+
+[2024-03-14 21:57:09,166][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=10812, ip=127.0.0.1, actor_id=6744700ba170dbccd9a3368601000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000017A7B93FED0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 130, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 265, in train_scaffold
+    outputs = net(images)
+              ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 117, in forward
+    x = self.resnet(x)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 285, in forward
+    return self._forward_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 269, in _forward_impl
+    x = self.bn1(x)
+        ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\batchnorm.py", line 175, in forward
+    return F.batch_norm(
+           ^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\functional.py", line 2482, in batch_norm
+    return torch.batch_norm(
+           ^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=10812, ip=127.0.0.1, actor_id=6744700ba170dbccd9a3368601000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000017A7B93FED0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 4 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 130, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 265, in train_scaffold\n    outputs = net(images)\n              ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 117, in forward\n    x = self.resnet(x)\n        ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 285, in forward\n    return self._forward_impl(x)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 269, in _forward_impl\n    x = self.bn1(x)\n        ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\batchnorm.py", line 175, in forward\n    return F.batch_norm(\n           ^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\functional.py", line 2482, in batch_norm\n    return torch.batch_norm(\n           ^^^^^^^^^^^^^^^^^\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n',)
+[2024-03-14 21:57:09,189][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 130, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 265, in train_scaffold
+    outputs = net(images)
+              ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 117, in forward
+    x = self.resnet(x)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 285, in forward
+    return self._forward_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 269, in _forward_impl
+    x = self.bn1(x)
+        ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\batchnorm.py", line 175, in forward
+    return F.batch_norm(
+           ^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\functional.py", line 2482, in batch_norm
+    return torch.batch_norm(
+           ^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 3 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 130, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 265, in train_scaffold\n    outputs = net(images)\n              ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 117, in forward\n    x = self.resnet(x)\n        ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 285, in forward\n    return self._forward_impl(x)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 269, in _forward_impl\n    x = self.bn1(x)\n        ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\batchnorm.py", line 175, in forward\n    return F.batch_norm(\n           ^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\functional.py", line 2482, in batch_norm\n    return torch.batch_norm(\n           ^^^^^^^^^^^^^^^^^\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n',)
+[2024-03-14 21:57:21,755][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 130, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 265, in train_scaffold
+    outputs = net(images)
+              ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 117, in forward
+    x = self.resnet(x)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 285, in forward
+    return self._forward_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 271, in _forward_impl
+    x = self.maxpool(x)
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\pooling.py", line 164, in forward
+    return F.max_pool2d(input, self.kernel_size, self.stride,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\_jit_internal.py", line 499, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\functional.py", line 796, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 2.48 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 9 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 130, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 265, in train_scaffold\n    outputs = net(images)\n              ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 117, in forward\n    x = self.resnet(x)\n        ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 285, in forward\n    return self._forward_impl(x)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 271, in _forward_impl\n    x = self.maxpool(x)\n        ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\pooling.py", line 164, in forward\n    return F.max_pool2d(input, self.kernel_size, self.stride,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\_jit_internal.py", line 499, in fn\n    return if_false(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\functional.py", line 796, in _max_pool2d\n    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 2.48 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n',)
+
+[2024-03-14 21:57:21,798][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 130, in fit
+    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 265, in train_scaffold
+    outputs = net(images)
+              ^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 117, in forward
+    x = self.resnet(x)
+        ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 285, in forward
+    return self._forward_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torchvision\models\resnet.py", line 271, in _forward_impl
+    x = self.maxpool(x)
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\modules\pooling.py", line 164, in forward
+    return F.max_pool2d(input, self.kernel_size, self.stride,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\_jit_internal.py", line 499, in fn
+    return if_false(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\nn\functional.py", line 796, in _max_pool2d
+    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 2.48 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=7032, ip=127.0.0.1, actor_id=6e0d47980bb37a0277b6d4a801000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x000001236DF75CD0>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 9 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 130, in fit\n    train_loss, train_acc = train_scaffold(self.model, self.trainloader, optim, epochs, self.device, server_cv, self.client_cv)\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 265, in train_scaffold\n    outputs = net(images)\n              ^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 117, in forward\n    x = self.resnet(x)\n        ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 285, in forward\n    return self._forward_impl(x)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torchvision\\models\\resnet.py", line 271, in _forward_impl\n    x = self.maxpool(x)\n        ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1511, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\module.py", line 1520, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\modules\\pooling.py", line 164, in forward\n    return F.max_pool2d(input, self.kernel_size, self.stride,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\_jit_internal.py", line 499, in fn\n    return if_false(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\nn\\functional.py", line 796, in _max_pool2d\n    return torch.max_pool2d(input, kernel_size, stride, padding, dilation, ceil_mode)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 11.00 GiB of which 0 bytes is free. Of the allocated memory 2.48 GiB is allocated by PyTorch, and 21.30 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)\n',)
+[2024-03-14 21:59:02,133][flwr][DEBUG] - fit_round 1 received 2 results and 3 failures
+[2024-03-14 21:59:24,457][flwr][INFO] - fit progress: (1, 0.03482664370536804, {'accuracy': 25.09765625}, 195.59937919999993)
+[2024-03-14 21:59:24,457][flwr][DEBUG] - evaluate_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-14 21:59:30,787][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 33e56746477580d85efe514101000000
+	pid: 12192
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None.
+ Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 76, in run
+    job_results = job_fn(client)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 225, in evaluate
+    return maybe_call_evaluate(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 254, in maybe_call_evaluate
+    return client.evaluate(evaluate_ins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 262, in _evaluate
+    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 171, in evaluate
+    loss, accuracy = test(self.model, self.valloader, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 204, in test
+    for images, labels in testloader:
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 439, in __iter__
+    return self._get_iterator()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 387, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 1040, in __init__
+    w.start()
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 336, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\popen_spawn_win32.py", line 95, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+MemoryError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 225, in evaluate\n    return maybe_call_evaluate(\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 254, in maybe_call_evaluate\n    return client.evaluate(evaluate_ins)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 262, in _evaluate\n    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 171, in evaluate\n    loss, accuracy = test(self.model, self.valloader, self.device)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 204, in test\n    for images, labels in testloader:\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 439, in __iter__\n    return self._get_iterator()\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 387, in _get_iterator\n    return _MultiProcessingDataLoaderIter(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 1040, in __init__\n    w.start()\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\process.py", line 121, in start\n    self._popen = self._Popen(self)\n                  ^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 224, in _Popen\n    return _default_context.get_context().Process._Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 336, in _Popen\n    return Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\popen_spawn_win32.py", line 95, in __init__\n    reduction.dump(process_obj, to_child)\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\reduction.py", line 60, in dump\n    ForkingPickler(file, protocol).dump(obj)\nMemoryError\n',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1787, in ray._raylet.task_execution_handler
+  File "python\ray\_raylet.pyx", line 1684, in ray._raylet.execute_task_with_cancellation_handler
+  File "python\ray\_raylet.pyx", line 1366, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1367, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1583, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 853, in ray._raylet.store_task_errors
+  File "python\ray\_raylet.pyx", line 3713, in ray._raylet.CoreWorker.store_task_outputs
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 468, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 442, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python\ray\includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\msgpack\__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack\\_packer.pyx", line 120, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[2024-03-14 21:59:30,796][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 33e56746477580d85efe514101000000
+	pid: 12192
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None.
+ Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 76, in run
+    job_results = job_fn(client)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 225, in evaluate
+    return maybe_call_evaluate(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 254, in maybe_call_evaluate
+    return client.evaluate(evaluate_ins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 262, in _evaluate
+    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 171, in evaluate
+    loss, accuracy = test(self.model, self.valloader, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 204, in test
+    for images, labels in testloader:
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 439, in __iter__
+    return self._get_iterator()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 387, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 1040, in __init__
+    w.start()
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 336, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\popen_spawn_win32.py", line 95, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+MemoryError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 225, in evaluate\n    return maybe_call_evaluate(\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 254, in maybe_call_evaluate\n    return client.evaluate(evaluate_ins)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 262, in _evaluate\n    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 171, in evaluate\n    loss, accuracy = test(self.model, self.valloader, self.device)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 204, in test\n    for images, labels in testloader:\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 439, in __iter__\n    return self._get_iterator()\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 387, in _get_iterator\n    return _MultiProcessingDataLoaderIter(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 1040, in __init__\n    w.start()\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\process.py", line 121, in start\n    self._popen = self._Popen(self)\n                  ^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 224, in _Popen\n    return _default_context.get_context().Process._Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 336, in _Popen\n    return Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\popen_spawn_win32.py", line 95, in __init__\n    reduction.dump(process_obj, to_child)\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\reduction.py", line 60, in dump\n    ForkingPickler(file, protocol).dump(obj)\nMemoryError\n',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1787, in ray._raylet.task_execution_handler
+  File "python\ray\_raylet.pyx", line 1684, in ray._raylet.execute_task_with_cancellation_handler
+  File "python\ray\_raylet.pyx", line 1366, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1367, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1583, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 853, in ray._raylet.store_task_errors
+  File "python\ray\_raylet.pyx", line 3713, in ray._raylet.CoreWorker.store_task_outputs
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 468, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 442, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python\ray\includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\msgpack\__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack\\_packer.pyx", line 120, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[2024-03-14 21:59:30,805][flwr][WARNING] - Actor(33e56746477580d85efe514101000000) will be remove from pool.
+[2024-03-14 21:59:30,826][flwr][WARNING] - Actor(33e56746477580d85efe514101000000) will be remove from pool.
+[2024-03-14 21:59:30,826][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 33e56746477580d85efe514101000000
+	pid: 12192
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None.
+ Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 76, in run
+    job_results = job_fn(client)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 225, in evaluate
+    return maybe_call_evaluate(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 254, in maybe_call_evaluate
+    return client.evaluate(evaluate_ins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 262, in _evaluate
+    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 171, in evaluate
+    loss, accuracy = test(self.model, self.valloader, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 204, in test
+    for images, labels in testloader:
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 439, in __iter__
+    return self._get_iterator()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 387, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 1040, in __init__
+    w.start()
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 336, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\popen_spawn_win32.py", line 95, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+MemoryError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 225, in evaluate\n    return maybe_call_evaluate(\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 254, in maybe_call_evaluate\n    return client.evaluate(evaluate_ins)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 262, in _evaluate\n    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 171, in evaluate\n    loss, accuracy = test(self.model, self.valloader, self.device)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 204, in test\n    for images, labels in testloader:\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 439, in __iter__\n    return self._get_iterator()\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 387, in _get_iterator\n    return _MultiProcessingDataLoaderIter(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 1040, in __init__\n    w.start()\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\process.py", line 121, in start\n    self._popen = self._Popen(self)\n                  ^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 224, in _Popen\n    return _default_context.get_context().Process._Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 336, in _Popen\n    return Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\popen_spawn_win32.py", line 95, in __init__\n    reduction.dump(process_obj, to_child)\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\reduction.py", line 60, in dump\n    ForkingPickler(file, protocol).dump(obj)\nMemoryError\n',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1787, in ray._raylet.task_execution_handler
+  File "python\ray\_raylet.pyx", line 1684, in ray._raylet.execute_task_with_cancellation_handler
+  File "python\ray\_raylet.pyx", line 1366, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1367, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1583, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 853, in ray._raylet.store_task_errors
+  File "python\ray\_raylet.pyx", line 3713, in ray._raylet.CoreWorker.store_task_outputs
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 468, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 442, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python\ray\includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\msgpack\__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack\\_packer.pyx", line 120, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+
+[2024-03-14 21:59:30,836][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 33e56746477580d85efe514101000000
+	pid: 12192
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None.
+ Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 76, in run
+    job_results = job_fn(client)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 225, in evaluate
+    return maybe_call_evaluate(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 254, in maybe_call_evaluate
+    return client.evaluate(evaluate_ins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 262, in _evaluate
+    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 171, in evaluate
+    loss, accuracy = test(self.model, self.valloader, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 204, in test
+    for images, labels in testloader:
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 439, in __iter__
+    return self._get_iterator()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 387, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 1040, in __init__
+    w.start()
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 336, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\popen_spawn_win32.py", line 95, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+MemoryError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 225, in evaluate\n    return maybe_call_evaluate(\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 254, in maybe_call_evaluate\n    return client.evaluate(evaluate_ins)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 262, in _evaluate\n    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 171, in evaluate\n    loss, accuracy = test(self.model, self.valloader, self.device)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 204, in test\n    for images, labels in testloader:\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 439, in __iter__\n    return self._get_iterator()\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 387, in _get_iterator\n    return _MultiProcessingDataLoaderIter(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 1040, in __init__\n    w.start()\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\process.py", line 121, in start\n    self._popen = self._Popen(self)\n                  ^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 224, in _Popen\n    return _default_context.get_context().Process._Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 336, in _Popen\n    return Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\popen_spawn_win32.py", line 95, in __init__\n    reduction.dump(process_obj, to_child)\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\reduction.py", line 60, in dump\n    ForkingPickler(file, protocol).dump(obj)\nMemoryError\n',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1787, in ray._raylet.task_execution_handler
+  File "python\ray\_raylet.pyx", line 1684, in ray._raylet.execute_task_with_cancellation_handler
+  File "python\ray\_raylet.pyx", line 1366, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1367, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1583, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 853, in ray._raylet.store_task_errors
+  File "python\ray\_raylet.pyx", line 3713, in ray._raylet.CoreWorker.store_task_outputs
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 468, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 442, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python\ray\includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\msgpack\__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack\\_packer.pyx", line 120, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+
+[2024-03-14 21:59:30,848][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 33e56746477580d85efe514101000000
+	pid: 12192
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None.
+ Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 76, in run
+    job_results = job_fn(client)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 225, in evaluate
+    return maybe_call_evaluate(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 254, in maybe_call_evaluate
+    return client.evaluate(evaluate_ins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 262, in _evaluate
+    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 171, in evaluate
+    loss, accuracy = test(self.model, self.valloader, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 204, in test
+    for images, labels in testloader:
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 439, in __iter__
+    return self._get_iterator()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 387, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 1040, in __init__
+    w.start()
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 336, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\popen_spawn_win32.py", line 95, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+MemoryError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 225, in evaluate\n    return maybe_call_evaluate(\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 254, in maybe_call_evaluate\n    return client.evaluate(evaluate_ins)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 262, in _evaluate\n    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 171, in evaluate\n    loss, accuracy = test(self.model, self.valloader, self.device)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 204, in test\n    for images, labels in testloader:\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 439, in __iter__\n    return self._get_iterator()\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 387, in _get_iterator\n    return _MultiProcessingDataLoaderIter(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 1040, in __init__\n    w.start()\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\process.py", line 121, in start\n    self._popen = self._Popen(self)\n                  ^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 224, in _Popen\n    return _default_context.get_context().Process._Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 336, in _Popen\n    return Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\popen_spawn_win32.py", line 95, in __init__\n    reduction.dump(process_obj, to_child)\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\reduction.py", line 60, in dump\n    ForkingPickler(file, protocol).dump(obj)\nMemoryError\n',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1787, in ray._raylet.task_execution_handler
+  File "python\ray\_raylet.pyx", line 1684, in ray._raylet.execute_task_with_cancellation_handler
+  File "python\ray\_raylet.pyx", line 1366, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1367, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1583, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 853, in ray._raylet.store_task_errors
+  File "python\ray\_raylet.pyx", line 3713, in ray._raylet.CoreWorker.store_task_outputs
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 468, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 442, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python\ray\includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\msgpack\__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack\\_packer.pyx", line 120, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[2024-03-14 21:59:30,868][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 33e56746477580d85efe514101000000
+	pid: 12192
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None.
+ Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 76, in run
+    job_results = job_fn(client)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 225, in evaluate
+    return maybe_call_evaluate(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\client.py", line 254, in maybe_call_evaluate
+    return client.evaluate(evaluate_ins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\client\numpy_client.py", line 262, in _evaluate
+    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 171, in evaluate
+    loss, accuracy = test(self.model, self.valloader, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\model.py", line 204, in test
+    for images, labels in testloader:
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 439, in __iter__
+    return self._get_iterator()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 387, in _get_iterator
+    return _MultiProcessingDataLoaderIter(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\torch\utils\data\dataloader.py", line 1040, in __init__
+    w.start()
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\process.py", line 121, in start
+    self._popen = self._Popen(self)
+                  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 224, in _Popen
+    return _default_context.get_context().Process._Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\context.py", line 336, in _Popen
+    return Popen(process_obj)
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\popen_spawn_win32.py", line 95, in __init__
+    reduction.dump(process_obj, to_child)
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\multiprocessing\reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+MemoryError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 6 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 225, in evaluate\n    return maybe_call_evaluate(\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\client.py", line 254, in maybe_call_evaluate\n    return client.evaluate(evaluate_ins)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 262, in _evaluate\n    results = self.numpy_client.evaluate(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 171, in evaluate\n    loss, accuracy = test(self.model, self.valloader, self.device)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\model.py", line 204, in test\n    for images, labels in testloader:\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 439, in __iter__\n    return self._get_iterator()\n           ^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 387, in _get_iterator\n    return _MultiProcessingDataLoaderIter(self)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\site-packages\\torch\\utils\\data\\dataloader.py", line 1040, in __init__\n    w.start()\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\process.py", line 121, in start\n    self._popen = self._Popen(self)\n                  ^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 224, in _Popen\n    return _default_context.get_context().Process._Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\context.py", line 336, in _Popen\n    return Popen(process_obj)\n           ^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\popen_spawn_win32.py", line 95, in __init__\n    reduction.dump(process_obj, to_child)\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\fresh_pyt\\Lib\\multiprocessing\\reduction.py", line 60, in dump\n    ForkingPickler(file, protocol).dump(obj)\nMemoryError\n',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python\ray\_raylet.pyx", line 1787, in ray._raylet.task_execution_handler
+  File "python\ray\_raylet.pyx", line 1684, in ray._raylet.execute_task_with_cancellation_handler
+  File "python\ray\_raylet.pyx", line 1366, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1367, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1583, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 853, in ray._raylet.store_task_errors
+  File "python\ray\_raylet.pyx", line 3713, in ray._raylet.CoreWorker.store_task_outputs
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 468, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\serialization.py", line 442, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python\ray\includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\msgpack\__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack\\_packer.pyx", line 120, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[2024-03-14 21:59:35,611][flwr][DEBUG] - evaluate_round 1 received 3 results and 2 failures
+[2024-03-14 21:59:35,693][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 10)
+[2024-03-14 21:59:36,746][flwr][WARNING] - REMOVED actor 33e56746477580d85efe514101000000 from pool
+[2024-03-14 21:59:36,748][flwr][WARNING] - Pool size: 3
+[2024-03-14 21:59:40,838][flwr][INFO] - The cluster expanded. Adding 1 actors to the pool.
+[2024-03-14 21:59:56,822][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6e0d47980bb37a0277b6d4a801000000
+	pid: 7032
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 21:59:56,823][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6e0d47980bb37a0277b6d4a801000000
+	pid: 7032
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 21:59:56,824][flwr][WARNING] - Actor(6e0d47980bb37a0277b6d4a801000000) will be remove from pool.
+[2024-03-14 21:59:56,826][flwr][WARNING] - Actor(6e0d47980bb37a0277b6d4a801000000) will be remove from pool.
+[2024-03-14 21:59:56,826][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6e0d47980bb37a0277b6d4a801000000
+	pid: 7032
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-14 21:59:56,827][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6e0d47980bb37a0277b6d4a801000000
+	pid: 7032
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-14 21:59:56,832][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6e0d47980bb37a0277b6d4a801000000
+	pid: 7032
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 21:59:56,834][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6e0d47980bb37a0277b6d4a801000000
+	pid: 7032
+	namespace: 581e6215-b48a-477a-9c20-9268458b5745
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 22:01:21,235][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2513, in get
+    raise ValueError(
+ValueError: 'object_refs' must either be an ObjectRef or a list of ObjectRefs.
+
+[2024-03-14 22:01:21,250][flwr][ERROR] - 'object_refs' must either be an ObjectRef or a list of ObjectRefs.
