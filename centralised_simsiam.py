@@ -35,10 +35,12 @@ def main(cfg: DictConfig):
     subset = cfg.subset
     n_classes = cfg.num_classes
     #initialize module
-    if subset == 'subset':
+    if subset:
         net = ResNet18(n_classes, pretrained= False)
+        print(f"Subset of {n_classes} food categories!")
     else:
         net = ResNet18(101, pretrained= False)
+        print("hello22") #subset == 'subset' kai subset=True tote ebaze 101
 
     net = SimSiam(backbone=net.resnet, hidden_dim=2048, pred_dim=512, output_dim=2048)
     datapath = cfg.datapath  #"D:/DesktopC/Datasets/data/"

@@ -68,8 +68,8 @@ def get_food101(transform, datapath: str = 'D:/DesktopC/Datasets/data/', subset:
         # test_sub = Subset(testset, test_indices)
         return train_sub, test_sub
     else:
-        return trainset, testset                
-    # return trainset, testset
+        raise NotImplementedError('You need to pick subset=True, even for num_classes=10,50,101 etc.')
+        # return trainset, testset                
           
 def load_dataset(datapath: str, 
                  subset: bool,
@@ -81,8 +81,8 @@ def load_dataset(datapath: str,
                     alpha: float = 0.5,
                     balance: bool = True,
                     seed: int = 2024,
-                    val_ratio: float = 0.3):
-    """Download Food101 and generate IID partitions."""
+                    val_ratio: float = 0.3) -> tuple[list[DataLoader], list[DataLoader], DataLoader]:
+    """Download Food101 and generate partitions & loaders for federating learning."""
     print("Loading data...")
     #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
     # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
@@ -105,7 +105,7 @@ def load_dataset(datapath: str,
         save_str_cid: str = (f"a_{alpha}")
         save_str_exp = f"images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}/summary" #alpha_{alpha}_clients_{len(trainsets)}_classes_{num_classes}_
     else:
-        raise ValueError
+        raise NotImplementedError(f"{partitioning} partitioning not done")
 
 
     # Obtain and save data statistic plots
@@ -190,6 +190,150 @@ def load_dataset(datapath: str,
     testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
     return trainloaders, valloaders, testloader
 
+def load_dataset_SSL(datapath: str, 
+                 subset: bool,
+                 num_classes: int,
+                 num_workers: int,
+                 num_partitions: int, 
+                    batch_size: int,
+                    partitioning: str = "iid", 
+                    alpha: float = 0.5,
+                    balance: bool = True,
+                    seed: int = 2024,
+                    val_ratio: float = 0.0,
+                    rad_ratio: float = 0.02) -> tuple[list[DataLoader], list[DataLoader], DataLoader, DataLoader, DataLoader]:
+    """Download Food101 and generate partitions & loaders for federating self-supervised learning."""
+    augmentation = Compose([
+        RandomResizedCrop(256, scale=(0.2, 1.), interpolation= F.InterpolationMode.BICUBIC),
+        RandomApply([
+            ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+        ], p=0.8),
+        RandomGrayscale(p=0.2),
+        RandomHorizontalFlip(),
+        ToTensor(),
+        # normalize
+    ])
+    simple_trf = Compose([
+        Resize((256, 256), interpolation= F.InterpolationMode.BICUBIC),
+        ToTensor(),
+    ])
+    trainset, testset, memoryset = get_food101_ssl(augmentation, simple_trf, datapath, subset, num_classes)
+
+    if partitioning == "iid":
+        trainsets = partitioning_iid(trainset, num_partitions, balance, seed)
+        title_str = f"Clients data partitioning: {partitioning.upper()}"
+        if balance:
+            save_str_cid: str ="balanced" # equal splits per client based on each label quantity
+        else:
+            save_str_cid: str ="U" #uniform shuffle rand generator
+        save_str_exp = f"images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}/summary" #clients_{len(trainsets)}_classes_{num_classes}_
+    elif partitioning == "dirichlet":
+        trainsets = partitioning_dirichlet(alpha, trainset, num_partitions, seed)
+        title_str = f"Clients data partitioning: {partitioning.upper()}, a={alpha}"
+        save_str_cid: str = (f"a_{alpha}")
+        save_str_exp = f"images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}/summary" #alpha_{alpha}_clients_{len(trainsets)}_classes_{num_classes}_
+    else:
+        raise NotImplementedError(f"{partitioning} partitioning not done")
+
+
+    # Obtain and save data statistic plots
+    if not os.path.exists(f'./images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}'):
+            os.makedirs(f'./images/clients_vis/{partitioning}/clients_{len(trainsets)}/classes_{num_classes}/{save_str_cid}')
+    plot_exp_summary(trainsets, title_str, num_classes, save_str_exp)
+    for c_id, sub_trainset in enumerate(trainsets):
+        tmp = get_subset_stats(sub_trainset)
+        plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid, save_str_exp)
+    
+    # trainsets on IID case if balance=False
+    # create dataloaders with train+val support
+    trainloaders: list[CustomSubset] = []
+    valloaders: list[CustomSubset] = []
+    np.random.seed(seed)
+    for c_id, trainset_ in enumerate(trainsets):
+        if balance and val_ratio != 0:
+            if partitioning =="iid":
+                train_indices, val_indices = train_test_split(trainset_.indices, test_size=val_ratio, stratify=trainset_.labels)
+                
+                trainloaders.append(CustomSubset(trainset_.dataset, train_indices))
+                valloaders.append(CustomSubset(trainset_.dataset, val_indices))
+                tmp = get_subset_stats(trainloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_train", save_str_exp+ "_train", split="train")
+                tmp = get_subset_stats(valloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_val", save_str_exp+ "_val", split="val")
+            else: #dirichlet
+                # Get unique class labels and their counts
+                unique_labels, class_counts = np.unique(trainset_.labels, return_counts=True)
+                # Define a minimum threshold for the number of samples in each class
+                min_samples_per_class = 2
+                # Filter out classes with too few samples
+                filtered_classes = [label for label, count in zip(unique_labels, class_counts) if count >= min_samples_per_class]
+                # Filter indices corresponding to the filtered classes
+                filtered_indices = [index for index, label in enumerate(trainset_.labels) if label in filtered_classes]
+                # Split filtered (X,y)
+                train_indices, val_indices = train_test_split(trainset_.indices[filtered_indices], test_size=val_ratio, stratify=trainset_.labels[filtered_indices])
+                # Get the excluded indices
+                excluded_indices = [index for index in range(len(trainset_.labels)) if index not in filtered_indices]
+                train_indices = np.concatenate((train_indices, np.array(trainset_.indices[excluded_indices])))
+
+                trainloaders.append(CustomSubset(trainset_.dataset, train_indices))
+                valloaders.append(CustomSubset(trainset_.dataset, val_indices))
+                tmp = get_subset_stats(trainloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_train", save_str_exp+ "_train", split="train")
+                tmp = get_subset_stats(valloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_val", save_str_exp+ "_val", split="val")
+        else: #uni split if not balanced split requested
+            num_total = len(trainset_)
+            num_val = int(val_ratio * num_total)
+            num_train = num_total - num_val
+            
+            # choose validation indexes
+            choices = np.random.choice(range(num_total), size=num_val, replace=False)
+            # boolean split
+            idxs_val = np.zeros(num_total, dtype=bool)
+            idxs_val[choices] = True
+            idxs_tr = ~idxs_val
+            # In this way, the i-th client will get the i-th element in the trainloaders list and the i-th element in the valloaders list
+            trainloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_tr]))
+            tmp = get_subset_stats(trainloaders[-1])
+            plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_train", save_str_exp+ "_train", split="train")
+            if val_ratio !=0:
+                valloaders.append(CustomSubset(trainset_.dataset, trainset_.indices[idxs_val]))
+                tmp = get_subset_stats(valloaders[-1])
+                plot_client_stats(partitioning, c_id+1, tmp, num_classes, save_str_cid + "_val", save_str_exp+ "_val", split="val")
+
+    # construct data loaders to their respective list
+    trainloaders = [DataLoader(Subset(trainloaders[i].dataset, trainloaders[i].indices), batch_size=batch_size, 
+                                    shuffle=True, num_workers=num_workers) 
+                         for i in range(len(trainloaders))]
+    if val_ratio !=0:
+        valloaders = [DataLoader(Subset(valloaders[i].dataset, valloaders[i].indices), batch_size=batch_size, 
+                                        shuffle=True, num_workers=num_workers) 
+                            for i in range(len(valloaders))]
+    else:
+        valloaders = [None] * num_partitions
+    # testloader = DataLoader(testset, batch_size=batch_size, num_workers=num_workers)
+    testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
+    # Load representation alignment dataset which is publicly loaded from clients
+    train_indices, val_indices = train_test_split(trainset.indices, test_size=rad_ratio, stratify=trainset.labels)
+    # radset = CustomSubset(trainset.dataset, val_indices)
+    radset = CustomSubset(memoryset.dataset, val_indices)
+    # If I want diversify the augmentation of RAD.
+    # radset = Food101(root=datapath, split="train", transform=augmentation, download= True)
+    # radset = CustomSubset(radset, val_indices)
+
+    # radloader = DataLoader(radset, batch_size=batch_size, num_workers=num_workers)
+    
+    # print(trainset.dataset.transform)
+    # radset.dataset.transform = augmentation
+    # print(radset.dataset.transform)
+    # print(trainset.dataset.transform)
+    rad_stats = get_subset_stats(radset)
+    print(rad_stats)
+    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=num_workers)
+    # memoryloader-artificial knowledge for monitoring 
+    memoryloader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=num_workers) 
+    return trainloaders, valloaders, testloader, memoryloader, radloader
+
 def load_centr_data(datapath: str, 
                  subset: bool,
                  num_classes: int,
@@ -223,7 +367,7 @@ def get_food101_ssl(transform, simple_trf, datapath: str = 'D:/DesktopC/Datasets
     trainset = Food101(root=datapath, split="train", transform=TwoCropsTransform(transform), download= True)
     testset = Food101(root=datapath, split="test", transform=simple_trf, download= True)
     memoryset = Food101(root=datapath, split="train", transform=simple_trf, download= True)
-    print(type(trainset))
+    # print(type(trainset))
     # print(type(testset))
     if subset:
         #Taking Subset of trainset and testset
@@ -246,7 +390,7 @@ def get_food101_ssl(transform, simple_trf, datapath: str = 'D:/DesktopC/Datasets
         memory_sub = CustomSubset(memoryset, np_memory_idx)
         return train_sub, test_sub, memory_sub
     else:
-        raise ValueError('subset')
+        raise NotImplementedError('You need to pick subset=True, even for num_classes=10,50,101 etc.')
 
 def load_centr_data_SSL(datapath: str, 
                  subset: bool,
