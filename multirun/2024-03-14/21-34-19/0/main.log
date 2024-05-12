@@ -1,0 +1,104 @@
+[2024-03-14 21:34:21,892][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-14 21:34:21,893][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=100, round_timeout=None)
+[2024-03-14 21:34:25,275][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 7956590592.0, 'node:127.0.0.1': 1.0, 'memory': 15913181184.0, 'GPU': 1.0, 'node:__internal_head__': 1.0, 'CPU': 6.0}
+[2024-03-14 21:34:25,276][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-14 21:34:25,277][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 2, 'num_gpus': 0.5}
+[2024-03-14 21:34:25,287][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-03-14 21:34:25,288][flwr][INFO] - Initializing global parameters
+[2024-03-14 21:34:25,288][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-14 21:34:30,562][flwr][INFO] - Received initial parameters from one random client
+[2024-03-14 21:34:30,581][flwr][INFO] - Evaluating initial parameters
+[2024-03-14 21:34:45,708][flwr][INFO] - initial parameters (loss, other metrics): 0.02356870698928833, {'accuracy': 20.1171875}
+[2024-03-14 21:34:45,708][flwr][INFO] - FL starting
+[2024-03-14 21:34:45,781][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-14 21:39:52,758][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-03-14 21:40:09,038][flwr][INFO] - fit progress: (1, 0.027040785431861877, {'accuracy': 26.7578125}, 323.34077980000006)
+[2024-03-14 21:40:09,038][flwr][DEBUG] - evaluate_round 1: strategy sampled 5 clients (out of 10)
+[2024-03-14 21:40:31,293][flwr][DEBUG] - evaluate_round 1 received 5 results and 0 failures
+[2024-03-14 21:40:31,352][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 10)
+[2024-03-14 21:44:38,553][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 442234134583a2cc99aaed3f01000000
+	pid: 780
+	namespace: d2fa2ad8-feb0-44d6-a303-844d7f1c71c1
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 21:44:38,568][flwr][WARNING] - Actor(442234134583a2cc99aaed3f01000000) will be remove from pool.
+[2024-03-14 21:44:38,578][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 442234134583a2cc99aaed3f01000000
+	pid: 780
+	namespace: d2fa2ad8-feb0-44d6-a303-844d7f1c71c1
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-14 21:44:38,584][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 442234134583a2cc99aaed3f01000000
+	pid: 780
+	namespace: d2fa2ad8-feb0-44d6-a303-844d7f1c71c1
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 21:44:43,037][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6f3bd7c5b08ab3fe438d7d3e01000000
+	pid: 7088
+	namespace: d2fa2ad8-feb0-44d6-a303-844d7f1c71c1
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-14 21:44:43,037][flwr][WARNING] - Actor(6f3bd7c5b08ab3fe438d7d3e01000000) will be remove from pool.
+[2024-03-14 21:44:43,037][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\fresh_pyt\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6f3bd7c5b08ab3fe438d7d3e01000000
+	pid: 7088
+	namespace: d2fa2ad8-feb0-44d6-a303-844d7f1c71c1
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-14 21:44:43,050][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 6f3bd7c5b08ab3fe438d7d3e01000000
+	pid: 7088
+	namespace: d2fa2ad8-feb0-44d6-a303-844d7f1c71c1
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.

@@ -1,0 +1,2 @@
+[2024-03-14 22:27:59,000][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-14 22:27:59,000][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=100, round_timeout=None)

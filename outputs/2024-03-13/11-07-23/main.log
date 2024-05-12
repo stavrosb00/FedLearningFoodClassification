@@ -1,0 +1,448 @@
+[2024-03-13 11:07:25,326][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-03-13 11:07:25,327][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-03-13 11:07:30,425][flwr][INFO] - Flower VCE: Ray initialized with resources: {'GPU': 1.0, 'node:__internal_head__': 1.0, 'object_store_memory': 7956065894.0, 'memory': 15912131790.0, 'node:127.0.0.1': 1.0, 'CPU': 6.0}
+[2024-03-13 11:07:30,426][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-03-13 11:07:30,426][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 1, 'num_gpus': 1}
+[2024-03-13 11:07:30,437][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-03-13 11:07:30,437][flwr][INFO] - Initializing global parameters
+[2024-03-13 11:07:30,438][flwr][INFO] - Requesting initial parameters from one random client
+[2024-03-13 11:07:35,908][flwr][INFO] - Received initial parameters from one random client
+[2024-03-13 11:07:35,925][flwr][INFO] - Evaluating initial parameters
+[2024-03-13 11:08:48,721][flwr][INFO] - initial parameters (loss, other metrics): 0.02252557772397995, {'accuracy': 29.12109375}
+[2024-03-13 11:08:48,722][flwr][INFO] - FL starting
+[2024-03-13 11:08:48,778][flwr][DEBUG] - fit_round 1: strategy sampled 8 clients (out of 16)
+[2024-03-13 11:11:04,163][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 157, in fit
+    temp_df = pd.DataFrame(temp_dict) #, index=[0])
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\frame.py", line 733, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 667, in _extract_index
+    raise ValueError("If using all scalar values, you must pass an index")
+ValueError: If using all scalar values, you must pass an index
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 9 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 157, in fit\n    temp_df = pd.DataFrame(temp_dict) #, index=[0])\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\frame.py", line 733, in __init__\n    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 503, in dict_to_mgr\n    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 114, in arrays_to_mgr\n    index = _extract_index(arrays)\n            ^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 667, in _extract_index\n    raise ValueError("If using all scalar values, you must pass an index")\nValueError: If using all scalar values, you must pass an index\n',)
+
+[2024-03-13 11:11:04,175][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 157, in fit
+    temp_df = pd.DataFrame(temp_dict) #, index=[0])
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\frame.py", line 733, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 667, in _extract_index
+    raise ValueError("If using all scalar values, you must pass an index")
+ValueError: If using all scalar values, you must pass an index
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 9 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 157, in fit\n    temp_df = pd.DataFrame(temp_dict) #, index=[0])\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\frame.py", line 733, in __init__\n    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 503, in dict_to_mgr\n    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 114, in arrays_to_mgr\n    index = _extract_index(arrays)\n            ^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 667, in _extract_index\n    raise ValueError("If using all scalar values, you must pass an index")\nValueError: If using all scalar values, you must pass an index\n',)
+[2024-03-13 11:13:19,389][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2524, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(ClientException): [36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 157, in fit
+    temp_df = pd.DataFrame(temp_dict, index=[0])
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\frame.py", line 733, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 667, in _extract_index
+    raise ValueError("If using all scalar values, you must pass an index")
+ValueError: If using all scalar values, you must pass an index
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 3 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 157, in fit\n    temp_df = pd.DataFrame(temp_dict, index=[0])\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\frame.py", line 733, in __init__\n    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 503, in dict_to_mgr\n    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 114, in arrays_to_mgr\n    index = _extract_index(arrays)\n            ^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 667, in _extract_index\n    raise ValueError("If using all scalar values, you must pass an index")\nValueError: If using all scalar values, you must pass an index\n',)
+
+[2024-03-13 11:13:19,398][flwr][ERROR] - [36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+                  ^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 207, in fit
+    return maybe_call_fit(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\client.py", line 234, in maybe_call_fit
+    return client.fit(fit_ins)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\client\numpy_client.py", line 238, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\Documents\GitHub\FlowerYtTut\client_scaffold.py", line 157, in fit
+    temp_df = pd.DataFrame(temp_dict, index=[0])
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\frame.py", line 733, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\pandas\core\internals\construction.py", line 667, in _extract_index
+    raise ValueError("If using all scalar values, you must pass an index")
+ValueError: If using all scalar values, you must pass an index
+
+The above exception was the direct cause of the following exception:
+
+[36mray::DefaultActor.run()[39m (pid=12040, ip=127.0.0.1, actor_id=2ecb258cf70aa5d0bb1702e701000000, repr=<flwr.simulation.ray_transport.ray_actor.DefaultActor object at 0x0000020782F5A890>)
+  File "python\ray\_raylet.pyx", line 1418, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1498, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1424, in ray._raylet.execute_task
+  File "python\ray\_raylet.pyx", line 1364, in ray._raylet.execute_task.function_executor
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\function_manager.py", line 726, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\util\tracing\tracing_helper.py", line 464, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 90, in run
+    raise ClientException(str(message)) from ex
+flwr.simulation.ray_transport.ray_actor.ClientException: 
+>>>>>>>A ClientException occurred.('\n\tSomething went wrong when running your client run.\n\tClient 3 crashed when the DefaultActor was running its run.\n\tException triggered on the client side: Traceback (most recent call last):\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_actor.py", line 76, in run\n    job_results = job_fn(client)\n                  ^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\simulation\\ray_transport\\ray_client_proxy.py", line 207, in fit\n    return maybe_call_fit(\n           ^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\client.py", line 234, in maybe_call_fit\n    return client.fit(fit_ins)\n           ^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\flwr\\client\\numpy_client.py", line 238, in _fit\n    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\Documents\\GitHub\\FlowerYtTut\\client_scaffold.py", line 157, in fit\n    temp_df = pd.DataFrame(temp_dict, index=[0])\n              ^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\frame.py", line 733, in __init__\n    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 503, in dict_to_mgr\n    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 114, in arrays_to_mgr\n    index = _extract_index(arrays)\n            ^^^^^^^^^^^^^^^^^^^^^^\n  File "C:\\Users\\smpoulio_local\\miniconda3\\envs\\pyt_pg\\Lib\\site-packages\\pandas\\core\\internals\\construction.py", line 667, in _extract_index\n    raise ValueError("If using all scalar values, you must pass an index")\nValueError: If using all scalar values, you must pass an index\n',)
+[2024-03-13 11:13:41,583][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:41,980][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:41,981][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:41,981][flwr][WARNING] - Actor(2ecb258cf70aa5d0bb1702e701000000) will be remove from pool.
+[2024-03-13 11:13:41,984][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-13 11:13:41,984][flwr][WARNING] - REMOVED actor 2ecb258cf70aa5d0bb1702e701000000 from pool
+[2024-03-13 11:13:41,987][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:41,988][flwr][WARNING] - Pool size: 0
+[2024-03-13 11:13:41,989][flwr][ERROR] - ActorPool is empty!!!
+[2024-03-13 11:13:41,990][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:41,990][flwr][ERROR] - ActorPool is empty!!!
+[2024-03-13 11:13:41,990][flwr][WARNING] - Actor(2ecb258cf70aa5d0bb1702e701000000) will be remove from pool.
+[2024-03-13 11:13:41,991][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2513, in get
+    raise ValueError(
+ValueError: 'object_refs' must either be an ObjectRef or a list of ObjectRefs.
+
+[2024-03-13 11:13:41,992][flwr][ERROR] - ActorPool is empty!!!
+[2024-03-13 11:13:41,992][flwr][WARNING] - Actor(2ecb258cf70aa5d0bb1702e701000000) will be remove from pool.
+[2024-03-13 11:13:41,993][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2513, in get
+    raise ValueError(
+ValueError: 'object_refs' must either be an ObjectRef or a list of ObjectRefs.
+
+[2024-03-13 11:13:41,994][flwr][ERROR] - 'object_refs' must either be an ObjectRef or a list of ObjectRefs.
+[2024-03-13 11:13:41,995][flwr][ERROR] - ActorPool is empty!!!
+[2024-03-13 11:13:41,995][flwr][WARNING] - Actor(2ecb258cf70aa5d0bb1702e701000000) will be remove from pool.
+[2024-03-13 11:13:41,996][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-13 11:13:41,998][flwr][ERROR] - 'object_refs' must either be an ObjectRef or a list of ObjectRefs.
+[2024-03-13 11:13:41,999][flwr][ERROR] - ActorPool is empty!!!
+[2024-03-13 11:13:41,999][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-13 11:13:42,002][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:42,003][flwr][ERROR] - Traceback (most recent call last):
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_client_proxy.py", line 151, in _submit_job
+    res, updated_context = self.actor_pool.get_client_result(self.cid, timeout)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 425, in get_client_result
+    return self._fetch_future_result(cid)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 315, in _fetch_future_result
+    raise ex
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\flwr\simulation\ray_transport\ray_actor.py", line 306, in _fetch_future_result
+    res_cid, res, updated_context = ray.get(
+                                    ^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\auto_init_hook.py", line 24, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\smpoulio_local\miniconda3\envs\pyt_pg\Lib\site-packages\ray\_private\worker.py", line 2526, in get
+    raise value
+ray.exceptions.RayActorError: The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+
+[2024-03-13 11:13:42,005][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.
+[2024-03-13 11:13:42,009][flwr][ERROR] - The actor died unexpectedly before finishing this task.
+	class_name: DefaultActor
+	actor_id: 2ecb258cf70aa5d0bb1702e701000000
+	pid: 12040
+	namespace: 6b60e9c8-8548-4c40-9e29-b65ced7ccc72
+	ip: 127.0.0.1
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker unexpectedly exits with a connection error code 10054. An existing connection was forcibly closed by the remote host. There are some potential root causes. (1) The process is killed by SIGKILL by OOM killer due to high memory usage. (2) ray stop --force is called. (3) The worker is crashed unexpectedly due to SIGSEGV or other unexpected errors.

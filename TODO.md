@@ -45,7 +45,8 @@ https://pytorch.org/mobile/home/
 - [✓] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
 - [✓] Na dw alignment dataset me 0 validation support
 - [✓] Alignment dataloader optimization kai profiling benchmark gia tensor or numpy choose gia LinearCKA
-- [] Training and server gia HeteroSSFL
+- [] Client and server gia HeteroSSFL
+- [] main_ssfl script
 
 - [] Linear evaluation - load_downstream_data() synarthsh basei label percentages alliws ola 
 - [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10

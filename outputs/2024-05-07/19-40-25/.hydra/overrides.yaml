@@ -1,0 +1,5 @@
+- num_rounds=200
+- batch_size=64
+- val_ratio=0
+- optimizer=simsiam
+- num_workers=4
