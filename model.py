@@ -24,8 +24,8 @@ class ResNet18(nn.Module):
         self.resnet.fc = nn.Linear(in_features=512, out_features=num_classes)
         
     def forward(self, x):
-        x = self.resnet(x)
-        return x
+        # x = self.resnet(x)
+        return self.resnet(x)
     
 # Siamese Network Composition
 class ProjectionMLP(nn.Module):
@@ -81,10 +81,10 @@ def D(p, z, version='simplified'): # negative cosine similarity
         raise Exception
 
 class SimSiam(nn.Module):
-    def __init__(self, backbone=ResNet18(num_classes=10), hidden_dim = 2048, pred_dim = 512, output_dim = 2048):
+    def __init__(self, backbone=ResNet18(num_classes=10).resnet, hidden_dim = 2048, pred_dim = 512, output_dim = 2048):
         super(SimSiam, self).__init__()
         # backbone.output_dim = backbone.fc.in_features
-        backbone.fc = torch.nn.Identity() # erase last linear layer
+        backbone.fc = torch.nn.Identity() # erase last linear layer. removal doesn't offer much MB advantage 
         self.backbone = backbone
         # self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)
         self.projector = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)  
@@ -100,9 +100,28 @@ class SimSiam(nn.Module):
         f, h = self.encoder, self.predictor
         z1, z2 = f(x1), f(x2)
         p1, p2 = h(z1), h(z2)
-        L = D(p1, z2) / 2 + D(p2, z1) / 2
+        L = D(p1, z2) / 2 + D(p2, z1) / 2 # symmetric x0.5
         # return {'loss': L}
         return L
+
+class LinearEvaluationSimSiam(nn.Module):
+    def __init__(self, pretrained_model_path, device, linear_eval=True, num_classes: int = 10): # backbone,
+        super(LinearEvaluationSimSiam, self).__init__()
+        model = SimSiam() #backbone=ResNet18().resnet, hidden_dim=2048, pred_dim=512, output_dim=2048
+        model.load_state_dict(torch.load(pretrained_model_path, map_location=device))
+        self.encoder = model.encoder.to(device)
+        # freeze parameters 
+        if linear_eval:
+            self.encoder.requires_grad_(False)        
+            # for param in self.encoder.parameters():
+            #     param.requires_grad = False
+
+        #h diwxnw MLP projector head kai bazw ena Linear sto encoder.fc. Sto forward mexri telos tou trainable fc 1 linear?     
+        self.classifier = nn.Linear(in_features = self.encoder[1].l3[0].out_features, out_features = num_classes).to(device)
+
+    def forward(self, x):
+        return self.classifier(self.encoder(x))
+
 
 
 class Net(nn.Module):
@@ -137,7 +156,12 @@ def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
         global_params = [val.detach().clone() for val in net.parameters()]
     else:
         global_params = None
-    net.train()
+    if isinstance(net, LinearEvaluationSimSiam):
+        # print("net has encoder")
+        net.encoder.eval()
+        net.classifier.train()
+    else:  
+        net.train()
     train_losses = []
     train_accuracy = []
     for _ in range(epochs):
@@ -261,7 +285,7 @@ def train_scaffold(net: nn.Module, trainloader, optimizer: ScaffoldOptimizer, ep
 
     return train_loss, train_acc
 
-#Centralised training loop
+#Centralised training loops
 def train_loop(net: torch.nn.Module, 
           train_dataloader: torch.utils.data.DataLoader, 
           test_dataloader: torch.utils.data.DataLoader, 
@@ -288,7 +312,8 @@ def train_loop(net: torch.nn.Module,
     # criterion =  torch.nn.CrossEntropyLoss()
     net.to(device)
     # Loop through training and testing steps for a number of epochs
-    for epoch in range(epochs):
+    global_progress = tqdm(range(epochs), desc=f'Training')
+    for epoch in global_progress:
         train_loss, train_acc = train(net=net,
                                           trainloader=train_dataloader,
                                           optimizer=optimizer,
@@ -298,22 +323,19 @@ def train_loop(net: torch.nn.Module,
         test_loss, test_acc = test(net=net,
           testloader=test_dataloader,
           device=device)
-
-        # Print out what's happening
-        print(
-          f"Epoch: {epoch+1} | "
-          f"train_loss: {train_loss:.4f} | "
-          f"train_acc: {train_acc:.4f} | "
-          f"test_loss: {test_loss:.4f} | "
-          f"test_acc: {test_acc:.4f}"
-        )
-
-    # Update results dictionary
+        # Update results dictionary
         results["train_loss"].append(train_loss)
         results["train_acc"].append(train_acc)
         results["test_loss"].append(test_loss)
         results["test_acc"].append(test_acc)
-
+        # Print out what's happening
+        global_progress.set_postfix({
+        "epoch":epoch,
+        "train_loss": train_loss,
+        "train_acc": train_acc,
+        "test_loss": test_loss,
+        "test_acc": test_acc
+        })
     print('Finished Training')
     # Return the filled results at the end of the epochs
     return results
@@ -365,3 +387,7 @@ def train_loop_ssl(net: torch.nn.Module,
 
     print('Finished Training')
     return results
+
+if __name__ == "__main__":
+    print("Testing things")
+    pass

@@ -6,6 +6,6 @@ optimizer:
   _target_: models.train
   lr: 0.032 # base_lr
   momentum: 0.9
-  weight_decay: 1e-4
+  weight_decay: 1e-4 # 0.0005
   gmf: 0
   mu: 0
