@@ -9,6 +9,8 @@ from torch.optim import SGD
 from torch.cuda.amp import autocast, GradScaler
 from tqdm import tqdm
 from knn_monitor import knn_monitor
+import numpy as np
+from linear_cka import linear_CKA_fast
 
 # Note the model and functions here defined do not have any FL-specific components.
 class ResNet18(nn.Module):
@@ -70,12 +72,12 @@ class PredictionMLP(nn.Module):
 
 def D(p, z, version='simplified'): # negative cosine similarity
     if version == 'original':
-        z = z.detach() # stop gradient
+        z = z.detach() # stop gradient operant
         p = F.normalize(p, dim=1) # l2-normalize 
         z = F.normalize(z, dim=1) # l2-normalize 
         return -(p*z).sum(dim=1).mean()
 
-    elif version == 'simplified':# same thing, much faster. Scroll down, speed test in __main__
+    elif version == 'simplified':# same thing, much faster
         return - F.cosine_similarity(p, z.detach(), dim=-1).mean()
     else:
         raise Exception
@@ -85,13 +87,13 @@ class SimSiam(nn.Module):
         super(SimSiam, self).__init__()
         # backbone.output_dim = backbone.fc.in_features
         backbone.fc = torch.nn.Identity() # erase last linear layer. removal doesn't offer much MB advantage 
-        self.backbone = backbone
+        # self.backbone = backbone # comment , parameters economy
         # self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)
         self.projector = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)  
         # backbone.fc = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim) 
         # self.encoder = backbone
         self.encoder = nn.Sequential(
-            self.backbone,
+            backbone,
             self.projector
         )
         self.predictor = PredictionMLP(hidden_dim, pred_dim, output_dim)
@@ -387,6 +389,63 @@ def train_loop_ssl(net: torch.nn.Module,
 
     print('Finished Training')
     return results
+
+def train_heterossfl(net: torch.nn.Module, 
+          trainloader: torch.utils.data.DataLoader, 
+          radloader: torch.utils.data.DataLoader, 
+          optimizer: torch.optim.Optimizer,
+          epochs: int,
+          device: torch.device,
+          mu_coeff: float,
+          phi_K_mean: np.ndarray | None,
+          hide_progress: bool = False) -> tuple[float, np.ndarray]:
+
+    # Start training
+    net.to(device)
+    global_progress = tqdm(range(epochs), desc=f'Local training', disable=hide_progress)
+    for epoch in global_progress:
+        batch_loss = []
+        net.train() #need to reset because knn_monitor sets encoder sub-module on eval() mode
+        local_progress = tqdm(trainloader, desc=f'Epoch {epoch}/{epochs}', disable=hide_progress)
+        for i, data in enumerate(local_progress):
+            images = data[0]
+            optimizer.zero_grad()
+            loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+            # loss = data_dict['loss'].mean()
+            if phi_K_mean is None: # first round skip loss assignment
+                total_loss = loss
+                loss_cka = 0
+                print('First round CKA=0')
+                if epoch == (epochs-1):
+                    embeddings = []
+                    with torch.no_grad():
+                        for idx, (X_img , _) in enumerate(radloader):
+                            # images = data[0] # images[0]
+                            embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                            embeddings.append(embedding)
+                        phi_K = torch.cat(embeddings, dim=0).cpu().numpy()
+                # Isws TBD: na glytwsw 1o fresh round me 2 for loops ston radloader otan exw None kai otan den exw None...
+            else:
+                embeddings = []
+                with torch.no_grad():
+                    for idx, (X_img , _) in enumerate(radloader):
+                        # images = data[0] # images[0]
+                        embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                        embeddings.append(embedding)
+                    phi_K = torch.cat(embeddings, dim=0).cpu().numpy() # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
+                loss_cka = mu_coeff * linear_CKA_fast(phi_K, phi_K_mean)
+                total_loss = loss + loss_cka
+            total_loss.backward()
+            optimizer.step()
+            # lr_scheduler.step()
+            batch_loss.append(total_loss.item())
+            local_progress.set_postfix({'loss': float(loss), 'loss_cka': loss_cka, 'total_loss': batch_loss[-1]})
+
+        # adjust_learning_rate(optimizer, init_lr, epoch, epochs)
+        train_loss = float(sum(batch_loss) / len(batch_loss))
+        info_dict = {"epoch":epoch, "train_loss":train_loss}
+        global_progress.set_postfix(info_dict)
+    return train_loss, phi_K
 
 if __name__ == "__main__":
     print("Testing things")

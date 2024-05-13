@@ -92,7 +92,7 @@ if __name__ == "__main__":
     print(time.time() - start)
 
     start3 =time.time()
-    print('Linear CKA, between X and Y: {}'.format(linear_CKA_fast(K_np, K2_np)))
+    print('Linear CKA, between X and Y: {}'.format(linear_CKA_fast(K_np, K_np)))
     print(time.time() - start3)
     # X = np.random.randn(150, 2048)
     # gamma = 0.01

@@ -45,10 +45,14 @@ https://pytorch.org/mobile/home/
 - [✓] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
 - [✓] Na dw alignment dataset me 0 validation support
 - [✓] Alignment dataloader optimization kai profiling benchmark gia tensor or numpy choose gia LinearCKA
-- [] Client and server gia HeteroSSFL
-- [] main_ssfl script
-
-- [] Linear evaluation - load_downstream_data() synarthsh basei label percentages alliws ola 
+- [semi] Client, strategy kai server gia HeteroSSFL
+- [semi] tensorboard real time visuals
+- [] main_ssfl script gia metrics saves kai instances,calls.
+- [] Linear evaluate to megalo peirama 12 Maiou
+- [] Delete 80 test peiramata days : 13/5 , 
+- [] Load kai kNN accuracy sto main_ssfl
+- [] Linear evaluation : analoga .npz h .pth na kanei manipulation to load twn checkpoints
+- [] Linear evaluation : load_downstream_data() synarthsh basei label percentages alliws ola 
 - [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
 - [] Give feature: ignore evaluate_fn and ignore results related to test_acc... indexing me rounds na dw gia na xwraw 2-3 client ray processes. na trexw mono apo miniconda cmd xwris VScode
 - [] Na anebasw # client processes kai na bgalw evaluate_fn global test gia faster simulations
@@ -56,7 +60,7 @@ https://pytorch.org/mobile/home/
 - [] Nea polla peiramata me fraction=1 k higher #classes
 
 ## Xrysa tips
-- [semi] Read papers gia meta-learning/self-supervised me pre-trained pretext tasks kai downstream tasks
+- [✓] Read papers gia meta-learning/self-supervised me pre-trained pretext tasks kai downstream tasks
 - [] reproduce client manager lock seed https://discuss.flower.ai/t/how-do-i-write-a-custom-client-selection-protocol/74/2 alliws 
 clientmanager inherit gia change sampler method
 - [] Latex : kefalaio 2.1 gia anagnwrish faghtwn(proklhsh, )kai 1.4 sto neo 2.1 isws . 3.1.1 - match 4.1.1 
