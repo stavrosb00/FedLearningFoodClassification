@@ -13,6 +13,8 @@ import argparse
 from tqdm import tqdm
 from knn_monitor import knn_monitor
 
+#python .\centralised_simsiam.py num_rounds=50 batch_size=128 val_ratio=0 optimizer=adam num_workers=2
+# python .\centralised_simsiam.py num_rounds=200 batch_size=64 val_ratio=0 optimizer=simsiam num_workers=2
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig):
     start = time.time()

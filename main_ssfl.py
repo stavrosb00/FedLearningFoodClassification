@@ -15,16 +15,21 @@ from flwr.server.server import Server
 from hydra.utils import call, instantiate
 from dataset import load_dataset_SSL
 from client import generate_client_fn
-from strategy import get_on_fit_config, get_evaluate_fn, get_evaluate_fn_scaffold, weighted_average, CustomFedAvgStrategy #get_metrics_aggregation_fn
+from client_scaffold import ScaffoldClient
+from client_ssfl import generate_client_fn
+from strategy import get_on_fit_config_ssfl, get_evaluate_fn_ssfl, weighted_average_ssfl, CustomFedAvgStrategy #get_metrics_aggregation_fn
 from utils import save_results_as_pickle, plot_metric_from_history
 from strategy_scaffold import ScaffoldStrategy, ScaffoldStrategyV2
-from client_scaffold import ScaffoldClient
+from strategy_ssfl import HeteroSSFLStrategy
 from server_scaffold import ScaffoldServer, ScaffoldServerV2
-from server import FedAvgServer
-from model import ResNet18, test
+from server import FedAvgServer, HeteroSSFLServer
+from model import ResNet18, test, SimSiam
 import random
+import warnings
+# Suppress deprecation warnings above tensorboard 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-
+from torch.utils.tensorboard import SummaryWriter
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig):
@@ -35,12 +40,9 @@ def main(cfg: DictConfig):
 
     ## 2. Prepare your dataset
     trainloaders, validationloaders, testloader, memoryloader, radloader = load_dataset_SSL(cfg.datapath, cfg.subset, cfg.num_classes, cfg.num_workers, 
-                                                               cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed, cfg.val_ratio, cfg.rad_ratio)
-    # for i in range(4):
-    #     print(len(trainloaders[i]))
-    #     print(len(validationloaders[i].dataset))
-    #     print(len(trainloaders[i].dataset))
-    # return 0
+                                                        cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed, val_ratio = 0, rad_ratio=cfg.rad_ratio)
+
+
     checkpoint_path: str = (
         f"{cfg.checkpoint_path}best_model_eval_"
         f"{cfg.strategy.name}"
@@ -77,22 +79,29 @@ def main(cfg: DictConfig):
         return None
 
     save_path = HydraConfig.get().runtime.output_dir
+    log_dir = os.path.join(save_path, "logger")
+    print(log_dir)
+    writer = SummaryWriter(log_dir= log_dir)
+    #tensorboard --logdir=outputs\2024-05-13\21-45-27 etc. or outputs for all runs 
+
     ## 3. Define your clients
-    if cfg.strategy.client_fn._target_ == "client_scaffold.generate_client_fn":
-        client_progress = os.path.join(save_path, "clients")
-        print("Local progress and client variances for scaffold clients are saved to: ", client_progress)
-        client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, 
-                         cfg.local_epochs, cfg, save_dir=client_progress,
-        )
-        evaluate_fn = get_evaluate_fn_scaffold(cfg.num_classes, testloader)
-    else:
+    if cfg.strategy.client_fn._target_ == "client_ssfl.generate_client_fn":
         client_progress = os.path.join(save_path, "clients")
         print("Local progress for clients who participated in rounds are saved to: ", client_progress)
-        client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
-        evaluate_fn = get_evaluate_fn(cfg.num_classes, testloader)
-
-    # client_fn = generate_client_fn(trainloaders, validationloaders, cfg.num_classes, cfg.local_epochs, cfg)
-
+        # generate_client_fn(trainloaders, validationloaders, radloader, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
+        client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, radloader, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
+        evaluate_fn = get_evaluate_fn_ssfl(cfg.num_classes, testloader, memoryloader)
+        
+        mdl = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=False).resnet)
+        params = [val.cpu().numpy() for _, val in mdl.state_dict().items()]
+        L = len(radloader.dataset) #Length of RAD 
+        d_phi = mdl.encoder[1].l3[0].out_features # Features dimension length of encoder's output
+        params.append(np.random.randn(L, d_phi))
+        print(f"NDArrays buffer length {len(params)}")
+        params = fl.common.ndarrays_to_parameters(params)
+        mdl = None
+    else:
+        raise NotImplementedError("SSFL routine not implemented.")
     ## 4. Define your strategy
     # in the strategy's `aggregate_fit()` method
     # You can implement a custom strategy to have full control on all aspects including: how the clients are sampled,
@@ -103,47 +112,31 @@ def main(cfg: DictConfig):
     #         num_clients = int(num_available_clients * self.fraction_fit)
     #         clients_to_do_fit = max(num_clients, self.min_fit_clients)
     # ```
-
+    # HeteroSSFLStrategy()
     strategy = instantiate(
         cfg.strategy.strategy,
         num_classes=cfg.num_classes,
         checkpoint_path = checkpoint_path,
+        writer = writer,
         save_dir=client_progress,
+        initial_parameters=params,
         fraction_fit=cfg.C_fraction,  # in simulation, since all clients are available at all times, we can just use `min_fit_clients` to control exactly how many clients we want to involve during fit
-        # min_fit_clients=cfg.num_clients_per_round_fit,  # number of clients to sample for fit()
-        fraction_evaluate=cfg.C_fraction,  # similar to fraction_fit, we don't need to use this argument.
-        # min_evaluate_clients=cfg.num_clients_per_round_eval,  # number of clients to sample for evaluate()
+        fraction_evaluate=0.0,  # similar to fraction_fit, we don't need to use this argument.
         min_available_clients=cfg.num_clients,  # total clients in the simulation
-        on_fit_config_fn=get_on_fit_config(cfg),  # a function to execute to obtain the configuration to send to the clients during fit()
+        on_fit_config_fn=get_on_fit_config_ssfl(cfg), #cosine decay LR scheduling server side on Round level dependance for client's fit() method
         evaluate_fn=evaluate_fn, # a function to run on the server side to evaluate the global model.
-        evaluate_metrics_aggregation_fn=weighted_average,
-        fit_metrics_aggregation_fn=weighted_average, 
+        evaluate_metrics_aggregation_fn=weighted_average_ssfl,
+        fit_metrics_aggregation_fn=weighted_average_ssfl, 
         )
-    # strategy = fl.server.strategy.FedAvg(
-    #     fraction_fit=0.0,  # in simulation, since all clients are available at all times, we can just use `min_fit_clients` to control exactly how many clients we want to involve during fit
-    #     min_fit_clients=cfg.num_clients_per_round_fit,  # number of clients to sample for fit()
-    #     fraction_evaluate=0.0,  # similar to fraction_fit, we don't need to use this argument.
-    #     min_evaluate_clients=cfg.num_clients_per_round_eval,  # number of clients to sample for evaluate()
-    #     min_available_clients=cfg.num_clients,  # total clients in the simulation
-    #     on_fit_config_fn=get_on_fit_config(cfg),  # a function to execute to obtain the configuration to send to the clients during fit()
-    #     evaluate_fn=get_evaluate_fn(cfg.num_classes, testloader), # a function to run on the server side to evaluate the global model.
-    #     evaluate_metrics_aggregation_fn=weighted_average,
-    #     fit_metrics_aggregation_fn=weighted_average,
-    #     )
 
     # Define server
     # random.seed = 2024
     # random.seed(cfg.seed) # Reset random seed state clock , Client Manager sampling clients based on random
-    server = Server(strategy=strategy, client_manager=SimpleClientManager())
-    if isinstance(strategy, ScaffoldStrategy):
-        print("Chose SCAFFOLD alg!")
-        server= ScaffoldServer(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
-    elif isinstance(strategy, ScaffoldStrategyV2):
-        print("Chose SCAFFOLD alg version 2")
-        server= ScaffoldServerV2(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
+    if isinstance(strategy, HeteroSSFLStrategy):
+        server = HeteroSSFLServer(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
     else:
-        server= FedAvgServer(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
-
+        raise NotImplementedError("Strategy not implemented for SSFL settings")
+    
     ## 5. Start Simulation
     num_cpus = 6
     num_gpus = 1

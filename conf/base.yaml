@@ -37,6 +37,7 @@ local_epochs: 1
 
 model:
   checkpoint: 'C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth'
+  #C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth   <-Gia simsiam xwris self.backbone
   _target_: model.ResNet18
 
 

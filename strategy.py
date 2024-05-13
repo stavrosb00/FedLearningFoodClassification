@@ -2,7 +2,7 @@ from collections import OrderedDict
 from omegaconf import DictConfig
 from hydra.utils import instantiate
 import torch
-from model import ResNet18, Net, test
+from model import ResNet18, SimSiam, Net, test, knn_monitor
 from typing import Dict, List, Tuple
 from flwr.common.typing import Metrics
 import numpy as np
@@ -29,9 +29,9 @@ from flwr.server.client_manager import ClientManager
 from flwr.server.strategy import FedAvg
 from flwr.server.strategy.aggregate import aggregate, aggregate_inplace, weighted_loss_avg
 from logging import INFO
-from model import ResNet18
 import pandas as pd
 import os
+import math
 
 class CustomFedAvgStrategy(FedAvg):
     """Implement custom strategy for FedAvg with extra options based on FedAvg class."""
@@ -239,6 +239,22 @@ def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
         #return custom metrics
         return {"loss": loss, "accuracy": accuracy, "mean_diff_acc": mean_diff_acc,"var_diff_acc": var_diff_acc}
 
+def weighted_average_ssfl(metrics: List[Tuple[int, Metrics]]) -> Metrics:
+    """Return weighted average of metrics as evaluation method for SSFL."""
+    # Multiply accuracy of each client by number of examples used
+    # accuracies = [num_examples * m["accuracy"] for num_examples, m in metrics]
+    losses = [num_examples * m["loss"] for num_examples, m in metrics]
+    examples = [num_examples for num_examples, _ in metrics]
+
+    # Aggregate (weighted average)
+    loss = np.sum(losses) / np.sum(examples) 
+    # accuracy = np.sum(accuracies) / np.sum(examples) 
+    
+    #return custom metrics
+    return {"loss": loss} #, "accuracy": accuracy}
+
+
+
 def get_on_fit_config(config: DictConfig):
     """Return a function to configure the client's fit."""
 
@@ -265,6 +281,43 @@ def get_on_fit_config(config: DictConfig):
         return config_res 
     
     return fit_config_fn
+
+def get_on_fit_config_ssfl(config: DictConfig):
+    """Return a function to configure the client's fit."""
+
+    def fit_config_fn(server_round: int):
+        """Return training configuration dict for each round.
+
+        Learning rate is reduced by a factor after set rounds.
+        """
+        
+        config_res = {}
+        init_lr = config.optimizer.lr
+        cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds))
+        # lr = adjust_learning_rate()
+        config_res["lr"] = cur_lr
+        config_res["server_round"] = server_round
+        # config_res["num_rounds"] = config.num_rounds
+        return config_res 
+    
+    return fit_config_fn
+
+def get_evaluate_fn_ssfl(num_classes: int, testloader, memoryloader):
+    """Return a function to evaluate the centralised global SimSiam SSFL model."""
+    def evaluate_fn(server_round: int, parameters, config):
+        # model = SimSiam(backbone=ResNet18(num_classes).resnet)
+        model = SimSiam(backbone=ResNet18(num_classes, pretrained=False).resnet)
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        params_dict = zip(model.state_dict().keys(), parameters)
+        state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})
+        model.load_state_dict(state_dict, strict=True)
+
+        accuracy = knn_monitor(model.encoder.to(device), memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)  #min(25, 7500)
+        # loss, accuracy = test(model, testloader, device)
+        loss = 0 # could be None also
+        return loss, {"accuracy": accuracy}
+    return evaluate_fn
+    
 
 # def get_evaluate_fn(model_cfg: int, testloader)
 def get_evaluate_fn_scaffold(num_classes: int, testloader):

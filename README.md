@@ -16,5 +16,6 @@ conda install scikit-learn=1.3.0
 
 conda install tqdm
 
+conda install tensorboard
 [comment]: # (might need conda install cudatoolkit)
 [comment]: # (ray==2.6.3)
