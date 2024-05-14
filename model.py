@@ -405,23 +405,27 @@ def train_heterossfl(net: torch.nn.Module,
     global_progress = tqdm(range(epochs), desc=f'Local training', disable=hide_progress)
     for epoch in global_progress:
         batch_loss = []
+        disim_loss = []
+        cka_loss = []
         net.train() #need to reset because knn_monitor sets encoder sub-module on eval() mode
         local_progress = tqdm(trainloader, desc=f'Epoch {epoch}/{epochs}', disable=hide_progress)
         for i, data in enumerate(local_progress):
             images = data[0]
             optimizer.zero_grad()
-            loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
             # loss = data_dict['loss'].mean()
             if phi_K_mean is None: # first round skip loss assignment
                 total_loss = loss
                 loss_cka = 0
-                print('First round CKA=0')
+                # print('First round CKA=0')
                 if epoch == (epochs-1):
                     embeddings = []
                     with torch.no_grad():
                         for idx, (X_img , _) in enumerate(radloader):
                             # images = data[0] # images[0]
-                            embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                                embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
                             embeddings.append(embedding)
                         phi_K = torch.cat(embeddings, dim=0).cpu().numpy()
                 # Isws TBD: na glytwsw 1o fresh round me 2 for loops ston radloader otan exw None kai otan den exw None...
@@ -439,13 +443,18 @@ def train_heterossfl(net: torch.nn.Module,
             optimizer.step()
             # lr_scheduler.step()
             batch_loss.append(total_loss.item())
-            local_progress.set_postfix({'loss': float(loss), 'loss_cka': loss_cka, 'total_loss': batch_loss[-1]})
+            disim_loss.append(loss.item())
+            cka_loss.append(loss_cka)
+            # local_progress.set_postfix({'loss': float(loss), 'loss_cka': loss_cka, 'total_loss': batch_loss[-1]})
+            local_progress.set_postfix({'loss': disim_loss[-1], 'loss_cka': cka_loss[-1], 'total_loss': batch_loss[-1]})
 
         # adjust_learning_rate(optimizer, init_lr, epoch, epochs)
         train_loss = float(sum(batch_loss) / len(batch_loss))
+        disim_loss = float(sum(disim_loss) / len(disim_loss))
+        cka_loss = float(sum(cka_loss) / len(cka_loss))
         info_dict = {"epoch":epoch, "train_loss":train_loss}
         global_progress.set_postfix(info_dict)
-    return train_loss, phi_K
+    return train_loss, disim_loss, cka_loss, phi_K
 
 if __name__ == "__main__":
     print("Testing things")

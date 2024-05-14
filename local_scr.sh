@@ -21,8 +21,20 @@ python main.py strategy=scaffold optimizer=scaffold partitioning=iid num_rounds=
 # python main.py partitioning=dirichlet num_clients=32 num_classes=4
 # python main.py partitioning=dirichlet num_clients=16 num_classes=4
 
+
+# SSL k linear eval 
+# Downstream training - linear evaluation : python .\evaluation_linear.py num_rounds=50 batch_size=256 val_ratio=0 optimizer=adam num_workers=0
 # SSFL 
+
 python main_ssfl.py partitioning=dirichlet alpha=0.5 num_clients=10 num_classes=10 C_fraction=0.2 strategy=heterossfl optimizer=heterossfl num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=5 num_rounds=2
+
+# xwris cos decay gia early exps me c_fraction xamhlo
+python main_ssfl.py partitioning=dirichlet alpha=0.5 num_clients=10 num_classes=10 C_fraction=0.2 strategy=heterossfl optimizer=heterossfl num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=5 num_rounds=3 cos_decay=False
+
+# stis outputs\2024-05-14\12-02-59
+python main_ssfl.py partitioning=dirichlet alpha=0.5 num_clients=10 num_classes=10 C_fraction=1 strategy=heterossfl optimizer=heterossfl num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=5 num_rounds=5 cos_decay=False
+# bs=128 maybe
+ python main_ssfl.py partitioning=dirichlet alpha=0.5 num_clients=10 num_classes=10 C_fraction=1 strategy=heterossfl optimizer=heterossfl num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=10 num_rounds=4 cos_decay=False batch_size=128
 
 # declare -a partitioning =("dirichlet" "iid")
 # declare -a num_clients =(10 16 32)

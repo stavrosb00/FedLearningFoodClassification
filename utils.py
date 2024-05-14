@@ -131,6 +131,49 @@ def plot_metric_from_history(
     plt.savefig(Path(save_plot_path) / Path(f"{metric_type}_metrics{suffix}.png"))
     plt.close()
 
+def plot_metric_from_history_ssfl(
+    kNN_acc,
+    train_loss,
+    save_plot_path: str,
+    suffix: Optional[str] = "",
+) -> None:
+    """Plot from Flower server History.
+
+    Parameters
+    ----------
+    kNN_acc : array test_accuracy of server side from history
+    train_loss: array train_loss of weighted distributed losses from history
+        Arrays containing evaluation for all rounds.
+    save_plot_path : str
+        Folder to save the plot to.
+    suffix: Optional[str]
+        Optional string to add at the end of the filename for the plot.
+    """
+
+    rounds = [r for r in range(len(kNN_acc))] # rounds start from 1...Num_rounds
+    # Create a figure and two subplots
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+    # Plot test accuracy
+    ax1.plot(rounds, kNN_acc, color='blue', label='kNN Accuracy')
+    ax1.set_title('Test kNN Accuracy over rounds server side')
+    ax1.set_xlabel('Round')
+    ax1.set_ylabel('Accuracy %')
+    ax1.legend()
+
+    # Plot train loss
+    ax2.plot(rounds, train_loss, color='red', label='Train Loss')
+    ax2.set_title('Train weighted Loss over Rounds')
+    ax2.set_xlabel('Round')
+    ax2.set_ylabel('Loss')
+    ax2.legend()
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+    plt.savefig(Path(save_plot_path) / Path(f"exp_metrics{suffix}.png"))
+    # Show plot
+    # plt.show()
+    plt.close()
+
 
 def save_results_as_pickle(
     history: History,

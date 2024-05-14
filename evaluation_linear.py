@@ -13,7 +13,7 @@ import argparse
 from tqdm import tqdm
 from knn_monitor import knn_monitor
 
-# Downstream training - linear evaluation : python .\evaluation_linear.py num_rounds=50 batch_size=256 val_ratio=0 optimizer=adam num_workers=2
+# Downstream training - linear evaluation : python .\evaluation_linear.py num_rounds=50 batch_size=256 val_ratio=0 optimizer=adam num_workers=0
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig):
     start = time.time()
@@ -46,7 +46,7 @@ def main(cfg: DictConfig):
     grad_map: list[bool] = [p.requires_grad for _,p in net.state_dict(keep_vars=True).items()]
     print(grad_map)
     print(net)
-    return 0
+    # return 0
     datapath = cfg.datapath  #"D:/DesktopC/Datasets/data/"
     #loading data
     trainloader, testloader= load_centr_data(datapath=datapath, 

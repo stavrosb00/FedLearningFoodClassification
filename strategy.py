@@ -244,14 +244,18 @@ def weighted_average_ssfl(metrics: List[Tuple[int, Metrics]]) -> Metrics:
     # Multiply accuracy of each client by number of examples used
     # accuracies = [num_examples * m["accuracy"] for num_examples, m in metrics]
     losses = [num_examples * m["loss"] for num_examples, m in metrics]
+    d_losses = [num_examples * m["d_loss"] for num_examples, m in metrics]
+    cka_loss = [num_examples * m["cka_loss"] for num_examples, m in metrics]
     examples = [num_examples for num_examples, _ in metrics]
 
     # Aggregate (weighted average)
     loss = np.sum(losses) / np.sum(examples) 
+    d_loss = np.sum(d_losses) / np.sum(examples)
+    cka_loss = np.sum(cka_loss) / np.sum(examples)
     # accuracy = np.sum(accuracies) / np.sum(examples) 
     
     #return custom metrics
-    return {"loss": loss} #, "accuracy": accuracy}
+    return {"loss": loss, "d_loss": d_loss, "cka_loss": cka_loss} #, "accuracy": accuracy}
 
 
 
@@ -293,7 +297,11 @@ def get_on_fit_config_ssfl(config: DictConfig):
         
         config_res = {}
         init_lr = config.optimizer.lr
-        cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds))
+        # Optional - Cosine decay rule for now on server rounds level
+        if config.cos_decay:
+            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds))
+        else:
+            cur_lr = init_lr
         # lr = adjust_learning_rate()
         config_res["lr"] = cur_lr
         config_res["server_round"] = server_round
