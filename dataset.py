@@ -403,6 +403,7 @@ def load_centr_data_SSL(datapath: str,
     # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
     # normalize = Normalize(mean=[0.485, 0.456, 0.406],
     #                                     std=[0.229, 0.224, 0.225])
+    # Can be 512 - > 256 . Or 384 
     augmentation = Compose([
         RandomResizedCrop(256, scale=(0.2, 1.), interpolation= F.InterpolationMode.BICUBIC),
         RandomApply([

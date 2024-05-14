@@ -7,8 +7,9 @@ defaults:
 num_rounds: 3
 num_clients: 10
 lr_scheduling: False
+cos_decay: False
 
-batch_size: 64 #32 Federated supervised , 64 Federated SSL
+batch_size: 64 #32 Federated supervised , 64 Federated SSL #128 me autocast se eval_fn k local_fit 
 val_ratio: 0.3
 rad_ratio: 0.02
 partitioning: 'iid'

@@ -18,7 +18,7 @@ from client import generate_client_fn
 from client_scaffold import ScaffoldClient
 from client_ssfl import generate_client_fn
 from strategy import get_on_fit_config_ssfl, get_evaluate_fn_ssfl, weighted_average_ssfl, CustomFedAvgStrategy #get_metrics_aggregation_fn
-from utils import save_results_as_pickle, plot_metric_from_history
+from utils import save_results_as_pickle, plot_metric_from_history_ssfl
 from strategy_scaffold import ScaffoldStrategy, ScaffoldStrategyV2
 from strategy_ssfl import HeteroSSFLStrategy
 from server_scaffold import ScaffoldServer, ScaffoldServerV2
@@ -28,8 +28,8 @@ import random
 import warnings
 # Suppress deprecation warnings above tensorboard 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-
 from torch.utils.tensorboard import SummaryWriter
+
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig):
@@ -172,36 +172,32 @@ def main(cfg: DictConfig):
         print("[DELETED]Memory cost temp .pt format files related to client states")
 
     ## 6. Save your results
+    # Close summary writer
+    writer.close()
     print("................")
     print(history)
     # save_path = HydraConfig.get().runtime.output_dir
     # save results as a Python pickle using a file_path
     # the directory created by Hydra for each run
     save_results_as_pickle(history, file_path=save_path, extra_results={})
-
-    # results_path = Path(save_path) / "results.pkl"
-    # results = {"history": history, "anythingelse": "here"}
-    # # save the results as a python pickle
-    # with open(str(results_path), "wb") as h:
-    #     pickle.dump(results, h, protocol=pickle.HIGHEST_PROTOCOL)
-
     # Test centralized
     # print(f"{(time.time()-start)/60} minutes")
     # if strategy.evaluate_fn = None:
-    rounds, test_loss = zip(*history.losses_centralized)
-    _, test_accuracy = zip(*history.metrics_centralized["accuracy"])
+    # rounds, test_loss = zip(*history.losses_centralized)
+    # writer.add_scalar()
+    rounds, test_accuracy = zip(*history.metrics_centralized["accuracy"])
     # Fit metrics
     _, train_loss = zip(*history.metrics_distributed_fit["loss"])
-    _, train_acc = zip(*history.metrics_distributed_fit["accuracy"])
-    _, mean_diff_acc = zip(*history.metrics_distributed_fit["mean_diff_acc"])
-    _, var_diff_acc = zip(*history.metrics_distributed_fit["var_diff_acc"])
+    _, d_loss = zip(*history.metrics_distributed_fit["d_loss"])
+    _, cka_loss = zip(*history.metrics_distributed_fit["cka_loss"])
+    # _, train_acc = zip(*history.metrics_distributed_fit["accuracy"])
     # Evaluation metrics
-    _, val_loss = zip(*history.metrics_distributed["loss"])
-    _, val_acc = zip(*history.metrics_distributed["accuracy"])
+    # _, val_loss = zip(*history.metrics_distributed["loss"])
+    # _, val_acc = zip(*history.metrics_distributed["accuracy"])
 
     if len(rounds) != cfg.num_rounds:
         # drop zeroth evaluation round before start of training
-        test_loss = test_loss[1:]
+        # test_loss = test_loss[1:]
         test_accuracy = test_accuracy[1:]
         rounds = rounds[1:]
 
@@ -220,8 +216,9 @@ def main(cfg: DictConfig):
         f"_E={cfg.local_epochs}"
         f"_R={cfg.num_rounds}"
     )
-    plot_metric_from_history(
-        history,
+    plot_metric_from_history_ssfl(
+        test_accuracy,
+        train_loss,
         save_path,
         (file_suffix),
     )
@@ -230,14 +227,13 @@ def main(cfg: DictConfig):
         save_path,
         f"{file_suffix}.csv",
     )
-    if len(test_loss) == len(train_loss):
+    if len(test_accuracy) == len(train_loss):
         df = pd.DataFrame(
-        {"round": rounds, "test_loss": test_loss, "test_accuracy": test_accuracy, 
-         "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, "var_diff_acc": var_diff_acc, "val_loss": val_loss, "val_acc": val_acc})
+        {"round": rounds, "test_accuracy": test_accuracy, 
+         "train_loss": train_loss, "d_loss": d_loss, "cka_loss": cka_loss})
     else:
         df = pd.DataFrame(
-        {"round": rounds, "train_loss": train_loss, "train_acc": train_acc, "mean_diff_acc": mean_diff_acc, 
-         "var_diff_acc": var_diff_acc, "val_loss": val_loss, "val_acc": val_acc})
+        {"round": rounds, "train_loss": train_loss, "d_loss": d_loss, "cka_loss": cka_loss})
     
     df.to_csv(file_name, index=False)
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")

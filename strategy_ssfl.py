@@ -155,8 +155,12 @@ class HeteroSSFLStrategy(FedAvg):
             fit_metrics = [(res.num_examples, res.metrics) for _, res in results]
             # keep CID->file, ServerRound->index, train values. Interpolation the progress between ticks in second place
             for _, m in fit_metrics:
-                temp_dict = {"client_id" : m["client_id"], "server_round": server_round, "loss": m["loss"], "fit_mins": m["fit_mins"]} #, "accuracy": m["accuracy"], 
-                self.writer.add_scalar(f"client_fit_progress_{m['client_id']}/loss", m["loss"], server_round)
+                # "loss": train_loss, "d_loss": d_loss, "cka_loss": cka_loss,
+                temp_dict = {"client_id" : m["client_id"], "server_round": server_round, "loss": m["loss"], "d_loss": m["d_loss"], "cka_loss": m["cka_loss"], "fit_mins": m["fit_mins"]} #, "accuracy": m["accuracy"], 
+                # self.writer.add_scalars(f"client_fit_progress_{m['client_id']}/loss", m["loss"], server_round)
+                self.writer.add_scalars(f"client_fit_progress_{m['client_id']}/losses", 
+                                        {"loss": m["loss"], "d_loss": m["d_loss"], "cka_loss": m["cka_loss"]}, 
+                                        server_round)
                 self.writer.add_scalar(f"client_fit_progress_{m['client_id']}/fit_mins", m["fit_mins"], server_round)
                 if os.path.exists(f"{self.dir}/client_fit_progress_{m['client_id']}.csv"):
                     temp_df = pd.DataFrame(temp_dict, index=[0])
@@ -168,7 +172,9 @@ class HeteroSSFLStrategy(FedAvg):
                     temp_df.to_csv(f"{self.dir}/client_fit_progress_{m['client_id']}.csv", index=False)
 
             metrics_aggregated = self.fit_metrics_aggregation_fn(fit_metrics)
-            self.writer.add_scalar(f"server/weighted_loss", metrics_aggregated['loss'], server_round)
+            # self.writer.add_scalar(f"server/weighted_loss", metrics_aggregated['loss'], server_round) 
+            self.writer.add_scalars(f"server/weighted_losses", 
+                                    {"loss": metrics_aggregated['loss'], "d_loss": metrics_aggregated['d_loss'], "cka_loss": metrics_aggregated['cka_loss']}, server_round) 
         elif server_round == 1:  # Only log this warning once
             log(WARNING, "No fit_metrics_aggregation_fn provided")
 

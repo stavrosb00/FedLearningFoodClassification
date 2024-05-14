@@ -45,12 +45,15 @@ https://pytorch.org/mobile/home/
 - [✓] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
 - [✓] Na dw alignment dataset me 0 validation support
 - [✓] Alignment dataloader optimization kai profiling benchmark gia tensor or numpy choose gia LinearCKA
-- [semi] Client, strategy kai server gia HeteroSSFL
-- [semi] tensorboard real time visuals
-- [] main_ssfl script gia metrics saves kai instances,calls.
-- [] Linear evaluate to megalo peirama 12 Maiou
-- [] Delete 80 test peiramata days : 13/5 , 
+- [✓] Client, strategy kai server gia HeteroSSFL
+- [✓] tensorboard real time visuals. Add other losess too for client. (Tensorboard turn it on after experiment for I/O overhead economy) 
+- [✓] main_ssfl script instances,calls.
+- [✓] main_ssfl metrics saves
+- [semi] Linear evaluate to megalo peirama 12 Maiou. Left 
+- [] Delete 80 test peiramata days : 13/5 prin tis 22-14-08 , 
+- [✓] Fix oti o 9os client bgazei error kai dropparei logw channel dim ston autograd me ta BN kai ta pollaplasia iterations 
 - [] Load kai kNN accuracy sto main_ssfl
+- [✓] Hide progress se tqdm an ola debugged kai plotted se tensorboard
 - [] Linear evaluation : analoga .npz h .pth na kanei manipulation to load twn checkpoints
 - [] Linear evaluation : load_downstream_data() synarthsh basei label percentages alliws ola 
 - [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10

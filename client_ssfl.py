@@ -65,7 +65,7 @@ class HeteroSSFLClient(fl.client.NumPyClient):
         # else:
         # self.phi_K_mean = parameters[self.len_params :][0]
         self.phi_K_mean = parameters[-1]
-        print(self.phi_K_mean.shape, type(self.phi_K_mean))
+        # print(self.phi_K_mean.shape, type(self.phi_K_mean))
         # parameters = parameters[: self.len_params]
         mdl_parameters = parameters[: -1]
         # (print(len(mdl_parameters)))
@@ -105,12 +105,12 @@ class HeteroSSFLClient(fl.client.NumPyClient):
         # lr = adjust_learning_rate(optim, lr, server_round, num_rounds)
         # print(f"Client {self.cid} training on {self.device}")
         # local training
-        train_loss, phi_K = train_heterossfl(self.model, self.trainloader, self.radloader, optim, epochs, self.device, mu_coeff=mu_coeff, phi_K_mean=self.phi_K_mean, hide_progress=False)
+        train_loss, d_loss, cka_loss, phi_K = train_heterossfl(self.model, self.trainloader, self.radloader, optim, epochs, self.device, mu_coeff=mu_coeff, phi_K_mean=self.phi_K_mean, hide_progress=True)
         # Possible artificial knowledge for testing: knn_monitor, local memory labeled dataset -> weighted_accuracies strategy side
         # self.get_parameters({}).extend()
         combined_updates = self.get_parameters({}) + [phi_K]
         # return updated model params + phi_K(where batch_size x features), number of examples and dict of metrics
-        return combined_updates, len(self.trainloader.dataset), {"loss": train_loss, "client_id" : self.cid, "fit_mins": (time.time()-start)/60}
+        return combined_updates, len(self.trainloader.dataset), {"loss": train_loss, "d_loss": d_loss, "cka_loss": cka_loss, "client_id" : self.cid, "fit_mins": (time.time()-start)/60}
 
     def evaluate(self, parameters: NDArrays, config: Dict[str, Scalar]):
         # return None
