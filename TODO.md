@@ -45,24 +45,32 @@ https://pytorch.org/mobile/home/
 - [✓] Na dw bibliografia Fed gia memory vs test dataloader se knn monitoring. To FedSSL divergence paper exei training dataloader se server side. Alliws na kanw weighted kNN accs
 - [✓] Na dw alignment dataset me 0 validation support
 - [✓] Alignment dataloader optimization kai profiling benchmark gia tensor or numpy choose gia LinearCKA
-- [] Client and server gia HeteroSSFL
-- [] main_ssfl script
-
-- [] Linear evaluation - load_downstream_data() synarthsh basei label percentages alliws ola 
+- [✓] Client, strategy kai server gia HeteroSSFL
+- [✓] tensorboard real time visuals. Add other losess too for client. (Tensorboard turn it on after experiment for I/O overhead economy) 
+- [✓] main_ssfl script instances,calls.
+- [✓] main_ssfl metrics saves
+- [semi] Linear evaluate to megalo peirama 12 Maiou. Left 
+- [semi] Delete 80 test peiramata days : 13/5 prin tis 22-14-08 +  Delete 16/5 prin tis 13:27
+- [✓] Fix oti o 9os client bgazei error kai dropparei logw channel dim ston autograd me ta BN kai ta pollaplasia iterations 
+- [✓] Load kai kNN accuracy sto main_ssfl
+- [✓] LR scheduling debugging
+- [✓] Hide progress se tqdm an ola debugged kai plotted se tensorboard
+- [] Linear evaluation : analoga .npz h .pth na kanei manipulation to load twn checkpoints <- Na dw
+- [] Na ksanadw me progress meter debug ta data k batch times se client <- Isws
+- [] Linear evaluation me 256x256 anti gia 512x512 upresized-0pad. Na dw gia to pretrained=True
+- [] Linear evaluation : load_downstream_data() synarthsh basei label percentages, alliws olo to trainset load
 - [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
+- [] Na kanw downstream linear eval me 256x256 resize sto 
 - [] Give feature: ignore evaluate_fn and ignore results related to test_acc... indexing me rounds na dw gia na xwraw 2-3 client ray processes. na trexw mono apo miniconda cmd xwris VScode
 - [] Na anebasw # client processes kai na bgalw evaluate_fn global test gia faster simulations
 - [] Plot algorithm comparison and titles based on .yaml files : Algorithm(color) based on train acc or other accs(diff line w/ same color)
 - [] Nea polla peiramata me fraction=1 k higher #classes
 
 ## Xrysa tips
-- [semi] Read papers gia meta-learning/self-supervised me pre-trained pretext tasks kai downstream tasks
+- [✓] Read papers gia meta-learning/self-supervised me pre-trained pretext tasks kai downstream tasks
 - [] reproduce client manager lock seed https://discuss.flower.ai/t/how-do-i-write-a-custom-client-selection-protocol/74/2 alliws 
 clientmanager inherit gia change sampler method
 - [] Latex : kefalaio 2.1 gia anagnwrish faghtwn(proklhsh, )kai 1.4 sto neo 2.1 isws . 3.1.1 - match 4.1.1 
-- [] 
-
-
 
 ## Better data vis
 - [] X y functions pipeline for new dataset

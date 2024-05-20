@@ -1,0 +1,21 @@
+[2024-05-18 20:09:44,690][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-05-18 20:09:44,690][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-05-18 20:09:50,049][flwr][INFO] - Flower VCE: Ray initialized with resources: {'GPU': 1.0, 'object_store_memory': 7083171840.0, 'node:127.0.0.1': 1.0, 'memory': 14166343680.0, 'CPU': 6.0, 'node:__internal_head__': 1.0}
+[2024-05-18 20:09:50,049][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-05-18 20:09:50,049][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 6, 'num_gpus': 1}
+[2024-05-18 20:09:50,065][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-05-18 20:09:50,065][flwr][INFO] - Initializing global parameters
+[2024-05-18 20:09:50,065][flwr][INFO] - Using initial parameters provided by strategy
+[2024-05-18 20:09:50,065][flwr][INFO] - Evaluating initial parameters
+[2024-05-18 20:10:59,768][flwr][INFO] - FL starting
+[2024-05-18 20:10:59,855][flwr][DEBUG] - fit_round 1: strategy sampled 10 clients (out of 10)
+[2024-05-18 20:17:28,007][flwr][DEBUG] - fit_round 1 received 10 results and 0 failures
+[2024-05-18 20:18:22,230][flwr][INFO] - Model saved with Best Test kNN accuracy 31.800: 
+[2024-05-18 20:18:22,233][flwr][INFO] - fit progress: (1, 0, {'accuracy': 31.8}, 442.4757658999879)
+[2024-05-18 20:18:22,234][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-05-18 20:18:22,234][flwr][INFO] - FL finished in 442.47638900001766
+[2024-05-18 20:18:22,274][flwr][INFO] - app_fit: losses_distributed []
+[2024-05-18 20:18:22,274][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, -0.01793965798485196)], 'd_loss': [(1, -0.01793965798485196)], 'cka_loss': [(1, 0.0)]}
+[2024-05-18 20:18:22,274][flwr][INFO] - app_fit: metrics_distributed {}
+[2024-05-18 20:18:22,275][flwr][INFO] - app_fit: losses_centralized [(1, 0)]
+[2024-05-18 20:18:22,275][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(1, 31.8)]}

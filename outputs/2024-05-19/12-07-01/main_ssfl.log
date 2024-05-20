@@ -1,0 +1,26 @@
+[2024-05-19 12:07:03,903][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-05-19 12:07:03,904][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=2, round_timeout=None)
+[2024-05-19 12:07:08,871][flwr][INFO] - Flower VCE: Ray initialized with resources: {'CPU': 6.0, 'memory': 14177776436.0, 'node:127.0.0.1': 1.0, 'object_store_memory': 7088888217.0, 'node:__internal_head__': 1.0, 'GPU': 1.0}
+[2024-05-19 12:07:08,871][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-05-19 12:07:08,871][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 6, 'num_gpus': 1}
+[2024-05-19 12:07:08,875][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-05-19 12:07:08,875][flwr][INFO] - Initializing global parameters
+[2024-05-19 12:07:08,875][flwr][INFO] - Using initial parameters provided by strategy
+[2024-05-19 12:07:08,875][flwr][INFO] - Evaluating initial parameters
+[2024-05-19 12:08:04,039][flwr][INFO] - FL starting
+[2024-05-19 12:08:04,131][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 5)
+[2024-05-19 12:13:32,404][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-05-19 12:14:25,923][flwr][INFO] - Model saved with Best Test kNN accuracy 30.320: 
+[2024-05-19 12:14:25,933][flwr][INFO] - fit progress: (1, 0, {'accuracy': 30.320000000000004}, 381.9021833000006)
+[2024-05-19 12:14:25,933][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-05-19 12:14:26,017][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 5)
+[2024-05-19 12:19:45,360][flwr][DEBUG] - fit_round 2 received 5 results and 0 failures
+[2024-05-19 12:20:38,139][flwr][INFO] - Model saved with Best Test kNN accuracy 30.600: 
+[2024-05-19 12:20:38,139][flwr][INFO] - fit progress: (2, 0, {'accuracy': 30.599999999999998}, 754.1288168000174)
+[2024-05-19 12:20:38,139][flwr][INFO] - evaluate_round 2: no clients selected, cancel
+[2024-05-19 12:20:38,139][flwr][INFO] - FL finished in 754.129465200007
+[2024-05-19 12:20:38,160][flwr][INFO] - app_fit: losses_distributed []
+[2024-05-19 12:20:38,160][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, -0.039588001675510756), (2, -0.10984159963834243)], 'd_loss': [(1, -0.039588001675510756), (2, -0.10984159963834243)], 'cka_loss': [(1, 0.0), (2, 0.0)]}
+[2024-05-19 12:20:38,161][flwr][INFO] - app_fit: metrics_distributed {}
+[2024-05-19 12:20:38,161][flwr][INFO] - app_fit: losses_centralized [(1, 0), (2, 0)]
+[2024-05-19 12:20:38,161][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(1, 30.320000000000004), (2, 30.599999999999998)]}

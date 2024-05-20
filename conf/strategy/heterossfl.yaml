@@ -1,0 +1,9 @@
+name: heterossfl
+strategy:
+  _target_: strategy_ssfl.HeteroSSFLStrategy
+  _recursive_: false
+    
+
+client_fn:
+  _target_: client_ssfl.generate_client_fn
+  _recursive_: false

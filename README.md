@@ -16,5 +16,10 @@ conda install scikit-learn=1.3.0
 
 conda install tqdm
 
+conda install tensorboard 
+
+pip install py-spy snakeviz  for profiling
+
+[comment]: # (might need pip install tensorboard to avoid warnings w/o filtering them afterwards)
 [comment]: # (might need conda install cudatoolkit)
 [comment]: # (ray==2.6.3)

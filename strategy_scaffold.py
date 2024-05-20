@@ -73,10 +73,10 @@ class ScaffoldStrategy(FedAvg):
         self.dir = save_dir
         self.best_test_acc = 0.0
         self.num_classes = num_classes
-        self.model_params = ResNet18(self.num_classes)
         self.checkpoint_path = checkpoint_path
         # server learning rate of delta_x
         # self.eta_g: int = 1
+        self.model_params = ResNet18(self.num_classes)
         self.len_params = len([p for p in self.model_params.parameters()])
         self.model_params = None
         # self.eval_every_n = eval_every_n #global eval freq

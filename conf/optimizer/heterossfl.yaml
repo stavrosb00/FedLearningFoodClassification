@@ -1,0 +1,14 @@
+# @package _global_
+
+exp_name: heterossfl
+
+optimizer:
+  _target_: models.ScaffoldOptimizer
+  lr: 0.032 # base_lr for init_lr .
+  momentum: 0.9
+  weight_decay: 1e-4 # 0.0005
+  gmf: 0
+  mu: 0
+  mu_coeff: 0.3 # loss coefficient weight term for linear CKA, Authors: 0.5 CIFAR-10,  1 on tiny-imgnet(200 Classes) ~ Food 101 classes
+  #For alignment and convergence
+  # TBD

@@ -63,6 +63,8 @@ class Resize_with_pad:
         else:
             return F.resize(image, [self.h, self.w])
 
+# TBD: IN ORDER TO GENERALIZE CODE need to input arguments indices and labels in X, y format and 
+# return only idx_map to set the CustomDatasets after partitioning functions 
 def partitioning_iid(trainset, num_partitions: int, balance: bool = True, seed: int = 2024):
     """Partitionining according to IID and random permutation.
 
@@ -182,6 +184,7 @@ def partitioning_dirichlet(alpha, trainset, num_partitions: int, seed: int = 202
         for k in range(num_classes):
             idx_k = np.where(tmp_t == k)[0]
             prng.shuffle(idx_k)
+            # sampled proportions vector from the Dirichlet distribution
             proportions = prng.dirichlet(np.repeat(alpha, num_partitions))
             # balancing
             proportions = np.array(

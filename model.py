@@ -1,6 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.utils
+import torch.utils.tensorboard
+import torch.utils.tensorboard.summary
 import torchvision
 import math
 from typing import Dict, List
@@ -9,6 +12,10 @@ from torch.optim import SGD
 from torch.cuda.amp import autocast, GradScaler
 from tqdm import tqdm
 from knn_monitor import knn_monitor
+import numpy as np
+from linear_cka import linear_CKA_fast
+from lr_scheduler import LR_Scheduler
+import time
 
 # Note the model and functions here defined do not have any FL-specific components.
 class ResNet18(nn.Module):
@@ -47,7 +54,7 @@ class ProjectionMLP(nn.Module):
             nn.Linear(h1_features, out_features),
             nn.BatchNorm1d(out_features)
         )
-
+        #to facebook paper bazei 3 layers me teleutaio Linear->BN. EasyFL leei me sketo linear sto end layer
     def forward(self, x):
         # x = self.l1(x)
         # # x = self.l2(x) # FedSSL 2022 paper suggests 2-layer
@@ -64,19 +71,17 @@ class PredictionMLP(nn.Module):
             nn.ReLU(inplace=True)
         )
         self.l2 = nn.Linear(hidden_features, out_features)
-    
     def forward(self, x):
         return self.l2(self.l1(x))
 
 def D(p, z, version='simplified'): # negative cosine similarity
-    if version == 'original':
-        z = z.detach() # stop gradient
+    if version == 'simplified':# same thing, much faster
+        return - F.cosine_similarity(p, z.detach(), dim=-1).mean()
+    elif version == 'original':
+        z = z.detach() # stop gradient operant
         p = F.normalize(p, dim=1) # l2-normalize 
         z = F.normalize(z, dim=1) # l2-normalize 
         return -(p*z).sum(dim=1).mean()
-
-    elif version == 'simplified':# same thing, much faster. Scroll down, speed test in __main__
-        return - F.cosine_similarity(p, z.detach(), dim=-1).mean()
     else:
         raise Exception
 
@@ -85,14 +90,16 @@ class SimSiam(nn.Module):
         super(SimSiam, self).__init__()
         # backbone.output_dim = backbone.fc.in_features
         backbone.fc = torch.nn.Identity() # erase last linear layer. removal doesn't offer much MB advantage 
-        self.backbone = backbone
-        # self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)
-        self.projector = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)  
+        # self.backbone = backbone # comment , parameters economy.
+        # self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)\
+
+        # self.projector = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)   #<-buffer econ, comment for after 15 May feature for model chekpt
+
         # backbone.fc = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim) 
         # self.encoder = backbone
         self.encoder = nn.Sequential(
-            self.backbone,
-            self.projector
+            backbone,
+            ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)
         )
         self.predictor = PredictionMLP(hidden_dim, pred_dim, output_dim)
 
@@ -346,6 +353,25 @@ def adjust_learning_rate(optimizer: SGD, init_lr, epoch, epochs):
     for param_group in optimizer.param_groups:
         param_group['lr'] = cur_lr
 
+# code from https://github.com/PatrickHua/SimSiam/blob/75a7c51362c30e8628ad83949055ef73829ce786/optimizers/__init__.py
+def get_optimizer(model: nn.Module, lr: float, momentum: float, weight_decay: float, name: str='sgd'):
+
+    predictor_prefix = ('module.predictor', 'predictor')
+    parameters = [{
+        'name': 'base',
+        'params': [param for name, param in model.named_parameters() if not name.startswith(predictor_prefix)],
+        'lr': lr
+    },{
+        'name': 'predictor',
+        'params': [param for name, param in model.named_parameters() if name.startswith(predictor_prefix)],
+        'lr': lr
+    }]
+   
+    if name == 'sgd':
+        optimizer = torch.optim.SGD(parameters, lr=lr, momentum=momentum, weight_decay=weight_decay)
+   
+    return optimizer
+
 def train_loop_ssl(net: torch.nn.Module, 
           trainloader: torch.utils.data.DataLoader, 
           testloader: torch.utils.data.DataLoader, 
@@ -353,7 +379,9 @@ def train_loop_ssl(net: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           epochs: int,
           device: torch.device,
-          init_lr=0.032) -> Dict[str, List]:
+          init_lr: float,
+          lr_scheduler: LR_Scheduler,
+          writer: torch.utils.tensorboard.SummaryWriter) -> Dict[str, List]:
     accuracy = 0 
     results = {"knn_accuracy": [],
                "train_loss": []
@@ -368,10 +396,12 @@ def train_loop_ssl(net: torch.nn.Module,
         for i, data in enumerate(local_progress):
             images = data[0]
             optimizer.zero_grad()
-            loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
             # loss = data_dict['loss'].mean()
             loss.backward()
             optimizer.step()
+            lr_scheduler.step()
             # lr_scheduler.step()
             batch_loss.append(loss)
             local_progress.set_postfix({'loss': loss})
@@ -379,14 +409,95 @@ def train_loop_ssl(net: torch.nn.Module,
         # accuracy = knn_monitor(net.encoder, testloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)
         # net.backbone
         accuracy = knn_monitor(net.encoder, memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)  # 25, 7500
+        epoch_bs_loss = float(sum(batch_loss) / len(batch_loss))
+        writer.add_scalar(f"metrics/kNN_acc", accuracy, epoch)
         info_dict = {"epoch":epoch, "accuracy":accuracy}
-        adjust_learning_rate(optimizer, init_lr, epoch, epochs)
+        # adjust_learning_rate(optimizer, init_lr, epoch, epochs*2)
+        writer.add_scalar(f"metrics/loss", epoch_bs_loss, epoch)
         global_progress.set_postfix(info_dict)
         results["knn_accuracy"].append(float(accuracy))
-        results["train_loss"].append(float(sum(batch_loss) / len(batch_loss)))
+        results["train_loss"].append(epoch_bs_loss)
 
     print('Finished Training')
     return results
+
+def train_heterossfl(net: torch.nn.Module, 
+          trainloader: torch.utils.data.DataLoader, 
+          radloader: torch.utils.data.DataLoader, 
+          optimizer: torch.optim.Optimizer,
+          epochs: int,
+          device: torch.device,
+          mu_coeff: float,
+          phi_K_mean: np.ndarray | None,
+          hide_progress: bool = False) -> tuple[float, np.ndarray]:
+
+    # Start training
+    net.to(device)
+    global_progress = tqdm(range(epochs), desc=f'Local training', disable=hide_progress)
+    for epoch in global_progress:
+        batch_loss = []
+        disim_loss = []
+        cka_loss = []
+        net.train() #need to reset because knn_monitor sets encoder sub-module on eval() mode
+        local_progress = tqdm(trainloader, desc=f'Epoch {epoch}/{epochs}', disable=hide_progress)
+        # start1= time.time() 
+        # vlepe https://github.com/pytorch/examples/blob/6f62fcd361868406a95d71af9349f9a3d03a2c52/imagenet/main.py#L275 
+        # me progress meters
+        for i, data in enumerate(local_progress):
+            # print(f"tr Datal{time.time() - start1}")
+            images = data[0]
+            optimizer.zero_grad()
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+                # loss = loss.mean() # minimizing statistical expectation
+            # loss = data_dict['loss'].mean()
+            if mu_coeff ==0: # Lazy FedSimSiam
+                total_loss = loss
+                loss_cka = 0
+                phi_K = np.zeros(len(radloader.dataset), net.encoder[1].l3[0].out_features) # artificial phi_K just to hold the same communication buffer protocol
+            else:
+                if phi_K_mean is None: # first round skip loss assignment
+                    total_loss = loss
+                    loss_cka = 0
+                    # print('First round CKA=0')
+                    # Glytwnw 1o fresh round me 2 for loops ston radloader otan exw None kai otan den exw None
+                    if epoch == (epochs-1):
+                        embeddings = []
+                        with torch.no_grad():
+                            for idx, (X_img , _) in enumerate(radloader):
+                                # images = data[0] # images[0]
+                                with torch.autocast(device_type="cuda", dtype=torch.float16):
+                                    embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                                embeddings.append(embedding)
+                            phi_K = torch.cat(embeddings, dim=0).cpu().numpy()
+                else:
+                    embeddings = []
+                    with torch.no_grad():
+                        for idx, (X_img , _) in enumerate(radloader):
+                            # images = data[0] # images[0]
+                            embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                            embeddings.append(embedding)
+                        phi_K = torch.cat(embeddings, dim=0).cpu().numpy() # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
+                    loss_cka = mu_coeff * linear_CKA_fast(phi_K, phi_K_mean)
+                    total_loss = loss + loss_cka
+            # per local epoch backwards
+            total_loss.backward()
+            optimizer.step()
+            # lr_scheduler.step()
+            batch_loss.append(total_loss.item())
+            disim_loss.append(loss.item())
+            cka_loss.append(loss_cka)
+            # local_progress.set_postfix({'loss': float(loss), 'loss_cka': loss_cka, 'total_loss': batch_loss[-1]})
+            local_progress.set_postfix({'loss': disim_loss[-1], 'loss_cka': cka_loss[-1], 'total_loss': batch_loss[-1]})
+            # start1 = time.time()
+
+        # adjust_learning_rate(optimizer, init_lr, epoch, epochs)
+        train_loss = float(sum(batch_loss) / len(batch_loss))
+        disim_loss = float(sum(disim_loss) / len(disim_loss))
+        cka_loss = float(sum(cka_loss) / len(cka_loss))
+        info_dict = {"epoch":epoch, "train_loss":train_loss}
+        global_progress.set_postfix(info_dict)
+    return train_loss, disim_loss, cka_loss, phi_K
 
 if __name__ == "__main__":
     print("Testing things")

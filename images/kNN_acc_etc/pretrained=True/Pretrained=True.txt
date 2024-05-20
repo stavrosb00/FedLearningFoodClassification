@@ -1,0 +1,9 @@
+Adaptation phase: downgrading sthn arxh k meta pop off. Xrhsimeuei to warmup edw akoma perissotero gia oxi apotomo collapse pros twn representations kai anakampsh
+
+There might be an adaptation phase where the model's weights adjust from the pre-trained state 
+to the new task. During this phase, performance metrics can fluctuate and might temporarily degrade before improving.
+
+
+Pre-trained weights provide a strong prior that might initially restrict the model's ability to explore the data distribution of the new task. 
+This can result in lower performance in the early stages of training as the model adjusts.
+When starting from scratch, the model has no such priors and might be more adaptable initially, even though it will likely be less optimal overall without extensive training.

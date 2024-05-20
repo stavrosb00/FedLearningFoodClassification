@@ -1,7 +1,8 @@
 __pycache__/*
 # outputs/*
-# multirun/*
+multirun/*
 models/*
+profiles/*
 # images/*
 
 # # # Ignore everything

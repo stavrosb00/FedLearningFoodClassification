@@ -131,6 +131,49 @@ def plot_metric_from_history(
     plt.savefig(Path(save_plot_path) / Path(f"{metric_type}_metrics{suffix}.png"))
     plt.close()
 
+def plot_metric_from_history_ssfl(
+    kNN_acc,
+    train_loss,
+    save_plot_path: str,
+    suffix: Optional[str] = "",
+) -> None:
+    """Plot from Flower server History.
+
+    Parameters
+    ----------
+    kNN_acc : array test_accuracy of server side from history
+    train_loss: array train_loss of weighted distributed losses from history
+        Arrays containing evaluation for all rounds.
+    save_plot_path : str
+        Folder to save the plot to.
+    suffix: Optional[str]
+        Optional string to add at the end of the filename for the plot.
+    """
+
+    rounds = [r for r in range(len(kNN_acc))] # rounds start from 1...Num_rounds
+    # Create a figure and two subplots
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+    # Plot test accuracy
+    ax1.plot(rounds, kNN_acc, color='blue', label='kNN Accuracy')
+    ax1.set_title('Test kNN Accuracy over rounds server side')
+    ax1.set_xlabel('Round')
+    ax1.set_ylabel('Accuracy %')
+    ax1.legend()
+
+    # Plot train loss
+    ax2.plot(rounds, train_loss, color='red', label='Train Loss')
+    ax2.set_title('Train weighted Loss over Rounds')
+    ax2.set_xlabel('Round')
+    ax2.set_ylabel('Loss')
+    ax2.legend()
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+    plt.savefig(Path(save_plot_path) / Path(f"exp_metrics{suffix}.png"))
+    # Show plot
+    # plt.show()
+    plt.close()
+
 
 def save_results_as_pickle(
     history: History,
@@ -310,7 +353,16 @@ def generate_plots(
     plt.show()
 
 # From visual.ipynb
-def plot_progress(eval_file, train_file, cid: int, save_str: str, exp_str: str):
+def plot_progress(eval_file: str, train_file: str, cid: int, save_str: str, exp_str: str):
+    """Plot cid client's individual progress
+
+    Args:
+        eval_file (str): client's eval file.csv
+        train_file (str): client's train file.csv
+        cid (int): ID of client
+        save_str (str): string path to be save
+        exp_str (str): string to be added on the path
+    """    
     # Read CSV files
     eval_df = pd.read_csv(eval_file)
     train_df = pd.read_csv(train_file)
@@ -359,7 +411,21 @@ def plot_clients_progress(exp_file_csv: str):
             print("Not enough rounds for eval and train accuracy samples")
             FileExistsError()
 
-
+# Soft debugging 
+def fit_mins_combined(output_regex_csvs: str = f"outputs/2024-05-14/15-55-45/clients/*csv"):
+    """Printing and returning total minutes of client's fit() computation during experiment.
+    Args:
+        output_regex_csvs (str)"""
+    exp_files: list[str] = []
+    exp_files = glob.glob(output_regex_csvs) 
+    print(exp_files)
+    total_fit_mins = 0
+    for f in exp_files:
+        df = pd.read_csv(f)
+        fit_mins_column = df["fit_mins"]
+        total_fit_mins += sum(fit_mins_column)
+    print(total_fit_mins)
+    return total_fit_mins
 
 def compare_alg_on_partitioning(exp_file_csvs: list[str], acc_type: str):
     """
