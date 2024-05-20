@@ -1,0 +1,26 @@
+[2024-05-19 10:51:44,265][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-05-19 10:51:44,266][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=2, round_timeout=None)
+[2024-05-19 10:51:49,364][flwr][INFO] - Flower VCE: Ray initialized with resources: {'GPU': 1.0, 'object_store_memory': 7235501260.0, 'memory': 14471002523.0, 'node:127.0.0.1': 1.0, 'node:__internal_head__': 1.0, 'CPU': 6.0}
+[2024-05-19 10:51:49,364][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-05-19 10:51:49,365][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 6, 'num_gpus': 1}
+[2024-05-19 10:51:49,374][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-05-19 10:51:49,375][flwr][INFO] - Initializing global parameters
+[2024-05-19 10:51:49,376][flwr][INFO] - Using initial parameters provided by strategy
+[2024-05-19 10:51:49,376][flwr][INFO] - Evaluating initial parameters
+[2024-05-19 10:52:46,099][flwr][INFO] - FL starting
+[2024-05-19 10:52:46,185][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 5)
+[2024-05-19 10:58:51,923][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-05-19 10:59:44,420][flwr][INFO] - Model saved with Best Test kNN accuracy 30.320: 
+[2024-05-19 10:59:44,436][flwr][INFO] - fit progress: (1, 0, {'accuracy': 30.320000000000004}, 418.3616478999611)
+[2024-05-19 10:59:44,436][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-05-19 10:59:44,513][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 5)
+[2024-05-19 11:06:17,050][flwr][DEBUG] - fit_round 2 received 5 results and 0 failures
+[2024-05-19 11:07:10,624][flwr][INFO] - Model saved with Best Test kNN accuracy 30.480: 
+[2024-05-19 11:07:10,627][flwr][INFO] - fit progress: (2, 0, {'accuracy': 30.48}, 864.5750690999557)
+[2024-05-19 11:07:10,627][flwr][INFO] - evaluate_round 2: no clients selected, cancel
+[2024-05-19 11:07:10,628][flwr][INFO] - FL finished in 864.5758161999984
+[2024-05-19 11:07:10,659][flwr][INFO] - app_fit: losses_distributed []
+[2024-05-19 11:07:10,660][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, -0.04682562282973036), (2, 0.045001702861282966)], 'd_loss': [(1, -0.04682562282973036), (2, -0.11706467872355461)], 'cka_loss': [(1, 0.0), (2, 0.16206638105076543)]}
+[2024-05-19 11:07:10,660][flwr][INFO] - app_fit: metrics_distributed {}
+[2024-05-19 11:07:10,660][flwr][INFO] - app_fit: losses_centralized [(1, 0), (2, 0)]
+[2024-05-19 11:07:10,661][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(1, 30.320000000000004), (2, 30.48)]}

@@ -55,8 +55,8 @@ https://pytorch.org/mobile/home/
 - [✓] Load kai kNN accuracy sto main_ssfl
 - [✓] LR scheduling debugging
 - [✓] Hide progress se tqdm an ola debugged kai plotted se tensorboard
-- [] Linear evaluation : analoga .npz h .pth na kanei manipulation to load twn checkpoints
-- [] Na ksanadw me progress meter debug ta data k batch times se client 
+- [] Linear evaluation : analoga .npz h .pth na kanei manipulation to load twn checkpoints <- Na dw
+- [] Na ksanadw me progress meter debug ta data k batch times se client <- Isws
 - [] Linear evaluation me 256x256 anti gia 512x512 upresized-0pad. Na dw gia to pretrained=True
 - [] Linear evaluation : load_downstream_data() synarthsh basei label percentages, alliws olo to trainset load
 - [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
@@ -71,9 +71,6 @@ https://pytorch.org/mobile/home/
 - [] reproduce client manager lock seed https://discuss.flower.ai/t/how-do-i-write-a-custom-client-selection-protocol/74/2 alliws 
 clientmanager inherit gia change sampler method
 - [] Latex : kefalaio 2.1 gia anagnwrish faghtwn(proklhsh, )kai 1.4 sto neo 2.1 isws . 3.1.1 - match 4.1.1 
-- [] 
-
-
 
 ## Better data vis
 - [] X y functions pipeline for new dataset

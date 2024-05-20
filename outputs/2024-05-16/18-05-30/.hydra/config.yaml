@@ -1,0 +1,48 @@
+num_rounds: 1
+num_clients: 10
+lr_scheduling: false
+cos_decay: false
+batch_size: 128
+val_ratio: 0
+rad_ratio: 0.02
+partitioning: dirichlet
+alpha: 0.5
+balance: true
+num_classes: 10
+subset: true
+load: false
+cleaner: true
+checkpoint_path: models/
+datapath: D:/Datasets/data/
+num_workers: 0
+C_fraction: 1
+num_clients_per_round_fit: 8
+num_clients_per_round_eval: ${num_clients_per_round_fit}
+seed: 2024
+client_resources:
+  num_cpus: 6
+  num_gpus: 1
+var_local_epochs: false
+var_min_epochs: 1
+var_max_epochs: 4
+local_epochs: 2
+model:
+  checkpoint: models\centr_pretrainedV2_simsiam_resnet18_classes10_E200.pth
+  _target_: model.ResNet18
+strategy:
+  name: heterossfl
+  strategy:
+    _target_: strategy_ssfl.HeteroSSFLStrategy
+    _recursive_: false
+  client_fn:
+    _target_: client_ssfl.generate_client_fn
+    _recursive_: false
+exp_name: heterossfl
+optimizer:
+  _target_: models.ScaffoldOptimizer
+  lr: 0.032
+  momentum: 0.9
+  weight_decay: 0.0001
+  gmf: 0
+  mu: 0
+  mu_coeff: 0.5

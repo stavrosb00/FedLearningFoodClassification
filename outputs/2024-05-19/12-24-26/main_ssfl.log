@@ -1,0 +1,60 @@
+[2024-05-19 12:24:29,654][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-05-19 12:24:29,655][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=10, round_timeout=None)
+[2024-05-19 12:24:34,333][flwr][INFO] - Flower VCE: Ray initialized with resources: {'GPU': 1.0, 'node:127.0.0.1': 1.0, 'object_store_memory': 7513516032.0, 'memory': 15027032064.0, 'CPU': 6.0, 'node:__internal_head__': 1.0}
+[2024-05-19 12:24:34,333][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-05-19 12:24:34,333][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 6, 'num_gpus': 1}
+[2024-05-19 12:24:34,349][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 1 actors
+[2024-05-19 12:24:34,349][flwr][INFO] - Initializing global parameters
+[2024-05-19 12:24:34,349][flwr][INFO] - Using initial parameters provided by strategy
+[2024-05-19 12:24:34,356][flwr][INFO] - Evaluating initial parameters
+[2024-05-19 12:25:30,676][flwr][INFO] - FL starting
+[2024-05-19 12:25:30,758][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 5)
+[2024-05-19 13:17:47,678][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-05-19 13:18:41,850][flwr][INFO] - Model saved with Best Test kNN accuracy 26.720: 
+[2024-05-19 13:18:41,854][flwr][INFO] - fit progress: (1, 0, {'accuracy': 26.72}, 3191.2853552000015)
+[2024-05-19 13:18:41,854][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-05-19 13:18:41,933][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 5)
+[2024-05-19 14:22:15,525][flwr][DEBUG] - fit_round 2 received 5 results and 0 failures
+[2024-05-19 14:23:10,914][flwr][INFO] - fit progress: (2, 0, {'accuracy': 26.240000000000002}, 7060.4565534000285)
+[2024-05-19 14:23:10,914][flwr][INFO] - evaluate_round 2: no clients selected, cancel
+[2024-05-19 14:23:10,996][flwr][DEBUG] - fit_round 3: strategy sampled 5 clients (out of 5)
+[2024-05-19 15:26:24,378][flwr][DEBUG] - fit_round 3 received 5 results and 0 failures
+[2024-05-19 15:27:17,362][flwr][INFO] - Model saved with Best Test kNN accuracy 27.000: 
+[2024-05-19 15:27:17,362][flwr][INFO] - fit progress: (3, 0, {'accuracy': 27.0}, 10906.991255200002)
+[2024-05-19 15:27:17,362][flwr][INFO] - evaluate_round 3: no clients selected, cancel
+[2024-05-19 15:27:17,440][flwr][DEBUG] - fit_round 4: strategy sampled 5 clients (out of 5)
+[2024-05-19 16:30:19,416][flwr][DEBUG] - fit_round 4 received 5 results and 0 failures
+[2024-05-19 16:31:12,419][flwr][INFO] - fit progress: (4, 0, {'accuracy': 26.119999999999997}, 14742.119679199997)
+[2024-05-19 16:31:12,420][flwr][INFO] - evaluate_round 4: no clients selected, cancel
+[2024-05-19 16:31:12,497][flwr][DEBUG] - fit_round 5: strategy sampled 5 clients (out of 5)
+[2024-05-19 17:34:22,550][flwr][DEBUG] - fit_round 5 received 5 results and 0 failures
+[2024-05-19 17:35:15,575][flwr][INFO] - Model saved with Best Test kNN accuracy 27.680: 
+[2024-05-19 17:35:15,575][flwr][INFO] - fit progress: (5, 0, {'accuracy': 27.68}, 18585.531633100007)
+[2024-05-19 17:35:15,591][flwr][INFO] - evaluate_round 5: no clients selected, cancel
+[2024-05-19 17:35:15,671][flwr][DEBUG] - fit_round 6: strategy sampled 5 clients (out of 5)
+[2024-05-19 18:37:58,956][flwr][DEBUG] - fit_round 6 received 5 results and 0 failures
+[2024-05-19 18:38:51,717][flwr][INFO] - fit progress: (6, 0, {'accuracy': 26.72}, 22402.11284700001)
+[2024-05-19 18:38:51,717][flwr][INFO] - evaluate_round 6: no clients selected, cancel
+[2024-05-19 18:38:51,800][flwr][DEBUG] - fit_round 7: strategy sampled 5 clients (out of 5)
+[2024-05-19 19:42:03,918][flwr][DEBUG] - fit_round 7 received 5 results and 0 failures
+[2024-05-19 19:43:00,972][flwr][INFO] - fit progress: (7, 0, {'accuracy': 27.0}, 26251.673478300043)
+[2024-05-19 19:43:00,972][flwr][INFO] - evaluate_round 7: no clients selected, cancel
+[2024-05-19 19:43:01,052][flwr][DEBUG] - fit_round 8: strategy sampled 5 clients (out of 5)
+[2024-05-19 20:46:05,011][flwr][DEBUG] - fit_round 8 received 5 results and 0 failures
+[2024-05-19 20:46:57,619][flwr][INFO] - fit progress: (8, 0, {'accuracy': 27.200000000000003}, 30088.540119600017)
+[2024-05-19 20:46:57,619][flwr][INFO] - evaluate_round 8: no clients selected, cancel
+[2024-05-19 20:46:57,706][flwr][DEBUG] - fit_round 9: strategy sampled 5 clients (out of 5)
+[2024-05-19 21:49:43,061][flwr][DEBUG] - fit_round 9 received 5 results and 0 failures
+[2024-05-19 21:50:35,794][flwr][INFO] - fit progress: (9, 0, {'accuracy': 26.840000000000003}, 33906.8574946)
+[2024-05-19 21:50:35,794][flwr][INFO] - evaluate_round 9: no clients selected, cancel
+[2024-05-19 21:50:35,858][flwr][DEBUG] - fit_round 10: strategy sampled 5 clients (out of 5)
+[2024-05-19 22:53:19,128][flwr][DEBUG] - fit_round 10 received 5 results and 0 failures
+[2024-05-19 22:54:11,690][flwr][INFO] - Model saved with Best Test kNN accuracy 28.920: 
+[2024-05-19 22:54:11,690][flwr][INFO] - fit progress: (10, 0, {'accuracy': 28.92}, 37722.87445870001)
+[2024-05-19 22:54:11,690][flwr][INFO] - evaluate_round 10: no clients selected, cancel
+[2024-05-19 22:54:11,690][flwr][INFO] - FL finished in 37722.87520300003
+[2024-05-19 22:54:11,705][flwr][INFO] - app_fit: losses_distributed []
+[2024-05-19 22:54:11,705][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, -0.5885044936285481), (2, -0.43361442275000556), (3, -0.45386323145514845), (4, -0.45733783997387634), (5, -0.45412985542955836), (6, -0.4598441891145068), (7, -0.46411806487719454), (8, -0.48155146562619955), (9, -0.4812800639615355), (10, -0.4790014080320758)], 'd_loss': [(1, -0.5885044936285481), (2, -0.6575969797666256), (3, -0.6971547009870387), (4, -0.7220385060136914), (5, -0.7331786747429705), (6, -0.7428295955887058), (7, -0.7464571307502571), (8, -0.7560908268245757), (9, -0.761714281115393), (10, -0.7619937207477695)], 'cka_loss': [(1, 0.0), (2, 0.22398255727701502), (3, 0.24329147048632857), (4, 0.2647006656471725), (5, 0.27904881907190326), (6, 0.28298540662151705), (7, 0.28233906677089515), (8, 0.2745393621168037), (9, 0.28043421514876393), (10, 0.28299231389039425)]}
+[2024-05-19 22:54:11,705][flwr][INFO] - app_fit: metrics_distributed {}
+[2024-05-19 22:54:11,705][flwr][INFO] - app_fit: losses_centralized [(1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (9, 0), (10, 0)]
+[2024-05-19 22:54:11,705][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(1, 26.72), (2, 26.240000000000002), (3, 27.0), (4, 26.119999999999997), (5, 27.68), (6, 26.72), (7, 27.0), (8, 27.200000000000003), (9, 26.840000000000003), (10, 28.92)]}
