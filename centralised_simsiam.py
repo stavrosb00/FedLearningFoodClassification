@@ -41,12 +41,13 @@ def main(cfg: DictConfig):
     # subset = 'subset'
     subset = cfg.subset
     n_classes = cfg.num_classes
+    pretrained = False # Isws pretrained=False kalytera gia sygkrisimothta ws baseline 
     #initialize module
     if subset:
-        net = ResNet18(n_classes, pretrained= True)
+        net = ResNet18(n_classes, pretrained= pretrained) 
         print(f"Subset of {n_classes} food categories!")
     else:
-        net = ResNet18(101, pretrained= True)
+        net = ResNet18(101, pretrained= pretrained)
         print("hello22") #subset == 'subset' kai subset=True tote ebaze 101
 
     net = SimSiam(backbone=net.resnet, hidden_dim=2048, pred_dim=512, output_dim=2048)
