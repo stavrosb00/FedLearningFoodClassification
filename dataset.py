@@ -29,7 +29,7 @@ class CustomSubset(Dataset):
         np_tr_lab = np.array(dataset._labels)
         tr_mapped_lab = np_tr_lab[indices]
         self.labels = tr_mapped_lab
-    def __getitem__(self, idx):
+    def __getitem__(self, idx): # in the end: util Subset used by utilising the indices and labels of this class
         image = self.dataset[self.indices[idx]][0]
         label = self.labels[self.indices[idx]]
         return (image, label)
@@ -190,6 +190,13 @@ def load_dataset(datapath: str,
     testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
     return trainloaders, valloaders, testloader
 
+# Gia ta resizes 
+# 0.75* 512 # 384
+# 0.4... 1 . MO= 0.7
+# 0.7 * 512 # 358
+# 0.6* 512 = 307
+# 0.65* 512 = 332
+# 384 x 512 = 512 x 384
 def load_dataset_SSL(datapath: str, 
                  subset: bool,
                  num_classes: int,
@@ -204,7 +211,7 @@ def load_dataset_SSL(datapath: str,
                     rad_ratio: float = 0.02) -> tuple[list[DataLoader], list[DataLoader], DataLoader, DataLoader, DataLoader]:
     """Download Food101 and generate partitions & loaders for federating self-supervised learning."""
     augmentation = Compose([
-        RandomResizedCrop(256, scale=(0.2, 1.), interpolation= F.InterpolationMode.BICUBIC),
+        RandomResizedCrop(256, scale=(0.3, 1.), interpolation= F.InterpolationMode.BICUBIC),
         RandomApply([
             ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
         ], p=0.8),
@@ -303,16 +310,16 @@ def load_dataset_SSL(datapath: str,
 
     # construct data loaders to their respective list
     trainloaders = [DataLoader(Subset(trainloaders[i].dataset, trainloaders[i].indices), batch_size=batch_size, 
-                                    shuffle=True, num_workers=num_workers) 
+                                    shuffle=True, num_workers=num_workers, pin_memory=True, drop_last=True ) #If not even division train client split w/ batch size: drop_last=True 
                          for i in range(len(trainloaders))]
     if val_ratio !=0:
         valloaders = [DataLoader(Subset(valloaders[i].dataset, valloaders[i].indices), batch_size=batch_size, 
-                                        shuffle=True, num_workers=num_workers) 
+                                        shuffle=True, num_workers=num_workers, pin_memory=True) 
                             for i in range(len(valloaders))]
     else:
         valloaders = [None] * num_partitions
     # testloader = DataLoader(testset, batch_size=batch_size, num_workers=num_workers)
-    testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
+    testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers, pin_memory=True)
     # Load representation alignment dataset which is publicly loaded from clients
     train_indices, val_indices = train_test_split(trainset.indices, test_size=rad_ratio, stratify=trainset.labels)
     # radset = CustomSubset(trainset.dataset, val_indices)
@@ -329,22 +336,22 @@ def load_dataset_SSL(datapath: str,
     # print(trainset.dataset.transform)
     rad_stats = get_subset_stats(radset)
     print(rad_stats)
-    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=num_workers)
+    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=num_workers, pin_memory=True)
     # memoryloader-artificial knowledge for monitoring 
-    memoryloader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=num_workers) 
+    memoryloader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=num_workers, pin_memory=True) 
     return trainloaders, valloaders, testloader, memoryloader, radloader
 
 def load_centr_data(datapath: str, 
                  subset: bool,
                  num_classes: int,
                  num_workers: int,
-                    batch_size: int):
+                    batch_size: int, H: int = 512, W: int = 512):
     """Download Food101 dataset for centralised learning."""
     print("Loading data...")
     #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
     # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
     trf = Compose([
-         Resize_with_pad(),
+         Resize_with_pad(W, H),
          ToTensor(),
     ])
     trainset, testset = get_food101(trf, datapath,subset, num_classes)
@@ -405,7 +412,7 @@ def load_centr_data_SSL(datapath: str,
     #                                     std=[0.229, 0.224, 0.225])
     # Can be 512 - > 256 . Or 384 
     augmentation = Compose([
-        RandomResizedCrop(256, scale=(0.2, 1.), interpolation= F.InterpolationMode.BICUBIC),
+        RandomResizedCrop(256, scale=(0.3, 1.), interpolation= F.InterpolationMode.BICUBIC),
         RandomApply([
             ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
         ], p=0.8),

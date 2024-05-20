@@ -31,7 +31,9 @@ class HeteroSSFLClient(fl.client.NumPyClient):
         # self.d_phi = self.model.encoder[1].l3[0].out_features # Features dimension length of encoder's output
         self.phi_K_mean = None
         # figure out if this client has access to GPU support or not
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda")
+        # print(self.device)
         self.epochs = epochs
         self.exp_config = config
         self.dir = save_dir

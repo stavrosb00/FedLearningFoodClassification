@@ -35,6 +35,7 @@ def main(cfg: DictConfig):
     n_classes = cfg.num_classes
     #initialize module
     # TODO : model checkpoint on .npz or .pth format re arrange
+    # na to kanw 
     if subset:
         net = LinearEvaluationSimSiam(pretrained_model_path=cfg.model.checkpoint, device=DEVICE, linear_eval=True, num_classes=n_classes)
     else:
@@ -42,18 +43,21 @@ def main(cfg: DictConfig):
 
     # model =f"{model}_downstream_SSL_{cfg.model.checkpoint}"
     # model =f"{model}_downstream_SSL_HeteroSSL"
-    model =f"{model}_downstream_SSL_Centralized"
+    model =f"{model}_downstream_SSL_CentralizedV2" # EXP NAME 
     grad_map: list[bool] = [p.requires_grad for _,p in net.state_dict(keep_vars=True).items()]
     print(grad_map)
     print(net)
     # return 0
     datapath = cfg.datapath  #"D:/DesktopC/Datasets/data/"
+    # Isws 256x256 kalytera gia downstream
+    H = 256
+    W = H
     #loading data
     trainloader, testloader= load_centr_data(datapath=datapath, 
                  subset=subset,
                  num_classes=n_classes,
                  num_workers=num_workers,
-                    batch_size=bs)
+                    batch_size=bs, H=H, W=W)
     print("Data loaded")
 
     # warm_start = False

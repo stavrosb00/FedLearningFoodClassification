@@ -296,12 +296,18 @@ def get_on_fit_config_ssfl(config: DictConfig):
         """
         
         config_res = {}
-        init_lr = config.optimizer.lr
+        base_lr = config.optimizer.lr
         # Optional - Cosine decay rule for now on server rounds level
         if config.cos_decay:
-            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds))
+            init_lr = base_lr * config.batch_size / 256
+            # cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds)) 
+            n_rounds=800
+            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / n_rounds)) 
+            # optimizer.step()
+            # LR_scheduler ..
+            # 
         else:
-            cur_lr = init_lr
+            cur_lr = base_lr # 0.01 0.0075 h 0.03
         # lr = adjust_learning_rate()
         config_res["lr"] = cur_lr
         config_res["server_round"] = server_round
@@ -320,7 +326,8 @@ def get_evaluate_fn_ssfl(num_classes: int, testloader, memoryloader):
         state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})
         model.load_state_dict(state_dict, strict=True)
 
-        accuracy = knn_monitor(model.encoder.to(device), memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)  #min(25, 7500)
+
+        accuracy = knn_monitor(model.encoder.to(device), memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device, hide_progress=True)  #min(25, 7500)
         # loss, accuracy = test(model, testloader, device)
         loss = 0 # could be None also
         return loss, {"accuracy": accuracy}

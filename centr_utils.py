@@ -130,9 +130,11 @@ def plot_results_downstream(save_path: str, info_dict: Dict[str, List], subset: 
     plt.close()
 
     figname2 = f"./images/losses_{datamode}_{num_classes}classes_{model}.png"
-    plt.plot(xset, losses[0], '-', xset, losses[1], '-')
-    plt.legend(('Train Loss', 'Test Loss'), loc = 'lower center')
-    plt.xlabel('Epochs')
+    plt.plot(xset, losses[0], '-')
+    #, xset, losses[1], '-')
+    plt.legend('Train Loss') 
+    #, 'Test Loss'), loc = 'lower center')
+    plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.savefig(figname2, bbox_inches='tight')
     plt.close()
@@ -153,11 +155,63 @@ def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, n
     accs = info_dict["knn_accuracy"]
     xset =[x+1 for x in range(len(accs))]
     figname = f"./images/knn_accuracy_{datamode}_{num_classes}classes_{model}.png"
-    plt.plot(xset, accs, 'x-')
-    plt.xlabel('Epochs')
+    plt.plot(xset, accs, '-')
+    plt.xlabel('Epoch')
     plt.ylabel('kNN Accuracy %')
     plt.title('Centralised pretraining SimSiam')
     # plt.grid(True)
     # plt.show()
     plt.savefig(figname, bbox_inches='tight')
     plt.close()
+
+    losses = info_dict["train_loss"]
+    figname2 = f"./images/d_losses_{datamode}_{num_classes}classes_{model}.png"
+    plt.plot(xset, losses, '-')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Centralised pretraining SimSiam')
+    plt.savefig(figname2, bbox_inches='tight')
+    plt.close()
+
+def plot_results_SSL_csv(csv_file: str):
+    """Plot train loss and kNN accuracy
+
+    Args:
+        csv_file (str): CSV file string from centralised experiment's saved results
+
+    Raises:
+        ValueError: CSV file origin must have the two corresponding columns to kNN accuracy and train loss
+    """
+    df = pd.read_csv(csv_file)
+    
+    # Check if the required columns are present in the dataframe
+    if 'knn_accuracy' not in df.columns or 'train_loss' not in df.columns:
+        raise ValueError("The CSV file must contain 'knn_accuracy' and 'train_loss' columns.")
+    
+    # Extract the 'knn_accuracy' and 'train_loss' columns
+    knn_accuracy = df['knn_accuracy']
+    train_loss = df['train_loss']
+    
+    # Plot the extracted columns using matplotlib
+    plt.figure(figsize=(10, 5))
+    figname = f"./images/knn_accuracy_train_loss_centralised_simsiam.png"
+    # Plot knn_accuracy
+    plt.subplot(1, 2, 1)
+    plt.plot(knn_accuracy, label='kNN Accuracy', color='blue')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy %')
+    plt.title('kNN Accuracy over Epochs')
+    plt.legend()
+
+    # Plot train_loss
+    plt.subplot(1, 2, 2)
+    plt.plot(train_loss, label='Train Loss', color='red')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Train D Loss over epochs')
+    plt.legend()
+    
+    # Show the plots
+    plt.savefig(figname, bbox_inches='tight')
+    # plt.tight_layout()
+    # plt.show()

@@ -1,5 +1,5 @@
 import torch
-import ray
+# import ray
 # ray.available_resources()
 # Check for CUDA availability
 if torch.cuda.is_available():
