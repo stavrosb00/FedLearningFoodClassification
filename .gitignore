@@ -2,6 +2,7 @@ __pycache__/*
 outputs/*
 multirun/*
 models/*
+profiles/*
 # images/*
 
 # # # Ignore everything

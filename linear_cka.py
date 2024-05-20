@@ -79,10 +79,12 @@ def kernel_CKA(X, Y, sigma=None):
 
 if __name__ == "__main__":
     print("Testing things")
+    # torch.manual_seed(42)
     K = torch.randn(150, 2048)
     K2 = torch.randn(150, 2048)
     K_np = K.cpu().numpy()
     K2_np = K2.cpu().numpy()
+    print('Linear CKA, between X and Y: {}'.format(linear_CKA(K_np, K_np)))
     start =time.time()
     print('Linear CKA, between X and Y: {}'.format(linear_CKA(K_np, K2_np)))
     print(time.time() - start)

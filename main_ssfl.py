@@ -24,11 +24,14 @@ from strategy_ssfl import HeteroSSFLStrategy
 from server_scaffold import ScaffoldServer, ScaffoldServerV2
 from server import FedAvgServer, HeteroSSFLServer
 from model import ResNet18, test, SimSiam
+from knn_monitor import knn_monitor
 import random
 import warnings
 # Suppress deprecation warnings above tensorboard 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-from torch.utils.tensorboard import SummaryWriter
+# warnings.filterwarnings("ignore", category=DeprecationWarning)
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore",category=DeprecationWarning)
+    from torch.utils.tensorboard import SummaryWriter
 
 # A decorator for Hydra. This tells hydra to by default load the config in conf/base.yaml
 @hydra.main(config_path="conf", config_name="base", version_base=None)
@@ -37,7 +40,7 @@ def main(cfg: DictConfig):
     ## 1. Parse config & get experiment output dir
     print(OmegaConf.to_yaml(cfg))
     ## library me centralised pre-trained models se alla BIG FOOD datasets gia meta-learning se clients me mikra datasets
-
+    # model = cfg.model instantiate() call()
     ## 2. Prepare your dataset
     trainloaders, validationloaders, testloader, memoryloader, radloader = load_dataset_SSL(cfg.datapath, cfg.subset, cfg.num_classes, cfg.num_workers, 
                                                         cfg.num_clients, cfg.batch_size, cfg.partitioning, cfg.alpha, cfg.balance, cfg.seed, val_ratio = 0, rad_ratio=cfg.rad_ratio)
@@ -71,8 +74,10 @@ def main(cfg: DictConfig):
             params_dict = zip(model.state_dict().keys(), [checkpoint[key] for key in npz_keys])
             state_dict = OrderedDict({k: torch.Tensor(v) for k, v in params_dict})
             model.load_state_dict(state_dict)
-            loss, acc = test(model, testloader, device)
-            print(f"--Loss: {loss}, Accuracy: {acc:.3f} on Test set, Round: {checkpoint['scalar_2']} --")
+            # If someone wants to choose his testloader related to our artitificla knowledgeable memoryloader.
+            acc = knn_monitor(model.encoder.to(device), memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device, hide_progress=True)
+            # loss, acc = test(model, testloader, device)
+            print(f"--kNN Accuracy: {acc:.3f} on Test set, Round: {checkpoint['scalar_2']} --")
             # print(f"-L {checkpoint['scalar_0']} -A {checkpoint['scalar_1']:.3f} - R: {checkpoint['scalar_2']}")
         except FileNotFoundError():
             print(f"Checkpoint path {checkpoint_path} to be loaded is not implemented.")
@@ -80,8 +85,9 @@ def main(cfg: DictConfig):
 
     save_path = HydraConfig.get().runtime.output_dir
     log_dir = os.path.join(save_path, "logger")
-    print(log_dir)
+    print(f"Logger workdir: {log_dir}")
     writer = SummaryWriter(log_dir= log_dir)
+    # writer.close()
     #tensorboard --logdir=outputs\2024-05-13\21-45-27 etc. or outputs for all runs 
 
     ## 3. Define your clients
@@ -239,4 +245,9 @@ def main(cfg: DictConfig):
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")
 
 if __name__ == "__main__":
+    import cProfile
+    # cProfile.run('main()', 'profiles/fed_heterossl_fileR=1E=2_Nwork=0')
+    # torch.autograd.set_detect_anomaly(mode=True) # for gradscaler and backwards debugging
+    # snakeviz .\profiles\fed_heterossl_fileR=1E=1
     main()
+    pass

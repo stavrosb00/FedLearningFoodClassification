@@ -37,8 +37,11 @@ var_max_epochs: 4
 local_epochs: 1
 
 model:
-  checkpoint: 'C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth'
+  #Linear evaluation
+  checkpoint: 'models\centr_pretrainedV2_simsiam_resnet18_classes10_E200.pth'
+  # 'C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth'
   #C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth   <-Gia simsiam xwris self.backbone
+  #Backbone
   _target_: model.ResNet18
 
 

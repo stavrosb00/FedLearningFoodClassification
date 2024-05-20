@@ -353,7 +353,16 @@ def generate_plots(
     plt.show()
 
 # From visual.ipynb
-def plot_progress(eval_file, train_file, cid: int, save_str: str, exp_str: str):
+def plot_progress(eval_file: str, train_file: str, cid: int, save_str: str, exp_str: str):
+    """Plot cid client's individual progress
+
+    Args:
+        eval_file (str): client's eval file.csv
+        train_file (str): client's train file.csv
+        cid (int): ID of client
+        save_str (str): string path to be save
+        exp_str (str): string to be added on the path
+    """    
     # Read CSV files
     eval_df = pd.read_csv(eval_file)
     train_df = pd.read_csv(train_file)
@@ -402,7 +411,21 @@ def plot_clients_progress(exp_file_csv: str):
             print("Not enough rounds for eval and train accuracy samples")
             FileExistsError()
 
-
+# Soft debugging 
+def fit_mins_combined(output_regex_csvs: str = f"outputs/2024-05-14/15-55-45/clients/*csv"):
+    """Printing and returning total minutes of client's fit() computation during experiment.
+    Args:
+        output_regex_csvs (str)"""
+    exp_files: list[str] = []
+    exp_files = glob.glob(output_regex_csvs) 
+    print(exp_files)
+    total_fit_mins = 0
+    for f in exp_files:
+        df = pd.read_csv(f)
+        fit_mins_column = df["fit_mins"]
+        total_fit_mins += sum(fit_mins_column)
+    print(total_fit_mins)
+    return total_fit_mins
 
 def compare_alg_on_partitioning(exp_file_csvs: list[str], acc_type: str):
     """
