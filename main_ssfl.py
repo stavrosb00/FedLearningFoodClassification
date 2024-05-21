@@ -20,7 +20,7 @@ from client_ssfl import generate_client_fn
 from strategy import get_on_fit_config_ssfl, get_evaluate_fn_ssfl, weighted_average_ssfl, CustomFedAvgStrategy #get_metrics_aggregation_fn
 from utils import save_results_as_pickle, plot_metric_from_history_ssfl
 from strategy_scaffold import ScaffoldStrategy, ScaffoldStrategyV2
-from strategy_ssfl import HeteroSSFLStrategy
+from strategy_ssfl import HeteroSSFLStrategy, FedSimSiamStrategy
 from server_scaffold import ScaffoldServer, ScaffoldServerV2
 from server import FedAvgServer, HeteroSSFLServer
 from model import ResNet18, test, SimSiam
@@ -69,7 +69,8 @@ def main(cfg: DictConfig):
                 allow_pickle=True,
             )
             device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-            model = ResNet18(cfg.num_classes)
+            # model = ResNet18(cfg.num_classes)
+            model = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=False).resnet)
             npz_keys = [key for key in checkpoint.keys() if key.startswith('array')]
             params_dict = zip(model.state_dict().keys(), [checkpoint[key] for key in npz_keys])
             state_dict = OrderedDict({k: torch.Tensor(v) for k, v in params_dict})
@@ -103,6 +104,16 @@ def main(cfg: DictConfig):
         L = len(radloader.dataset) #Length of RAD 
         d_phi = mdl.encoder[1].l3[0].out_features # Features dimension length of encoder's output
         params.append(np.random.randn(L, d_phi))
+        print(f"NDArrays buffer length {len(params)}")
+        params = fl.common.ndarrays_to_parameters(params)
+        mdl = None
+    elif cfg.strategy.client_fn._target_ == "client_ssfl.generate_client_fedsimsiam_fn":
+        client_progress = os.path.join(save_path, "clients")
+        print("Local progress for clients who participated in rounds are saved to: ", client_progress)
+        client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, radloader, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
+        evaluate_fn = get_evaluate_fn_ssfl(cfg.num_classes, testloader, memoryloader)
+        mdl = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=False).resnet)
+        params = [val.cpu().numpy() for _, val in mdl.state_dict().items()]
         print(f"NDArrays buffer length {len(params)}")
         params = fl.common.ndarrays_to_parameters(params)
         mdl = None
@@ -140,6 +151,8 @@ def main(cfg: DictConfig):
     # random.seed(cfg.seed) # Reset random seed state clock , Client Manager sampling clients based on random
     if isinstance(strategy, HeteroSSFLStrategy):
         server = HeteroSSFLServer(strategy=strategy, num_classes=cfg.num_classes, checkpoint_path=checkpoint_path, client_manager=SimpleClientManager())
+    elif isinstance(strategy, FedSimSiamStrategy): 
+        server = Server(strategy=strategy, client_manager=SimpleClientManager())
     else:
         raise NotImplementedError("Strategy not implemented for SSFL settings")
     
@@ -192,10 +205,7 @@ def main(cfg: DictConfig):
     # rounds, test_loss = zip(*history.losses_centralized)
     # writer.add_scalar()
     rounds, test_accuracy = zip(*history.metrics_centralized["accuracy"])
-    # Fit metrics
-    _, train_loss = zip(*history.metrics_distributed_fit["loss"])
-    _, d_loss = zip(*history.metrics_distributed_fit["d_loss"])
-    _, cka_loss = zip(*history.metrics_distributed_fit["cka_loss"])
+
     # _, train_acc = zip(*history.metrics_distributed_fit["accuracy"])
     # Evaluation metrics
     # _, val_loss = zip(*history.metrics_distributed["loss"])
@@ -206,6 +216,17 @@ def main(cfg: DictConfig):
         # test_loss = test_loss[1:]
         test_accuracy = test_accuracy[1:]
         rounds = rounds[1:]
+
+    # Fit metrics
+    _, train_loss = zip(*history.metrics_distributed_fit["loss"])
+    try:
+        _, d_loss = zip(*history.metrics_distributed_fit["d_loss"])
+    except KeyError:
+        d_loss = [0 for i in range(rounds[-1])]
+    try:
+        _, cka_loss = zip(*history.metrics_distributed_fit["cka_loss"])
+    except KeyError:
+        cka_loss = [0 for i in range(rounds[-1])]
 
     file_suffix: str = (
         f"{cfg.strategy.name}"

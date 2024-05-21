@@ -241,21 +241,24 @@ def weighted_average(metrics: List[Tuple[int, Metrics]]) -> Metrics:
 
 def weighted_average_ssfl(metrics: List[Tuple[int, Metrics]]) -> Metrics:
     """Return weighted average of metrics as evaluation method for SSFL."""
-    # Multiply accuracy of each client by number of examples used
+    # Multiply accuracy of each client by number of examples used and weighted aggregate them
     # accuracies = [num_examples * m["accuracy"] for num_examples, m in metrics]
-    losses = [num_examples * m["loss"] for num_examples, m in metrics]
-    d_losses = [num_examples * m["d_loss"] for num_examples, m in metrics]
-    cka_loss = [num_examples * m["cka_loss"] for num_examples, m in metrics]
     examples = [num_examples for num_examples, _ in metrics]
-
-    # Aggregate (weighted average)
+    losses = [num_examples * m["loss"] for num_examples, m in metrics]
     loss = np.sum(losses) / np.sum(examples) 
-    d_loss = np.sum(d_losses) / np.sum(examples)
-    cka_loss = np.sum(cka_loss) / np.sum(examples)
-    # accuracy = np.sum(accuracies) / np.sum(examples) 
+    result = {"loss": loss}
+    if any("d_loss" in m for _, m in metrics):
+        d_losses = [num_examples * m["d_loss"] for num_examples, m in metrics]
+        d_loss = np.sum(d_losses) / np.sum(examples)
+        result["d_loss"] = d_loss
     
+    if any("cka_loss" in m for _, m in metrics):
+        cka_loss = [num_examples * m["cka_loss"] for num_examples, m in metrics]
+        cka_loss = np.sum(cka_loss) / np.sum(examples)
+        result["cka_loss"] = cka_loss
+
     #return custom metrics
-    return {"loss": loss, "d_loss": d_loss, "cka_loss": cka_loss} #, "accuracy": accuracy}
+    return result #, "accuracy": accuracy}
 
 
 
@@ -304,8 +307,8 @@ def get_on_fit_config_ssfl(config: DictConfig):
             n_rounds=800
             cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / n_rounds)) 
             # optimizer.step()
+            # warming epochs gia 2 gyrous an loc epoch =5 isws
             # LR_scheduler ..
-            # 
         else:
             cur_lr = base_lr # 0.01 0.0075 h 0.03
         # lr = adjust_learning_rate()
