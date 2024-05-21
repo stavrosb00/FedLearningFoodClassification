@@ -6,7 +6,7 @@ import torch.utils.tensorboard
 import torch.utils.tensorboard.summary
 import torchvision
 import math
-from typing import Dict, List
+from typing import Dict, List, OrderedDict
 from utils import comp_accuracy
 from torch.optim import SGD
 from torch.cuda.amp import autocast, GradScaler
@@ -91,8 +91,7 @@ class SimSiam(nn.Module):
         # backbone.output_dim = backbone.fc.in_features
         backbone.fc = torch.nn.Identity() # erase last linear layer. removal doesn't offer much MB advantage 
         # self.backbone = backbone # comment , parameters economy.
-        # self.projector = ProjectionMLP(backbone.output_dim, hidden_dim, hidden_dim, hidden_dim)\
-
+        # 14 array sets of params saved
         # self.projector = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim)   #<-buffer econ, comment for after 15 May feature for model chekpt
 
         # backbone.fc = ProjectionMLP(backbone.layer4[-1].conv2.out_channels, hidden_dim, hidden_dim, hidden_dim) 
@@ -111,25 +110,46 @@ class SimSiam(nn.Module):
         # return {'loss': L}
         return L
 
+def get_model(model, pretrained_model_path):
+    if pretrained_model_path.endswith('.npz'):
+        # return "npz"
+        checkpoint = np.load(
+                pretrained_model_path,
+                allow_pickle=True,
+            )
+        npz_keys = [key for key in checkpoint.keys() if key.startswith('array')]
+        try: 
+            params_dict = zip(model.state_dict().keys(), [checkpoint[key] for key in npz_keys])
+            state_dict = OrderedDict({k: torch.Tensor(v) for k, v in params_dict})
+            # print(len(state_dict))
+            model.load_state_dict(state_dict)
+            return model
+        except:
+            nd_arrays_shapes = [checkpoint[key].shape for key in npz_keys]
+            print(f"NPZ length of param dict: {len(nd_arrays_shapes)}")
+            print(f"nn.Module length of state dict: {len(model.state_dict().keys())}")
+            raise ValueError("Miss matched array params")
+    elif pretrained_model_path.endswith('.pth'):
+        try:
+            model.load_state_dict(torch.load(pretrained_model_path))#, map_location=device))
+            return model
+        except:
+            raise ValueError("Miss matched model format params")
+    else:
+        raise ValueError("Unsupported file format for model checkpoint. Only .npz and .pth are supported.")
+    
 class LinearEvaluationSimSiam(nn.Module):
-    def __init__(self, pretrained_model_path, device, linear_eval=True, num_classes: int = 10): # backbone,
+    def __init__(self, model, device, linear_eval=True, num_classes: int = 10): # backbone,
         super(LinearEvaluationSimSiam, self).__init__()
-        model = SimSiam() #backbone=ResNet18().resnet, hidden_dim=2048, pred_dim=512, output_dim=2048
-        model.load_state_dict(torch.load(pretrained_model_path, map_location=device))
         self.encoder = model.encoder.to(device)
         # freeze parameters 
         if linear_eval:
             self.encoder.requires_grad_(False)        
-            # for param in self.encoder.parameters():
-            #     param.requires_grad = False
-
         #h diwxnw MLP projector head kai bazw ena Linear sto encoder.fc. Sto forward mexri telos tou trainable fc 1 linear?     
         self.classifier = nn.Linear(in_features = self.encoder[1].l3[0].out_features, out_features = num_classes).to(device)
 
     def forward(self, x):
         return self.classifier(self.encoder(x))
-
-
 
 class Net(nn.Module):
     def __init__(self, num_classes: int):
@@ -407,7 +427,6 @@ def train_loop_ssl(net: torch.nn.Module,
             local_progress.set_postfix({'loss': loss})
 
         # accuracy = knn_monitor(net.encoder, testloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)
-        # net.backbone
         accuracy = knn_monitor(net.encoder, memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device)  # 25, 7500
         epoch_bs_loss = float(sum(batch_loss) / len(batch_loss))
         writer.add_scalar(f"metrics/kNN_acc", accuracy, epoch)
@@ -451,10 +470,10 @@ def train_heterossfl(net: torch.nn.Module,
                 loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
                 # loss = loss.mean() # minimizing statistical expectation
             # loss = data_dict['loss'].mean()
-            if mu_coeff ==0: # Lazy FedSimSiam
+            if mu_coeff == 0: # Lazy FedSimSiam
                 total_loss = loss
                 loss_cka = 0
-                phi_K = np.zeros(len(radloader.dataset), net.encoder[1].l3[0].out_features) # artificial phi_K just to hold the same communication buffer protocol
+                phi_K = np.zeros((len(radloader.dataset), net.encoder[1].l3[0].out_features)) # artificial phi_K just to hold the same communication buffer protocol
             else:
                 if phi_K_mean is None: # first round skip loss assignment
                     total_loss = loss
@@ -479,7 +498,7 @@ def train_heterossfl(net: torch.nn.Module,
                             embeddings.append(embedding)
                         phi_K = torch.cat(embeddings, dim=0).cpu().numpy() # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
                     loss_cka = mu_coeff * linear_CKA_fast(phi_K, phi_K_mean)
-                    total_loss = loss + loss_cka
+                    total_loss = loss - loss_cka
             # per local epoch backwards
             total_loss.backward()
             optimizer.step()
@@ -498,6 +517,43 @@ def train_heterossfl(net: torch.nn.Module,
         info_dict = {"epoch":epoch, "train_loss":train_loss}
         global_progress.set_postfix(info_dict)
     return train_loss, disim_loss, cka_loss, phi_K
+
+def train_fedsimsiam(net: torch.nn.Module, 
+          trainloader: torch.utils.data.DataLoader, 
+          optimizer: torch.optim.Optimizer,
+          epochs: int,
+          device: torch.device,
+          hide_progress: bool = False) -> tuple[float, np.ndarray]:
+
+    # Start training
+    net.to(device)
+    global_progress = tqdm(range(epochs), desc=f'Local training', disable=hide_progress)
+    for epoch in global_progress:
+        disim_loss = []
+        net.train() #need to reset because knn_monitor sets encoder sub-module on eval() mode
+        local_progress = tqdm(trainloader, desc=f'Epoch {epoch}/{epochs}', disable=hide_progress)
+        # start1= time.time() 
+        # vlepe https://github.com/pytorch/examples/blob/6f62fcd361868406a95d71af9349f9a3d03a2c52/imagenet/main.py#L275 
+        # me progress meters
+        for i, data in enumerate(local_progress):
+            # print(f"tr Datal{time.time() - start1}")
+            images = data[0]
+            optimizer.zero_grad()
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+                # loss = loss.mean() # minimizing statistical expectation. Already on forward pass.
+            # per local epoch backwards
+            loss.backward()
+            optimizer.step()
+            disim_loss.append(loss.item())
+            local_progress.set_postfix({'loss': disim_loss[-1]})
+            # start1 = time.time()
+
+        # adjust_learning_rate(optimizer, init_lr, epoch, epochs)
+        disim_loss = float(sum(disim_loss) / len(disim_loss))
+        info_dict = {"epoch":epoch, "train_loss":disim_loss}
+        global_progress.set_postfix(info_dict)
+    return disim_loss
 
 if __name__ == "__main__":
     print("Testing things")
