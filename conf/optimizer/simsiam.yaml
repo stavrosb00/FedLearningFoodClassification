@@ -4,7 +4,7 @@ exp_name: simsiam
 
 optimizer:
   _target_: models.train
-  lr: 0.032 # base_lr na dw ksana gia 0.05
+  lr: 0.05 # 0.032 # base_lr na dw ksana gia 0.05 h kati endiameso
   momentum: 0.9
   weight_decay: 1e-4 #1 h 5 gia 0.0001 h 0.0005 
   gmf: 0
