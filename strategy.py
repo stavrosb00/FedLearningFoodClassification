@@ -256,7 +256,6 @@ def weighted_average_ssfl(metrics: List[Tuple[int, Metrics]]) -> Metrics:
         cka_loss = [num_examples * m["cka_loss"] for num_examples, m in metrics]
         cka_loss = np.sum(cka_loss) / np.sum(examples)
         result["cka_loss"] = cka_loss
-
     #return custom metrics
     return result #, "accuracy": accuracy}
 
@@ -296,24 +295,26 @@ def get_on_fit_config_ssfl(config: DictConfig):
         """Return training configuration dict for each round.
 
         Learning rate is reduced by a factor after set rounds.
-        """
-        
+        """  
         config_res = {}
         base_lr = config.optimizer.lr
-        # Optional - Cosine decay rule for now on server rounds level
+        # Optional - Cosine decay rule w/ warmup depending on server rounds level
         if config.cos_decay:
+            warm_up_rounds = config.warm_up_rounds # 5 me 10
             init_lr = base_lr * config.batch_size / 256
-            # cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds)) 
             n_rounds=800
-            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / n_rounds)) 
-            # optimizer.step()
-            # warming epochs gia 2 gyrous an loc epoch =5 isws
-            # LR_scheduler ..
+            # linear spacing of learning rate during warm-up rounds
+            if server_round < warm_up_rounds:
+                cur_lr = np.linspace(0, init_lr, warm_up_rounds)[server_round]
+            # cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds)) 
+            # after warm-up
+            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * (server_round - warm_up_rounds) / (n_rounds - warm_up_rounds))) 
         else:
             cur_lr = base_lr # 0.01 0.0075 h 0.03
         # lr = adjust_learning_rate()
         config_res["lr"] = cur_lr
         config_res["server_round"] = server_round
+        # isws return "loc_epochs" kai "local_scheduling" = [...linspace kok...]
         # config_res["num_rounds"] = config.num_rounds
         return config_res 
     

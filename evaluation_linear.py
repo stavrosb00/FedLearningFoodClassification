@@ -66,7 +66,7 @@ def main(cfg: DictConfig):
 
     # criterion =  torch.nn.CrossEntropyLoss()
     # optimizer = torch.optim.SGD(net.parameters(), lr=lr, momentum=momentum)
-    optimizer = torch.optim.Adam(net.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(net.classifier.parameters(), lr=lr)
     # epochs = 5
     # training and results
     info_dict = train_loop(net=net, train_dataloader=trainloader, test_dataloader=testloader, 
