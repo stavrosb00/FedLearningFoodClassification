@@ -91,6 +91,8 @@ def main(cfg: DictConfig):
     # writer.close()
     #tensorboard --logdir=outputs\2024-05-13\21-45-27 etc. or outputs for all runs 
 
+    # Warm-start option: ...
+
     ## 3. Define your clients
     if cfg.strategy.client_fn._target_ == "client_ssfl.generate_client_fn":
         client_progress = os.path.join(save_path, "clients")
@@ -120,15 +122,6 @@ def main(cfg: DictConfig):
     else:
         raise NotImplementedError("SSFL routine not implemented.")
     ## 4. Define your strategy
-    # in the strategy's `aggregate_fit()` method
-    # You can implement a custom strategy to have full control on all aspects including: how the clients are sampled,
-    # how updated models from the clients are aggregated, how the model is evaluated on the server, etc
-    # To control how many clients are sampled, strategies often use a combination of two parameters `fraction_{}` and `min_{}_clients`
-    # where `{}` can be either `fit` or `evaluate`, depending on the FL stage. The final number of clients sampled is given by the formula
-    # ``` # an equivalent bit of code is used by the strategies' num_fit_clients() and num_evaluate_clients() built-in methods.
-    #         num_clients = int(num_available_clients * self.fraction_fit)
-    #         clients_to_do_fit = max(num_clients, self.min_fit_clients)
-    # ```
     # HeteroSSFLStrategy()
     strategy = instantiate(
         cfg.strategy.strategy,
@@ -266,7 +259,7 @@ def main(cfg: DictConfig):
     print(f"---------Experiment Completed in : {(time.time()-start)/60} minutes")
 
 if __name__ == "__main__":
-    import cProfile
+    # import cProfile
     # cProfile.run('main()', 'profiles/fed_heterossl_fileR=1E=2_Nwork=0')
     # torch.autograd.set_detect_anomaly(mode=True) # for gradscaler and backwards debugging
     # snakeviz .\profiles\fed_heterossl_fileR=1E=1

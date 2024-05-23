@@ -214,7 +214,18 @@ class FedSimSiamClient(fl.client.NumPyClient):
         else:
             epochs = self.epochs
         # optimizer
+        # if args.fix_pred_lr:
+        #     optim_params = [{'params': model.module.encoder.parameters(), 'fix_lr': False},
+        #                     {'params': model.module.predictor.parameters(), 'fix_lr': True}]
+        # else:
+        #     optim_params = model.parameters()
         optim = torch.optim.SGD(self.model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
+        # for param_group in optimizer.param_groups:
+        #     if 'fix_lr' in param_group and param_group['fix_lr']:
+        #         param_group['lr'] = init_lr
+        #     else:
+        #         param_group['lr'] = cur_lr
+
         # lr = adjust_learning_rate(optim, lr, server_round, num_rounds)
         # print(f"Client {self.cid} training on {self.device}")
         # local training

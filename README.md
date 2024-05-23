@@ -18,8 +18,12 @@ conda install tqdm
 
 conda install tensorboard 
 
-pip install py-spy snakeviz  for profiling
+<!-- Profiling -->
+pip install py-spy snakeviz
 
-[comment]: # (might need pip install tensorboard to avoid warnings w/o filtering them afterwards)
+
+<!-- pip install albumentations  -->
+<!-- gia augmentations -->
+<!-- [comment]: # (might need pip install tensorboard to avoid warnings w/o filtering them afterwards)
 [comment]: # (might need conda install cudatoolkit)
-[comment]: # (ray==2.6.3)
+[comment]: # (ray==2.6.3) -->

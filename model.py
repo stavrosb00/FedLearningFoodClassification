@@ -40,18 +40,17 @@ class ProjectionMLP(nn.Module):
     def __init__(self, in_features, h1_features, h2_features, out_features):
         super(ProjectionMLP, self).__init__()
         self.l1 = nn.Sequential(
-            nn.Linear(in_features, h1_features),
+            nn.Linear(in_features, h1_features, bias=False),
             nn.BatchNorm1d(h1_features),
             nn.ReLU(inplace=True)
         )
-        # self.l2 = nn.Sequential(
-        #     nn.Linear(h1_features, h2_features),
-        #     nn.BatchNorm1d(h2_features),
-        #     nn.ReLU(inplace=True)
-
-        # )
+        self.l2 = nn.Sequential(
+            nn.Linear(h1_features, h2_features, bias=False),
+            nn.BatchNorm1d(h2_features),
+            nn.ReLU(inplace=True)
+        )
         self.l3 = nn.Sequential(
-            nn.Linear(h1_features, out_features),
+            nn.Linear(h1_features, out_features, bias=False),
             nn.BatchNorm1d(out_features)
         )
         #to facebook paper bazei 3 layers me teleutaio Linear->BN. EasyFL leei me sketo linear sto end layer
@@ -59,7 +58,8 @@ class ProjectionMLP(nn.Module):
         # x = self.l1(x)
         # # x = self.l2(x) # FedSSL 2022 paper suggests 2-layer
         # x = self.l3(x)
-        return self.l3(self.l1(x))
+        return self.l3(self.l2(self.l1(x)))
+        # return self.l3(self.l1(x))
 
 class PredictionMLP(nn.Module):
     """Prediction MLP h"""
@@ -136,10 +136,12 @@ def get_model(model, pretrained_model_path):
         except:
             raise ValueError("Miss matched model format params")
     else:
+        # pretrained_model_path = 'models/centr_pretrained_0.012_simsiam_resnet18_classes10_E200.pth'
+        # pretrained_model_path = "models/best_model_eval_heterossfl_heterossfl_dirichlet_alpha0.5_balanced_Classes=10_Seed=2024_C=5_fraction1_B=128_E=20_R=10.npz"
         raise ValueError("Unsupported file format for model checkpoint. Only .npz and .pth are supported.")
     
 class LinearEvaluationSimSiam(nn.Module):
-    def __init__(self, model, device, linear_eval=True, num_classes: int = 10): # backbone,
+    def __init__(self, model: SimSiam, device, linear_eval=True, num_classes: int = 10): # backbone,
         super(LinearEvaluationSimSiam, self).__init__()
         self.encoder = model.encoder.to(device)
         # freeze parameters 
@@ -470,35 +472,30 @@ def train_heterossfl(net: torch.nn.Module,
                 loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
                 # loss = loss.mean() # minimizing statistical expectation
             # loss = data_dict['loss'].mean()
-            if mu_coeff == 0: # Lazy FedSimSiam
+            if phi_K_mean is None: # first round skip loss assignment
                 total_loss = loss
                 loss_cka = 0
-                phi_K = np.zeros((len(radloader.dataset), net.encoder[1].l3[0].out_features)) # artificial phi_K just to hold the same communication buffer protocol
-            else:
-                if phi_K_mean is None: # first round skip loss assignment
-                    total_loss = loss
-                    loss_cka = 0
-                    # print('First round CKA=0')
-                    # Glytwnw 1o fresh round me 2 for loops ston radloader otan exw None kai otan den exw None
-                    if epoch == (epochs-1):
-                        embeddings = []
-                        with torch.no_grad():
-                            for idx, (X_img , _) in enumerate(radloader):
-                                # images = data[0] # images[0]
-                                with torch.autocast(device_type="cuda", dtype=torch.float16):
-                                    embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
-                                embeddings.append(embedding)
-                            phi_K = torch.cat(embeddings, dim=0).cpu().numpy()
-                else:
+                # print('First round CKA=0')
+                # Glytwnw 1o fresh round me 2 for loops ston radloader otan exw None kai otan den exw None
+                if epoch == (epochs-1):
                     embeddings = []
                     with torch.no_grad():
                         for idx, (X_img , _) in enumerate(radloader):
                             # images = data[0] # images[0]
-                            embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                                embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
                             embeddings.append(embedding)
-                        phi_K = torch.cat(embeddings, dim=0).cpu().numpy() # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
-                    loss_cka = mu_coeff * linear_CKA_fast(phi_K, phi_K_mean)
-                    total_loss = loss - loss_cka
+                        phi_K = torch.cat(embeddings, dim=0).cpu().numpy()
+            else:
+                embeddings = []
+                with torch.no_grad():
+                    for idx, (X_img , _) in enumerate(radloader):
+                        # images = data[0] # images[0]
+                        embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                        embeddings.append(embedding)
+                    phi_K = torch.cat(embeddings, dim=0).cpu().numpy() # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
+                loss_cka = mu_coeff * linear_CKA_fast(phi_K, phi_K_mean)
+                total_loss = loss - loss_cka # isws kalytera me (-)
             # per local epoch backwards
             total_loss.backward()
             optimizer.step()

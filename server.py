@@ -1,4 +1,4 @@
-"""Server class for FedAvg."""
+"""Server class for FedAvg and HeteroSSFL."""
 import numpy as np
 import timeit
 from model import ResNet18, SimSiam
