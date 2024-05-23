@@ -35,10 +35,12 @@ var_local_epochs: False
 var_min_epochs: 1 
 var_max_epochs: 4
 local_epochs: 1
+warm_up_rounds: 2
 
 model:
   #Linear evaluation
-  checkpoint: 'models\centr_pretrainedV2_simsiam_resnet18_classes10_E200.pth'
+  checkpoint: 'models/centr_pretrained_0.012_simsiam_resnet18_classes10_E200.pth'
+  # 'models/centr_pretrainedV2_simsiam_resnet18_classes10_E200.pth'
   # 'C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth'
   #C:\Users\smpoulio_local\Desktop\PythonProjects\FlowerYtTut\models\centr_pretrained_simsiam_resnet18_classes10_E200.pth   <-Gia simsiam xwris self.backbone
   #Backbone

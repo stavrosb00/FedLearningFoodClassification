@@ -1,0 +1,9 @@
+name: fedsimsiam
+strategy:
+  _target_: strategy_ssfl.FedSimSiamStrategy
+  _recursive_: false
+    
+
+client_fn:
+  _target_: client_ssfl.generate_client_fedsimsiam_fn
+  _recursive_: false

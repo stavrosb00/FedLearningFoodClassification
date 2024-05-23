@@ -18,8 +18,10 @@ from torch.utils.tensorboard import SummaryWriter
 #python .\centralised_simsiam.py num_rounds=50 batch_size=128 val_ratio=0 optimizer=adam num_workers=2
 # python .\centralised_simsiam.py num_rounds=200 batch_size=64 val_ratio=0 optimizer=simsiam num_workers=2
 # python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=2 optimizer.lr=0.032 
-# 14/5 stis 10 wra konta: python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=0 optimizer.lr=0.05
-# Etreksa stis 15/5 apo wra 12-18-53 gia 11.5 hrs: python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=0 optimizer.lr=0.032
+# 14/5 stis 10 wra konta: python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=2 optimizer.lr=0.05
+# Etreksa stis 15/5 apo wra 12-18-53 gia 11.5 hrs: python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=0 optimizer.lr=0.05
+# ki alla ...
+# 20/5 : dokimes me base lr=0.05 python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=2 optimizer.lr=0.05
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig):
 
@@ -31,7 +33,7 @@ def main(cfg: DictConfig):
 
     
     #model type architecture
-    model = 'simsiam_resnet18'
+    model = 'simsiam_resnet18_Jit0.3_min_scale0.4'
     num_workers = cfg.num_workers
     bs = cfg.batch_size
     epochs = cfg.num_rounds
@@ -41,7 +43,7 @@ def main(cfg: DictConfig):
     # subset = 'subset'
     subset = cfg.subset
     n_classes = cfg.num_classes
-    pretrained = False # Isws pretrained=False kalytera gia sygkrisimothta ws baseline 
+    pretrained = False # Isws pretrained=False kalytera gia sygkrisimothta ws koinh arxh kai oxi unstables basei adaptation phases
     #initialize module
     if subset:
         net = ResNet18(n_classes, pretrained= pretrained) 
@@ -78,7 +80,7 @@ def main(cfg: DictConfig):
     # optimizer = torch.optim.SGD(net.parameters(), lr=init_lr, momentum=cfg.optimizer.momentum, weight_decay=cfg.optimizer.weight_decay)
     lr_scheduler = LR_Scheduler(optimizer=optimizer, warmup_epochs=cfg.optimizer.warmup_epochs, warmup_lr=cfg.optimizer.warmup_lr * bs / 256, 
                                 num_epochs=num_epochs, base_lr=init_lr, final_lr=cfg.optimizer.final_lr * bs / 256, iter_per_epoch=batches_per_epoch,
-                                constant_predictor_lr=True) # see the end of SimSiam paper section 4.2 predictor     
+                                constant_predictor_lr=False) # see the end of SimSiam paper section 4.2 predictor     
     # return 0
     # train loop SSL
     info_dict = train_loop_ssl(net=net, trainloader=trainloader, testloader=testloader, memoryloader=memoryloader, optimizer=optimizer, epochs=epochs, 
@@ -100,7 +102,7 @@ def main(cfg: DictConfig):
 if __name__ == "__main__":
     # parser
     # import cProfile
-    # cProfile.run('main()', 'profiles/centr_simsiam_fileE=1_Nwork=4')
+    # cProfile.run('main()', 'profiles/centr_simsiam_fileE=1_Nwork=4_k_2')
     main()
     # snakeviz.
     pass

@@ -36,6 +36,14 @@ python main_ssfl.py partitioning=dirichlet alpha=0.5 num_clients=10 num_classes=
 # bs=128 maybe
 python main_ssfl.py partitioning=dirichlet alpha=0.5 num_clients=10 num_classes=10 C_fraction=1 strategy=heterossfl optimizer=heterossfl num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=10 num_rounds=4 cos_decay=False batch_size=128
 
+# Centr SimSiam 
+python .\centralised_simsiam.py num_rounds=200 batch_size=128 val_ratio=0 optimizer=simsiam num_workers=2 optimizer.lr=0.03
+
+## FedSimSiam 
+# Long
+python main_ssfl.py partitioning=iid alpha=0.5 num_clients=5 num_classes=10 C_fraction=1 strategy=fedsimsiam optimizer=fedsimsiam num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=2 num_rounds=10 cos_decay=True batch_size=128
+#Debug me IID kai short rounds
+python main_ssfl.py partitioning=iid alpha=0.5 num_clients=5 num_classes=10 C_fraction=0.2 strategy=fedsimsiam optimizer=fedsimsiam num_workers=0 val_ratio=0 rad_ratio=0.02 local_epochs=2 num_rounds=1 cos_decay=True batch_size=128
 # declare -a partitioning =("dirichlet" "iid")
 # declare -a num_clients =(10 16 32)
 # declare -a num_classes =(4 10 30)

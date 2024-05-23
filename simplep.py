@@ -1,62 +1,56 @@
 import torch
 import math
 import time
+from model import SimSiam, LinearEvaluationSimSiam
+from typing import OrderedDict
+import numpy as np
 
-def centering(K):
-    n = K.size(0)
-    unit = torch.ones(n, n, device=K.device)
-    I = torch.eye(n, device=K.device)
-    H = I - unit / n
-
-    return torch.matmul(torch.matmul(H, K), H)
-
-
-def rbf(X, sigma=None):
-    GX = torch.matmul(X, X.t())
-    KX = torch.diag(GX) - GX + (torch.diag(GX) - GX).t()
-    if sigma is None:
-        mdist = torch.median(KX[KX != 0])
-        sigma = torch.sqrt(mdist)
-    KX *= - 0.5 / (sigma * sigma)
-    KX = torch.exp(KX)
-    return KX
+def get_checkpoint_format(pretrained_model_path):
+    # Check the file extension
+    if pretrained_model_path.endswith('.npz'):
+        return "npz"
+    elif pretrained_model_path.endswith('.pth'):
+        return "pth"
+    else:
+        raise ValueError("Unsupported file format. Only .npz and .pth are supported.")
 
 
-def kernel_HSIC(X, Y, sigma):
-    return torch.sum(centering(rbf(X, sigma)) * centering(rbf(Y, sigma)))
-
-
-def linear_HSIC(X, Y):
-    L_X = torch.matmul(X, X.t())
-    L_Y = torch.matmul(Y, Y.t())
-    return torch.sum(centering(L_X) * centering(L_Y))
-
-
-def linear_CKA(X, Y):
-    hsic = linear_HSIC(X, Y)
-    var1 = torch.sqrt(linear_HSIC(X, X))
-    var2 = torch.sqrt(linear_HSIC(Y, Y))
-
-    return hsic / (var1 * var2)
-
-
-def kernel_CKA(X, Y, sigma=None):
-    hsic = kernel_HSIC(X, Y, sigma)
-    var1 = torch.sqrt(kernel_HSIC(X, X, sigma))
-    var2 = torch.sqrt(kernel_HSIC(Y, Y, sigma))
-
-    return hsic / (var1 * var2)
-
+def get_model(model, pretrained_model_path, device):
+    if pretrained_model_path.endswith('.npz'):
+        # return "npz"
+        checkpoint = np.load(
+                pretrained_model_path,
+                allow_pickle=True,
+            )
+        print(checkpoint)
+        npz_keys = [key for key in checkpoint.keys() if key.startswith('array')]
+        # nd_arrays_shapes = [checkpoint[key].shape for key in npz_keys]
+        # print(len(nd_arrays_shapes))
+        # print(len(model.state_dict().keys()))
+        params_dict = zip(model.state_dict().keys(), [checkpoint[key] for key in npz_keys])
+        state_dict = OrderedDict({k: torch.Tensor(v) for k, v in params_dict})
+        # print(len(state_dict))
+        model.load_state_dict(state_dict)
+        return model
+    elif pretrained_model_path.endswith('.pth'):
+        model.load_state_dict(torch.load(pretrained_model_path))#, map_location=device))
+        return model
+    else:
+        raise ValueError("Unsupported file format for model checkpoint. Only .npz and .pth are supported.")
+    
+def main():
+    pretrained_model_path = "models/best_model_eval_heterossfl_heterossfl_dirichlet_alpha0.5_balanced_Classes=10_Seed=2024_C=5_fraction1_B=128_E=20_R=10.npz"
+    device = torch.device("cuda")
+    model = SimSiam() #backbone=ResNet18().resnet, hidden_dim=2048, pred_dim=512, output_dim=2048
+    # model = model.load_state_dict(torch.load(pretrained_model_path, map_location=device))
+    device = torch.device("cuda")
+    model = get_model(model, pretrained_model_path, device)
+    print(model)
+    linear_mdl = LinearEvaluationSimSiam(model, device, linear_eval=True, num_classes=10)
+    print(len(linear_mdl.state_dict()))
+    grad_map: list[bool] = [p.requires_grad for _,p in linear_mdl.state_dict(keep_vars=True).items()]
+    print(grad_map)
 
 if __name__=='__main__':
-    X = torch.randn(25000, 512)
-    Y = torch.randn(25000, 512)
-    start =time.time()
-    print('Linear CKA, between X and Y: {}'.format(linear_CKA(X, Y)))
-    print(time.time() - start)
-    print('Linear CKA, between X and X: {}'.format(linear_CKA(X, X)))
-
-    start =time.time()
-    print('RBF Kernel CKA, between X and Y: {}'.format(kernel_CKA(X, Y)))
-    print(time.time() - start)
-    print('RBF Kernel CKA, between X and X: {}'.format(kernel_CKA(X, X)))
+    main()
+    pass

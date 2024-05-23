@@ -3,7 +3,7 @@ import torch.nn as nn
 from centr_utils import *
 # from data_process import *
 # from train import *
-from model import train, test, ResNet18, train_loop, train_loop_ssl, SimSiam, adjust_learning_rate, LinearEvaluationSimSiam
+from model import train, test, ResNet18, train_loop, train_loop_ssl, SimSiam, adjust_learning_rate, LinearEvaluationSimSiam, get_model
 from dataset import load_centr_data
 import hydra
 from hydra.core.hydra_config import HydraConfig
@@ -13,7 +13,7 @@ import argparse
 from tqdm import tqdm
 from knn_monitor import knn_monitor
 
-# Downstream training - linear evaluation : python .\evaluation_linear.py num_rounds=50 batch_size=256 val_ratio=0 optimizer=adam num_workers=0
+# Downstream training - linear evaluation : python .\evaluation_linear.py num_rounds=50 batch_size=256 val_ratio=0 optimizer=adam num_workers=2
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig):
     start = time.time()
@@ -34,13 +34,12 @@ def main(cfg: DictConfig):
     subset = cfg.subset
     n_classes = cfg.num_classes
     #initialize module
-    # TODO : model checkpoint on .npz or .pth format re arrange
-    # na to kanw 
+    print(f"Loading from checkpoint:{cfg.model.checkpoint}")
+    chkpnt_mdl = get_model(model=SimSiam(), pretrained_model_path= cfg.model.checkpoint) 
     if subset:
-        net = LinearEvaluationSimSiam(pretrained_model_path=cfg.model.checkpoint, device=DEVICE, linear_eval=True, num_classes=n_classes)
+        net = LinearEvaluationSimSiam(model=chkpnt_mdl, device=DEVICE, linear_eval=True, num_classes=n_classes)
     else:
-        net = LinearEvaluationSimSiam(pretrained_model_path=cfg.model.checkpoint, device=DEVICE, linear_eval=True, num_classes=101)
-
+        net = LinearEvaluationSimSiam(model=chkpnt_mdl, device=DEVICE, linear_eval=True, num_classes=101)
     # model =f"{model}_downstream_SSL_{cfg.model.checkpoint}"
     # model =f"{model}_downstream_SSL_HeteroSSL"
     model =f"{model}_downstream_SSL_CentralizedV2" # EXP NAME 
@@ -67,7 +66,7 @@ def main(cfg: DictConfig):
 
     # criterion =  torch.nn.CrossEntropyLoss()
     # optimizer = torch.optim.SGD(net.parameters(), lr=lr, momentum=momentum)
-    optimizer = torch.optim.Adam(net.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(net.classifier.parameters(), lr=lr)
     # epochs = 5
     # training and results
     info_dict = train_loop(net=net, train_dataloader=trainloader, test_dataloader=testloader, 
