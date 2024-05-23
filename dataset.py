@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import random_split, DataLoader, Subset, Dataset
-from torchvision.transforms import ToTensor, Normalize, Compose, RandomResizedCrop, RandomApply, ColorJitter, RandomGrayscale, RandomHorizontalFlip, Resize
+from torchvision.transforms import ToTensor, Normalize, Compose, RandomResizedCrop, RandomApply, ColorJitter, RandomGrayscale, RandomHorizontalFlip, Resize, GaussianBlur
 import torchvision.transforms.functional as F
 from torchvision.datasets import Food101
 from dataset_prep import *
@@ -36,7 +36,48 @@ class CustomSubset(Dataset):
 
     def __len__(self):
         return len(self.indices)
-    
+#transformation based on imagenet & resnet18 settings  or from dataset normalization stats
+    # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
+    # normalize = Normalize(mean=[0.485, 0.456, 0.406],
+    #                                     std=[0.229, 0.224, 0.225])
+# Gia ta resizes skepseis
+# 0.75* 512 # 384
+# 0.4... 1 . MO= 0.7
+# 0.7 * 512 # 358
+# 0.6* 512 = 307
+# 0.65* 512 = 332
+# 384 x 512 = 512 x 384
+# MoCo v2's aug: similar to SimCLR https://arxiv.org/abs/2002.05709
+    # augmentation = [
+    #     transforms.RandomResizedCrop(224, scale=(0.2, 1.)),
+    #     transforms.RandomApply([
+    #         transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+    #     ], p=0.8),
+    #     transforms.RandomGrayscale(p=0.2),
+    #     transforms.RandomApply([simsiam.loader.GaussianBlur([.1, 2.])], p=0.5),
+    #     transforms.RandomHorizontalFlip(),
+    #     transforms.ToTensor(),
+    #     normalize
+    # ]
+def load_transforms_ssl(dim: int = 256):
+    # SSL augmentation for x2 positive pair during training
+    augmentation = Compose([
+        RandomResizedCrop(dim, scale=(0.35, 1.), interpolation= F.InterpolationMode.BICUBIC), # upsample BICUBIC + AMP = gradients issue ?!?!?
+        RandomApply([
+            ColorJitter(brightness=0.3,contrast=0.3,saturation=0.3,hue=0.1)  # not strengthened
+        ], p=0.8),
+        RandomGrayscale(p=0.2),
+        # RandomApply([GaussianBlur(kernel_size= int(0.1 * dim), sigma=(0.1, 2.))], p=0.5), # x4 computation
+        RandomHorizontalFlip(),
+        ToTensor(),
+        # Fed theory: can't normalize bcz federated settings can't know about Dataset stats
+    ])
+    simple_trf = Compose([
+        Resize((dim, dim), interpolation= F.InterpolationMode.BICUBIC),
+        ToTensor(),
+    ])
+    return augmentation, simple_trf
+
 # from torchvision import transforms
 def get_food101(transform, datapath: str = 'D:/DesktopC/Datasets/data/', subset: bool = True, num_classes: int = 4):
     """Download Food101 and apply transformation."""
@@ -190,13 +231,6 @@ def load_dataset(datapath: str,
     testloader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
     return trainloaders, valloaders, testloader
 
-# Gia ta resizes 
-# 0.75* 512 # 384
-# 0.4... 1 . MO= 0.7
-# 0.7 * 512 # 358
-# 0.6* 512 = 307
-# 0.65* 512 = 332
-# 384 x 512 = 512 x 384
 def load_dataset_SSL(datapath: str, 
                  subset: bool,
                  num_classes: int,
@@ -210,20 +244,7 @@ def load_dataset_SSL(datapath: str,
                     val_ratio: float = 0.0,
                     rad_ratio: float = 0.02) -> tuple[list[DataLoader], list[DataLoader], DataLoader, DataLoader, DataLoader]:
     """Download Food101 and generate partitions & loaders for federating self-supervised learning."""
-    augmentation = Compose([
-        RandomResizedCrop(256, scale=(0.3, 1.), interpolation= F.InterpolationMode.BICUBIC),
-        RandomApply([
-            ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
-        ], p=0.8),
-        RandomGrayscale(p=0.2),
-        RandomHorizontalFlip(),
-        ToTensor(),
-        # normalize
-    ])
-    simple_trf = Compose([
-        Resize((256, 256), interpolation= F.InterpolationMode.BICUBIC),
-        ToTensor(),
-    ])
+    augmentation, simple_trf = load_transforms_ssl()
     trainset, testset, memoryset = get_food101_ssl(augmentation, simple_trf, datapath, subset, num_classes)
 
     if partitioning == "iid":
@@ -334,11 +355,11 @@ def load_dataset_SSL(datapath: str,
     # radset.dataset.transform = augmentation
     # print(radset.dataset.transform)
     # print(trainset.dataset.transform)
-    rad_stats = get_subset_stats(radset)
-    print(rad_stats)
-    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=num_workers, pin_memory=True)
+    # rad_stats = get_subset_stats(radset)
+    # print(rad_stats)
+    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=0, pin_memory=True)
     # memoryloader-artificial knowledge for monitoring 
-    memoryloader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=num_workers, pin_memory=True) 
+    memoryloader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=2, pin_memory=True) 
     return trainloaders, valloaders, testloader, memoryloader, radloader
 
 def load_centr_data(datapath: str, 
@@ -405,43 +426,14 @@ def load_centr_data_SSL(datapath: str,
                  num_workers: int,
                     batch_size: int):
     """Download Food101 dataset for centralised self-supervised learning."""
-    print("Loading data...")
-    #transformation based on imagenet & resnet18 settings  or from dataset normalization stats
-    # trf = torchvision.models.ResNet18_Weights.IMAGENET1K_V1.transforms()
-    # normalize = Normalize(mean=[0.485, 0.456, 0.406],
-    #                                     std=[0.229, 0.224, 0.225])
-    # Can be 512 - > 256 . Or 384 
-    augmentation = Compose([
-        RandomResizedCrop(256, scale=(0.3, 1.), interpolation= F.InterpolationMode.BICUBIC),
-        RandomApply([
-            ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
-        ], p=0.8),
-        RandomGrayscale(p=0.2),
-        RandomHorizontalFlip(),
-        ToTensor(),
-        # normalize
-    ])
-    simple_trf = Compose([
-        Resize((256, 256), interpolation= F.InterpolationMode.BICUBIC),
-        ToTensor(),
-    ])
+    print("Loading data SSL...")
+    augmentation, simple_trf = load_transforms_ssl()
     trainset, testset, memoryset = get_food101_ssl(augmentation, simple_trf, datapath, subset, num_classes)
-    train_loader = DataLoader(Subset(trainset.dataset, trainset.indices), batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    test_loader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=num_workers)
-    memory_loader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=num_workers)
+    train_loader = DataLoader(Subset(trainset.dataset, trainset.indices[0:1500]), batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
+    test_loader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=0, pin_memory=True)
+    memory_loader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=2, pin_memory=True)
     # Subset(testset.dataset, testset.indices)
     return train_loader, test_loader, memory_loader
-
-
-
-
-
-
-
-
-
-
-
 
 # def get_mnist(data_paths: str = './data'):
 #     """Download MNIST and apply minimal transformation."""
@@ -451,98 +443,6 @@ def load_centr_data_SSL(datapath: str,
 #     testset = MNIST(data_paths, train=False, download =True, transform=tr)
 
 #     return trainset, testset
-
-# def prepare_dataset(num_partitions: int, 
-#                     batch_size: int, 
-#                     val_ratio: float = 0.1):
-#     """Download MNIST and generate IID partitions."""
-
-#     # download MNIST in case it's not already in the system
-#     trainset, testset = get_mnist()
-
-    
-#     # split trainset into `num_partitions` trainsets (one per client)
-#     # figure out number of training examples per partition
-#     num_images = len(trainset) // num_partitions
-
-#     # a list of partition lenghts (all partitions are of equal size)
-#     partition_len = [num_images] * num_partitions
-#     trainsets = random_split(
-#         trainset, partition_len, torch.Generator().manual_seed(2023)
-#     )
-
-#     # create dataloaders with train+val support
-#     trainloaders = []
-#     valloaders = []
-#     for trainset_ in trainsets:
-#         num_total = len(trainset_)
-#         num_val = int(val_ratio * num_total)
-#         num_train = num_total - num_val
-
-#         for_train, for_val = random_split(trainset_, [num_train, num_val], torch.Generator().manual_seed(2023))
-#         # construct data loaders and append to their respective list.
-#         # In this way, the i-th client will get the i-th element in the trainloaders list and the i-th element in the valloaders list
-#         trainloaders.append(DataLoader(for_train, batch_size=batch_size, shuffle=True, num_workers=2))
-#         valloaders.append(DataLoader(for_val, batch_size=batch_size, shuffle=True, num_workers=2))
-        
-#     # We leave the test set intact (i.e. we don't partition it)
-#     # This test set will be left on the server side and we'll be used to evaluate the
-#     # performance of the global model after each round.
-#     # Please note that a more realistic setting would instead use a validation set on the server for
-#     # this purpose and only use the testset after the final round.
-#     # Also, in some settings (specially outside simulation) it might not be feasible to construct a validation
-#     # set on the server side, therefore evaluating the global model can only be done by the clients. (see the comment
-#     # in main.py above the strategy definition for more details on this)
-#     testloader = DataLoader(testset, batch_size=128)
-
-#     return trainloaders, valloaders, testloader
-
-# def load_datasets(config: DictConfig) -> Tuple[List[DataLoader], DataLoader, List]:
-#     """Create the dataloaders to be fed into the model.
-
-#     Parameters
-#     ----------
-#     config: DictConfig
-#         Parameterises the dataset partitioning process
-#     num_clients : int
-#         The number of clients that hold a part of the data
-#     val_ratio : float, optional
-#         The ratio of training data that will be used for validation (between 0 and 1),
-#         by default 0.1
-#     batch_size : int, optional
-#         The size of the batches to be fed into the model, by default 32
-#     seed : int, optional
-#         Used to set a fix seed to replicate experiments, by default 42
-
-#     Returns
-#     -------
-#     Tuple[DataLoader, DataLoader, List]
-#         The DataLoader for training, the DataLoader for testing, client dataset sizes.
-#     """
-#     # download MNIST in case it's not already in the system
-#     trainset, testset = get_mnist()
-
-#     partition_sizes = [1.0 / config.num_clients for _ in range(config.num_clients)]
-
-#     partition_obj = DataPartitioner(
-#         trainset, partition_sizes, is_non_iid=config.NIID, alpha=config.alpha
-#     )
-#     ratio = partition_obj.ratio
-
-#     trainloaders = []
-#     for data_split in range(config.num_clients):
-#         client_partition = partition_obj.use(data_split)
-#         trainloaders.append(
-#             torch.utils.data.DataLoader(
-#                 client_partition,
-#                 batch_size=config.batch_size,
-#                 shuffle=True,
-#             )
-#         )
-
-#     test_loader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=False)
-
-#     return trainloaders, test_loader, ratio
 
 # @hydra.main(config_path="conf", config_name="base", version_base=None)
 # def main(cfg: DictConfig):
