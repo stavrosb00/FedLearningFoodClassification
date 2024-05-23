@@ -309,6 +309,7 @@ def get_on_fit_config_ssfl(config: DictConfig):
             # cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds)) 
             # after warm-up
             cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * (server_round - warm_up_rounds) / (n_rounds - warm_up_rounds))) 
+            # print(cur_lr)
         else:
             cur_lr = base_lr # 0.01 0.0075 h 0.03
         # lr = adjust_learning_rate()
