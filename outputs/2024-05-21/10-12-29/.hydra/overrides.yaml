@@ -1,0 +1,14 @@
+- partitioning=iid
+- alpha=0.5
+- num_clients=5
+- num_classes=10
+- C_fraction=1
+- strategy=heterossfl
+- optimizer=heterossfl
+- num_workers=0
+- val_ratio=0
+- rad_ratio=0.02
+- local_epochs=5
+- num_rounds=10
+- cos_decay=True
+- batch_size=128
