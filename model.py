@@ -6,7 +6,7 @@ import torch.utils.tensorboard
 import torch.utils.tensorboard.summary
 import torchvision
 import math
-from typing import Dict, List, OrderedDict
+from typing import Dict, List, OrderedDict, Tuple
 from utils import comp_accuracy
 from torch.optim import SGD
 from torch.cuda.amp import autocast, GradScaler
@@ -16,6 +16,7 @@ import numpy as np
 from linear_cka import linear_CKA_fast
 from lr_scheduler import LR_Scheduler
 import time
+from sklearn.metrics import confusion_matrix
 
 # Note the model and functions here defined do not have any FL-specific components.
 class ResNet18(nn.Module):
@@ -199,7 +200,6 @@ def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
             #forward pass
-
             with torch.autocast(device_type="cuda", dtype=torch.float16):
                 outputs = net(images)
                 #loss = criterion(outputs, labels)
@@ -215,14 +215,11 @@ def train(net, trainloader, optimizer, epochs, device: str, proximal_mu = 0):
                             (local_weights - global_weights).norm(2)
                         )
                     loss = criterion(outputs, labels) + (proximal_mu / 2) * proximal_term
-
             #backward pass
             loss.backward()
             #gradient step
             optimizer.step()
-
             acc = comp_accuracy(outputs, labels)
-
             train_losses.append(loss.item())
             train_accuracy.append(acc[0].item())
 
@@ -321,7 +318,7 @@ def train_loop(net: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           epochs: int,
           device: torch.device,
-          proximal_mu=0) -> Dict[str, List]:
+          proximal_mu=0) -> Tuple[Dict[str, List], np.ndarray]:
     """Train the network on the training set.
     This is a training loop for Centralised Learning with PyTorch.
     Trains and tests a PyTorch model.
@@ -338,20 +335,78 @@ def train_loop(net: torch.nn.Module,
                "test_loss": [],
                "test_acc": []
     }
+    cm: np.ndarray = None
     # criterion =  torch.nn.CrossEntropyLoss()
     net.to(device)
     # Loop through training and testing steps for a number of epochs
     global_progress = tqdm(range(epochs), desc=f'Training')
     for epoch in global_progress:
-        train_loss, train_acc = train(net=net,
-                                          trainloader=train_dataloader,
-                                          optimizer=optimizer,
-                                          epochs=1,
-                                          device=device,
-                                          proximal_mu=proximal_mu)
-        test_loss, test_acc = test(net=net,
-          testloader=test_dataloader,
-          device=device)
+        criterion = torch.nn.CrossEntropyLoss()
+        net.to(device)
+        if proximal_mu > 0.0:
+            global_params = [val.detach().clone() for val in net.parameters()]
+        else:
+            global_params = None
+        if isinstance(net, LinearEvaluationSimSiam):
+            # print("net has encoder")
+            net.encoder.eval()
+            net.classifier.train()
+        else:  
+            net.train()
+        train_losses = []
+        train_accuracy = []
+        for images, labels in train_dataloader:
+            #load data to device
+            images, labels = images.to(device), labels.to(device)
+            optimizer.zero_grad()
+            #forward pass
+            with torch.autocast(device_type="cuda", dtype=torch.float16):
+                outputs = net(images)
+                #loss = criterion(outputs, labels)
+                if global_params is None:
+                    loss = criterion(outputs, labels)
+                else:
+                    # Proximal updates for FedProx
+                    proximal_term = 0.0
+                    for local_weights, global_weights in zip(
+                        net.parameters(), global_params
+                    ):
+                        proximal_term += torch.square(
+                            (local_weights - global_weights).norm(2)
+                        )
+                    loss = criterion(outputs, labels) + (proximal_mu / 2) * proximal_term
+            #backward pass
+            loss.backward()
+            #gradient step
+            optimizer.step()
+            acc = comp_accuracy(outputs, labels)
+            train_losses.append(loss.item())
+            train_accuracy.append(acc[0].item())
+
+        train_loss = sum(train_losses) / len(train_losses)
+        train_acc = sum(train_accuracy) / len(train_accuracy)
+        # Using test_loader set per epoch 
+        accuracy = []
+        loss = 0.0
+        net.eval()
+        all_labels = []
+        all_outputs = []
+        with torch.no_grad():
+            for images, labels in test_dataloader:
+                images, labels = images.to(device), labels.to(device)
+                with torch.autocast(device_type="cuda", dtype=torch.float16):
+                    outputs = net(images)
+                    loss += criterion(outputs, labels).item()
+                acc1 = comp_accuracy(outputs, labels)
+                accuracy.append(acc1[0].item())
+                if epoch == (epochs-1):
+                    all_labels.extend(labels.cpu().numpy())
+                    all_outputs.extend(torch.argmax(outputs, 1).cpu().numpy())
+
+        test_loss = loss / len(test_dataloader.dataset)
+        test_acc = sum(accuracy) / len(accuracy)
+        if epoch == (epochs-1):
+            cm = confusion_matrix(all_labels, all_outputs) 
         # Update results dictionary
         results["train_loss"].append(train_loss)
         results["train_acc"].append(train_acc)
@@ -366,8 +421,8 @@ def train_loop(net: torch.nn.Module,
         "test_acc": test_acc
         })
     print('Finished Training')
-    # Return the filled results at the end of the epochs
-    return results
+    # Return the filled results and confusion matrix at the end of the epochs
+    return results, cm
     
 def adjust_learning_rate(optimizer: SGD, init_lr, epoch, epochs):
     """Decay the learning rate based on schedule"""

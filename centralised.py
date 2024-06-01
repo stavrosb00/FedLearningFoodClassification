@@ -86,7 +86,7 @@ def main(cfg: DictConfig):
     optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     # epochs = 5
     # training and results
-    info_dict = train_loop(net=net,train_dataloader=trainloader, test_dataloader=testloader, 
+    info_dict, cm = train_loop(net=net,train_dataloader=trainloader, test_dataloader=testloader, 
                         optimizer=optimizer,epochs=epochs, device=DEVICE)
     
     #save results

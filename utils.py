@@ -49,6 +49,12 @@ def get_subset_stats(sub_trainset: CustomSubset):
     tmp = {int(unq[i]) : int(unq_count[i]) for i in range(len(unq))}
     return tmp
 
+def get_subset_cls2labels(subset: CustomSubset):
+    sample_counts = get_subset_stats(subset)
+    label_to_index = subset.dataset.class_to_idx
+    final_dict = {value: key for key, value in label_to_index.items() if value in sample_counts}
+    return final_dict
+
 def plot_exp_summary(trainsets: list[CustomSubset], title_str: str, num_classes: int, save_str: str):
     for c_id, sub_trainset in enumerate(trainsets):
         tmp = get_subset_stats(sub_trainset)
