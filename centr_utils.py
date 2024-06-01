@@ -12,6 +12,7 @@ import torch.nn.functional as F
 from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.metrics import ConfusionMatrixDisplay
 # from model import *
 
 #MODEL UTILS
@@ -137,6 +138,22 @@ def plot_results_downstream(save_path: str, info_dict: Dict[str, List], subset: 
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.savefig(figname2, bbox_inches='tight')
+    plt.close()
+
+def plot_confusion_matrix(cm: np.ndarray, cls_labels: list[str], model:str, title:str = 'Confusion matrix', cmap: str='inferno'):
+    if not os.path.exists('./images/conf_mats'):
+        os.makedirs('./images/conf_mats') 
+    figname = f"./images/conf_mats/conf_matrix_{model}.png"
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot(cmap=cmap)
+    plt.title(title)
+    # Set list of strings on y-axis as labels
+    plt.gca().set_yticks(np.arange(len(cls_labels)))
+    plt.gca().set_yticklabels(cls_labels)
+    # Set class indexes on x-axis as labels
+    plt.gca().set_xticks(np.arange(len(cls_labels)))
+    plt.gca().set_xticklabels([str(i) for i in np.arange(len(cls_labels))])
+    plt.savefig(figname, bbox_inches='tight')
     plt.close()
 
 def plot_results_SSL(save_path: str, info_dict: Dict[str, List], subset: bool, num_classes: int, model: str):

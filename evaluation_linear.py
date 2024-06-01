@@ -22,8 +22,6 @@ def main(cfg: DictConfig):
 
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Training will be on {DEVICE.type}")
-    #model type architecture
-    model = 'resnet18'
     num_workers = cfg.num_workers
     bs = cfg.batch_size # 64 * 2 = 128
     epochs = cfg.num_rounds # 50 for eval
@@ -35,14 +33,15 @@ def main(cfg: DictConfig):
     n_classes = cfg.num_classes
     #initialize module
     print(f"Loading from checkpoint:{cfg.model.checkpoint}")
-    chkpnt_mdl = get_model(model=SimSiam(), pretrained_model_path= cfg.model.checkpoint) 
+    chkpnt_mdl = get_model(model=SimSiam(), pretrained_model_path=cfg.model.checkpoint) 
     if subset:
         net = LinearEvaluationSimSiam(model=chkpnt_mdl, device=DEVICE, linear_eval=True, num_classes=n_classes)
     else:
         net = LinearEvaluationSimSiam(model=chkpnt_mdl, device=DEVICE, linear_eval=True, num_classes=101)
     # model =f"{model}_downstream_SSL_{cfg.model.checkpoint}"
     # model =f"{model}_downstream_SSL_HeteroSSL"
-    model =f"{model}_downstream_SSL_CentralizedV2" # EXP NAME 
+    #model type architecture
+    model =f"resnet18_downstream_SSL_CentralizedV4" # EXP NAME 
     grad_map: list[bool] = [p.requires_grad for _,p in net.state_dict(keep_vars=True).items()]
     print(grad_map)
     print(net)
@@ -69,13 +68,15 @@ def main(cfg: DictConfig):
     optimizer = torch.optim.Adam(net.classifier.parameters(), lr=lr)
     # epochs = 5
     # training and results
-    info_dict = train_loop(net=net, train_dataloader=trainloader, test_dataloader=testloader, 
+    info_dict, cm = train_loop(net=net, train_dataloader=trainloader, test_dataloader=testloader, 
                         optimizer=optimizer,epochs=epochs, device=DEVICE)
     
     #save results
     save_path = HydraConfig.get().runtime.output_dir
 
     plot_results_downstream(save_path=save_path, info_dict=info_dict, subset=subset, num_classes=n_classes, model=model)
+    cls_labels = list(testloader.dataset.dataset.class_to_idx.keys())[:n_classes]
+    plot_confusion_matrix(cm=cm, cls_labels=cls_labels, model=model, title='Confusion matrix based on output logits', cmap='inferno', )
     # plot_results(save_path=save_path, info_dict=info_dict, subset=subset, num_classes=n_classes, model=model)
     # Save the current net module 
     if not os.path.exists(cfg.checkpoint_path):
