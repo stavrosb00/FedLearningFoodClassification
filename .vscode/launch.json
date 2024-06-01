@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Testing linear eval",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "evaluation_linear.py",
+            "console": "integratedTerminal",
+            "args": "num_rounds=1 batch_size=256 val_ratio=0 optimizer=adam num_workers=4"
+        },
+        {
+            "name": "Testing FedSimSiam",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main_ssfl.py",
+            "console": "integratedTerminal",
+            "args": "partitioning=iid alpha=0.5 num_clients=5 num_classes=10 C_fraction=1 strategy=fedsimsiam optimizer=fedsimsiam num_workers=2 val_ratio=0 rad_ratio=0.02 local_epochs=2 num_rounds=2 cos_decay=True batch_size=128"
+        },
+    ]
+}
