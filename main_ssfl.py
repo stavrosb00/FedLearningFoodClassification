@@ -23,7 +23,7 @@ from strategy_scaffold import ScaffoldStrategy, ScaffoldStrategyV2
 from strategy_ssfl import HeteroSSFLStrategy, FedSimSiamStrategy
 from server_scaffold import ScaffoldServer, ScaffoldServerV2
 from server import FedAvgServer, HeteroSSFLServer
-from model import ResNet18, test, SimSiam
+from model import ResNet18, test, SimSiam, get_model
 from knn_monitor import knn_monitor
 import random
 import warnings
@@ -101,7 +101,7 @@ def main(cfg: DictConfig):
         client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, radloader, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
         evaluate_fn = get_evaluate_fn_ssfl(cfg.num_classes, testloader, memoryloader)
         
-        mdl = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=False).resnet)
+        mdl = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=cfg.pretrained).resnet)
         params = [val.cpu().numpy() for _, val in mdl.state_dict().items()]
         L = len(radloader.dataset) #Length of RAD 
         d_phi = mdl.encoder[1].l3[0].out_features # Features dimension length of encoder's output
@@ -114,7 +114,11 @@ def main(cfg: DictConfig):
         print("Local progress for clients who participated in rounds are saved to: ", client_progress)
         client_fn = call(cfg.strategy.client_fn, trainloaders, validationloaders, radloader, cfg.num_classes, cfg.local_epochs, cfg, save_dir=client_progress)
         evaluate_fn = get_evaluate_fn_ssfl(cfg.num_classes, testloader, memoryloader)
-        mdl = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=False).resnet)
+        mdl = SimSiam(backbone=ResNet18(cfg.num_classes, pretrained=cfg.pretrained).resnet)
+        if cfg.warm_start:
+            print(f"Warm start - retrieving FedSimSiam model from {cfg.model.checkpoint}")
+            mdl = get_model(model=mdl, pretrained_model_path=cfg.model.checkpoint)
+            
         params = [val.cpu().numpy() for _, val in mdl.state_dict().items()]
         print(f"NDArrays buffer length {len(params)}")
         params = fl.common.ndarrays_to_parameters(params)
@@ -162,8 +166,8 @@ def main(cfg: DictConfig):
             num_rounds=cfg.num_rounds
         ),  # minimal config for the server loop telling the number of rounds in FL
         # strategy=strategy,  # our strategy of choice
-        ray_init_args = {
-            "include_dashboard": True}, # we need this one for tracking
+        # ray_init_args = {
+        #     "include_dashboard": True}, # we need this one for tracking
     #         "num_cpus": num_cpus,
     #         "num_gpus": num_gpus,
     #         # "memory": ram_memory,
