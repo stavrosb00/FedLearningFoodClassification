@@ -33,7 +33,7 @@ def main(cfg: DictConfig):
 
     
     #model type architecture
-    model = 'simsiam_resnet18_Jit0.3_min_scale0.4'
+    model = 'simsiam_resnet18_Jit0.3_min_scale0.35'
     num_workers = cfg.num_workers
     bs = cfg.batch_size
     epochs = cfg.num_rounds
@@ -43,7 +43,7 @@ def main(cfg: DictConfig):
     # subset = 'subset'
     subset = cfg.subset
     n_classes = cfg.num_classes
-    pretrained = False # Isws pretrained=False kalytera gia sygkrisimothta ws koinh arxh kai oxi unstables basei adaptation phases
+    pretrained = cfg.pretrained # Isws pretrained=False kalytera gia sygkrisimothta ws koinh arxh kai oxi unstables basei adaptation phases
     #initialize module
     if subset:
         net = ResNet18(n_classes, pretrained= pretrained) 

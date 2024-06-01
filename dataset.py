@@ -357,7 +357,7 @@ def load_dataset_SSL(datapath: str,
     # print(trainset.dataset.transform)
     # rad_stats = get_subset_stats(radset)
     # print(rad_stats)
-    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=0, pin_memory=True)
+    radloader = DataLoader(Subset(radset.dataset, radset.indices), batch_size=batch_size, num_workers=2, pin_memory=True)
     # memoryloader-artificial knowledge for monitoring 
     memoryloader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=2, pin_memory=True) 
     return trainloaders, valloaders, testloader, memoryloader, radloader
@@ -429,7 +429,7 @@ def load_centr_data_SSL(datapath: str,
     print("Loading data SSL...")
     augmentation, simple_trf = load_transforms_ssl()
     trainset, testset, memoryset = get_food101_ssl(augmentation, simple_trf, datapath, subset, num_classes)
-    train_loader = DataLoader(Subset(trainset.dataset, trainset.indices[0:1500]), batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
+    train_loader = DataLoader(Subset(trainset.dataset, trainset.indices), batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=True)
     test_loader = DataLoader(Subset(testset.dataset, testset.indices), batch_size=batch_size, num_workers=0, pin_memory=True)
     memory_loader = DataLoader(Subset(memoryset.dataset, memoryset.indices), batch_size=batch_size, num_workers=2, pin_memory=True)
     # Subset(testset.dataset, testset.indices)

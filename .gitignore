@@ -1,5 +1,7 @@
 __pycache__/*
 outputs/*
+*stavros*.sh.o*
+summary*.png
 multirun/*
 models/*
 profiles/*

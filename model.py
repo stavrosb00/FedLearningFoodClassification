@@ -111,7 +111,7 @@ class SimSiam(nn.Module):
         # return {'loss': L}
         return L
 
-def get_model(model, pretrained_model_path):
+def get_model(model: nn.Module, pretrained_model_path):
     if pretrained_model_path.endswith('.npz'):
         # return "npz"
         checkpoint = np.load(
@@ -537,19 +537,20 @@ def train_heterossfl(net: torch.nn.Module,
                         for idx, (X_img , _) in enumerate(radloader):
                             # images = data[0] # images[0]
                             with torch.autocast(device_type="cuda", dtype=torch.float16):
-                                embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
-                            embeddings.append(embedding)
-                        phi_K = torch.cat(embeddings, dim=0).cpu().numpy()
+                                embedding = net.encoder(X_img.to(device, non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                            embeddings.append(embedding.cpu().numpy())
+                        phi_K = np.vstack(embeddings)
             else:
                 embeddings = []
                 with torch.no_grad():
                     for idx, (X_img , _) in enumerate(radloader):
                         # images = data[0] # images[0]
-                        embedding = net.encoder(X_img.cuda(non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
-                        embeddings.append(embedding)
-                    phi_K = torch.cat(embeddings, dim=0).cpu().numpy() # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
+                        with torch.autocast(device_type="cuda", dtype=torch.float16):
+                            embedding = net.encoder(X_img.to(device, non_blocking=True)) # +1000MB sthn gpu logw bs=64. Ana bs=32 ~ 500MB sthn GPU 
+                        embeddings.append(embedding.cpu().numpy())
+                    phi_K = np.vstack(embeddings) # [ batch_size x features_dims | batch_size x features_dims | ... | (L-batch_size) x features_dims ]
                 loss_cka = mu_coeff * linear_CKA_fast(phi_K, phi_K_mean)
-                total_loss = loss - loss_cka # isws kalytera me (-)
+                total_loss = loss + loss_cka # isws kalytera me (-)
             # per local epoch backwards
             total_loss.backward()
             optimizer.step()
@@ -590,8 +591,8 @@ def train_fedsimsiam(net: torch.nn.Module,
             # print(f"tr Datal{time.time() - start1}")
             images = data[0]
             optimizer.zero_grad()
-            with torch.autocast(device_type="cuda", dtype=torch.float16):
-                loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
+            # with torch.autocast(device_type="cuda", dtype=torch.float16): #BICUBIC upsample + AMP?!?!
+            loss = net(images[0].to(device, non_blocking=True), images[1].to(device, non_blocking=True))
                 # loss = loss.mean() # minimizing statistical expectation. Already on forward pass.
             # per local epoch backwards
             loss.backward()

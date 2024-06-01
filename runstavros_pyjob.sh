@@ -1,8 +1,7 @@
-#! /bin/bash
+#!/bin/bash
 
 #$ -cwd
-#$ -q main
-#$ -p 0
+#$ -q cuda.q
 #$ -S /bin/bash
 #$ -shell y
 #$ -j y
@@ -16,34 +15,41 @@
 ## 128M of memory
 ## -pe pvm 6- -l mem=128
 
-## request a single CUDA device
-#$ -l cudadev=1
-
 ## Send mail to these users
-## -M stavrousmpoul@mug6.ee.auth.gr
+#$ -M smpoulio@ece.auth.gr
 ## Mail at beginning/end/on suspension
-#$ -m bes
+#$ -m es
 
-## Change the following vars
-## -o file_for_output_log_here 
-## -e file_for_error_log_here 
+## Change the following vars if you want
+## -o stdout.log
+## -e stderr.log
 
-echo "Date: `date`"
-echo "User: `whoami`"
-echo "Job : $0"
-echo "Args: $@"
-echo "pwd : `pwd`"
+# Setup to use the currently idle GPU
+gpu0util="$(nvidia-smi -q -i 0 | grep Utilization -A 1 | grep Gpu | tail -c 4 | head -c 1)"
+gpu1util="$(nvidia-smi -q -i 1 | grep Utilization -A 1 | grep Gpu | tail -c 4 | head -c 1)"
+
+if [ $gpu0util -eq 0 ]; then
+    export CUDA_VISIBLE_DEVICES=0
+fi
+
+if [ $gpu1util -eq 0 ]; then
+    export CUDA_VISIBLE_DEVICES=1
+fi
+
+echo Date: `date`
+echo User: `whoami`
+echo Job : $0
+echo Args: $@
+echo pwd : `pwd`
 echo "--------"
-export PATH=~/Programs/miniconda3/envs/tf-gpu/bin:${PATH}  # NOTE - 'tf-gpu' is the conda env
-echo "PATH=${PATH}"
-echo "python: `which python`"
+
+echo conda : `which conda`
+# export PATH=stavrosmpoul/miniconda3/envs/pyt_flwr/bin:/home/stavrosmpoul/miniconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+## export PATH=$USER/miniconda3/envs/pyt_flwr/bin:$PATH
+conda activate pyt_flwr
+echo python: `which python`
 echo "--------"
-echo " "
 
-source activate your_envirnoment_here
-which python
-echo " "
-
-python $@
-
+# run the experiment
+python main_ssfl.py partitioning=iid num_clients=10 num_classes=10 C_fraction=1 strategy=fedsimsiam optimizer=fedsimsiam num_workers=4 val_ratio=0 rad_ratio=0.02 local_epochs=5 num_rounds=200 warm_up_rounds=10 cos_decay=True batch_size=128 pretrained=False
 exit
