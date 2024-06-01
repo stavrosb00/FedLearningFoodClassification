@@ -1,0 +1,20 @@
+[2024-05-26 15:49:58,163][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-05-26 15:49:58,163][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=200, round_timeout=None)
+[2024-05-26 15:50:00,565][flwr][INFO] - Flower VCE: Ray initialized with resources: {'node:__internal_head__': 1.0, 'object_store_memory': 9279007948.0, 'memory': 18558015899.0, 'node:155.207.19.230': 1.0, 'GPU': 2.0, 'accelerator_type:G': 1.0, 'CPU': 12.0}
+[2024-05-26 15:50:00,565][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-05-26 15:50:00,566][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 6, 'num_gpus': 1}
+[2024-05-26 15:50:00,575][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-05-26 15:50:00,575][flwr][INFO] - Initializing global parameters
+[2024-05-26 15:50:00,575][flwr][INFO] - Using initial parameters provided by strategy
+[2024-05-26 15:50:00,576][flwr][INFO] - Evaluating initial parameters
+[2024-05-26 15:50:34,599][flwr][INFO] - FL starting
+[2024-05-26 15:50:34,701][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 5)
+[2024-05-26 15:54:11,571][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-05-26 15:54:43,659][flwr][INFO] - Model saved with Best Test kNN accuracy 29.720: 
+[2024-05-26 15:54:43,660][flwr][INFO] - fit progress: (1, 0, {'accuracy': 29.720000000000002}, 249.06003652093932)
+[2024-05-26 15:54:43,660][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-05-26 15:54:43,765][flwr][DEBUG] - fit_round 2: strategy sampled 5 clients (out of 5)
+[2024-05-26 15:58:52,737][flwr][DEBUG] - fit_round 2 received 5 results and 0 failures
+[2024-05-26 15:59:24,744][flwr][INFO] - fit progress: (2, 0, {'accuracy': 28.96}, 530.1441002279753)
+[2024-05-26 15:59:24,745][flwr][INFO] - evaluate_round 2: no clients selected, cancel
+[2024-05-26 15:59:24,824][flwr][DEBUG] - fit_round 3: strategy sampled 5 clients (out of 5)

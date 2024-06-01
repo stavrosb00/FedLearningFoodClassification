@@ -1,0 +1,16 @@
+- partitioning=iid
+- alpha=0.5
+- num_clients=5
+- num_classes=10
+- C_fraction=1
+- strategy=fedsimsiam
+- optimizer=fedsimsiam
+- num_workers=4
+- val_ratio=0
+- rad_ratio=0.02
+- local_epochs=5
+- num_rounds=150
+- warm_up_rounds=10
+- cos_decay=True
+- batch_size=128
+- pretrained=False

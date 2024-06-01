@@ -1,0 +1,21 @@
+[2024-05-24 09:28:49,036][flwr][WARNING] - Both server and strategy were provided, ignoring strategy
+[2024-05-24 09:28:49,036][flwr][INFO] - Starting Flower simulation, config: ServerConfig(num_rounds=1, round_timeout=None)
+[2024-05-24 09:28:51,414][flwr][INFO] - Flower VCE: Ray initialized with resources: {'object_store_memory': 9319853260.0, 'node:__internal_head__': 1.0, 'accelerator_type:G': 1.0, 'node:155.207.19.230': 1.0, 'GPU': 2.0, 'memory': 18639706523.0, 'CPU': 12.0}
+[2024-05-24 09:28:51,414][flwr][INFO] - Optimize your simulation with Flower VCE: https://flower.dev/docs/framework/how-to-run-simulations.html
+[2024-05-24 09:28:51,414][flwr][INFO] - Flower VCE: Resources for each Virtual Client: {'num_cpus': 6, 'num_gpus': 1}
+[2024-05-24 09:28:51,423][flwr][INFO] - Flower VCE: Creating VirtualClientEngineActorPool with 2 actors
+[2024-05-24 09:28:51,423][flwr][INFO] - Initializing global parameters
+[2024-05-24 09:28:51,423][flwr][INFO] - Using initial parameters provided by strategy
+[2024-05-24 09:28:51,423][flwr][INFO] - Evaluating initial parameters
+[2024-05-24 09:29:20,693][flwr][INFO] - FL starting
+[2024-05-24 09:29:20,694][flwr][DEBUG] - fit_round 1: strategy sampled 5 clients (out of 5)
+[2024-05-24 09:30:54,481][flwr][DEBUG] - fit_round 1 received 5 results and 0 failures
+[2024-05-24 09:31:23,120][flwr][INFO] - Model saved with Best Test kNN accuracy 71.560: 
+[2024-05-24 09:31:23,121][flwr][INFO] - fit progress: (1, 0, {'accuracy': 71.56}, 122.42719392594881)
+[2024-05-24 09:31:23,121][flwr][INFO] - evaluate_round 1: no clients selected, cancel
+[2024-05-24 09:31:23,121][flwr][INFO] - FL finished in 122.42764884699136
+[2024-05-24 09:31:23,140][flwr][INFO] - app_fit: losses_distributed []
+[2024-05-24 09:31:23,140][flwr][INFO] - app_fit: metrics_distributed_fit {'loss': [(1, -0.021124562638049776)]}
+[2024-05-24 09:31:23,140][flwr][INFO] - app_fit: metrics_distributed {}
+[2024-05-24 09:31:23,140][flwr][INFO] - app_fit: losses_centralized [(1, 0)]
+[2024-05-24 09:31:23,141][flwr][INFO] - app_fit: metrics_centralized {'accuracy': [(1, 71.56)]}

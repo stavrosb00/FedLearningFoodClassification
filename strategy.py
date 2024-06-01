@@ -308,7 +308,7 @@ def get_on_fit_config_ssfl(config: DictConfig):
                 cur_lr = np.linspace(0, init_lr, warm_up_rounds)[server_round]
             # cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * server_round / config.num_rounds)) 
             # after warm-up
-            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * (server_round - warm_up_rounds) / (n_rounds - warm_up_rounds))) 
+            cur_lr = init_lr * 0.5 * (1. + math.cos(math.pi * (150 + server_round - warm_up_rounds) / (n_rounds - warm_up_rounds))) 
             # print(cur_lr)
         else:
             cur_lr = base_lr # 0.01 0.0075 h 0.03
@@ -327,11 +327,13 @@ def get_evaluate_fn_ssfl(num_classes: int, testloader, memoryloader):
         # model = SimSiam(backbone=ResNet18(num_classes).resnet)
         model = SimSiam(backbone=ResNet18(num_classes, pretrained=False).resnet)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("cuda:1")
         params_dict = zip(model.state_dict().keys(), parameters)
         state_dict = OrderedDict({k: torch.from_numpy(v) for k, v in params_dict})
         model.load_state_dict(state_dict, strict=True)
 
-
+        # Backbone ResNet + projector MLP -> representations => Syndyasmo + Linear Evaluation head  #BYOL 
+        # Backbone -> representations => Sketo backbone + Linear evaluation head
         accuracy = knn_monitor(model.encoder.to(device), memoryloader, testloader, k=min(25, len(memoryloader.dataset)), device=device, hide_progress=True)  #min(25, 7500)
         # loss, accuracy = test(model, testloader, device)
         loss = 0 # could be None also
