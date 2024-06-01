@@ -58,12 +58,11 @@ https://pytorch.org/mobile/home/
 - [✓] Linear evaluation : analoga .npz h .pth na kanei manipulation to load twn checkpoints <- Na dw sigoura
 - [✓] FedSimSiam simple algorithm xwris Hetero
 - [semi] Nea polla peiramata me fraction=1 k higher #classes
-- [] Isws lock seed gia augmentation
 - [] Na valw warm start sta FedSSL me scheduler: server_round_loaded - server_round
 - [] Na ksanadw me progress meter debug ta data k batch times se client <- Isws
-- [] Linear evaluation me 256x256 anti gia 512x512 upresized-0pad. Na dw gia to pretrained=True
+- [✓] Linear evaluation me 256x256 anti gia 512x512 upresized-0pad. Na dw gia to pretrained=True
 - [] Linear evaluation : load_downstream_data() synarthsh basei label percentages, alliws olo to trainset load
-- [] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
+- [semi] Self-supervised FL algorithm implementation k peiramata gia fraction=0.5/1 k classes=10
 - [] Give feature: ignore evaluate_fn and ignore results related to test_acc... indexing me rounds na dw gia na xwraw 2-3 client ray processes. na trexw mono apo miniconda cmd xwris VScode
 - [] Na anebasw # client processes kai na bgalw evaluate_fn global test gia faster simulations
 - [] Plot algorithm comparison and titles based on .yaml files : Algorithm(color) based on train acc or other accs(diff line w/ same color)
