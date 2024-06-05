@@ -41,7 +41,14 @@ warm_start: False
 
 model:
   #Linear evaluation
-  checkpoint: 'models/centr_pretrained_0.015_simsiam_resnet18_Jit0.3_min_scale0.4_classes10_E2.pth'
+  checkpoint: models/best_model_eval_fedsimsiam_fedsimsiam_dirichlet_alpha0.5_balanced_Classes=10_Seed=2024_C=5_fraction1_B=128_E=5_R=200_OLD.npz 
+  #models/centr_pretrained_0.015_simsiam_resnet18_Jit0.3_min_scale0.35_classes10_E400.pth
+  tag: 'resnet18_downstream_FedSimSiam_IID_balanced_Classes=10_Seed=2024_C=5_fraction1_B=128_E=5_R=200' #resnet18_downstream_SSL_Centralized
+  # Gia linear eval 
+  #models/models/best_model_eval_fedsimsiam_fedsimsiam_iid_balanced_Classes=10_Seed=2024_C=5_fraction1_B=128_E=2_R=150.npz # To fake warm_start R=50rounds pote den to kseperase
+  #models/best_model_eval_fedsimsiam_fedsimsiam_iid_balanced_Classes=10_Seed=2024_C=5_fraction1_B=128_E=5_R=50.npz #<-Fake 200 rounds
+
+  #'models/centr_pretrained_0.015_simsiam_resnet18_Jit0.3_min_scale0.4_classes10_E2.pth'
   #'models/best_model_eval_fedsimsiam_fedsimsiam_iid_balanced_Classes=10_Seed=2024_C=5_fraction0.2_B=128_E=1_R=3.npz'
   #'centr_pretrained_0.015_simsiam_resnet18_Jit0.3_min_scale0.4_classes10_E200.pth'
   # 'models/centr_pretrained_0.012_simsiam_resnet18_classes10_E200.pth'
